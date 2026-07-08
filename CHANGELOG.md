@@ -13,3 +13,4 @@
 - 新增 `pro-plans`，将根目录 `plans/` 计划写作、拆分和索引维护独立出来。
 - 将宿主级 system prompts 中固定的 `plans/` 工作流移出，计划维护统一交给 `pro-plans` 或项目模板。
 - 扩展基础项目模板：新增 `docs/` 当前项目文档层和 `references/` 外部参考层，明确 README、AGENTS、plans、记忆与外部资料的单一信息源边界。
+- 改造仓库 README 为 `pro-readme` 家族结构，补充任意 agent 目标目录安装、`context7` / `fast-context` 等外部工具前置说明，并将 hero 图移动为根级 `assets/hero.webp`。
