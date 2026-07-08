@@ -4,7 +4,7 @@
 
 ## 文件范围
 
-- [ ] `skills/` 只包含 11 个自研 skill。
+- [ ] `skills/` 只包含 14 个自研 skill。
 - [ ] `system-prompts/` 只包含宿主级提示词文件。
 - [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
@@ -14,8 +14,9 @@
 
 - [ ] `README.md` 中的 skill 数量与 `skills/` 目录一致。
 - [ ] docs 中引用的文件实际存在。
-- [ ] 模板默认入口为 `AGENTS.md`。
+- [ ] 模板默认 AI 入口为 `AGENTS.md`，并明确说明它是给 AI 助手读取的。
 - [ ] `system-prompts/` 与模板内 `.agent/rules/` 的边界说明清楚。
+- [ ] 计划写作规则只在 `pro-plans` 或项目模板中定义，`system-prompts/` 不重复绑定 `plans/` 流程。
 - [ ] `system-prompts/` 不包含个人供应商、图片/视频生成服务、真实 API 配置或本机绝对路径。
 
 ## 敏感内容扫描

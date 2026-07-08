@@ -8,15 +8,15 @@
 
 - 想把常用 coding agent 工作流沉淀成可安装 skills 的用户。
 - 想统一 Codex、Claude、Gemini、Windsurf 等工具协作规则的用户。
-- 想给新项目快速放入 `AGENTS.md`、`.agent/rules/`、`plans/`、`.ai_memory/` 结构的用户。
+- 想给新项目快速放入 `AGENTS.md`、`.agent/rules/`、`plans/` 和可选 `.ai_memory/` 结构的用户。
 
 ## 内容
 
 | 路径 | 说明 |
 |---|---|
-| `skills/` | 11 个自研 skill，覆盖检索、经验沉淀、解释、结构治理、测试、中文输出等工作流 |
+| `skills/` | 14 个自研 skill，覆盖 README 生成、计划管理、检索、经验沉淀、解释、结构治理、测试、中文输出等工作流 |
 | `system-prompts/` | 面向 Codex、Claude、Gemini、Windsurf 等宿主的全局提示词 |
-| `templates/base-project/` | 可复制到新项目的通用项目骨架，默认入口为 `AGENTS.md` |
+| `templates/base-project/` | 可复制到新项目的通用项目骨架，默认 AI 入口为 `AGENTS.md` |
 | `scripts/` | 本地安装 skill 与创建新项目模板的辅助脚本 |
 | `docs/` | 发布检查、兼容性说明和迁移说明 |
 
@@ -112,13 +112,15 @@ cp system-prompts/GEMINI.md ~/.gemini/GEMINI.md
 
 本仓库的 system prompts 已移除图片生成、图像编辑、视频生成和视频编辑的专用路由。如果你需要这些能力，可以在自己的本地提示词中额外补充，但不建议把个人供应商、API key、私有路径写进公开仓库。
 
+计划写作、拆分和 `plans/README.md` 维护不放进宿主级 system prompts；需要时使用 `pro-plans` 或项目模板内的项目级约定。
+
 ## 创建新项目模板
 
 ```powershell
 ./scripts/new-project.ps1 -Name my-agent-project -TargetRoot ../
 ```
 
-也可以直接复制 `templates/base-project/`，再按项目实际情况填写 `README.md`、`AGENTS.md` 和 `plans/README.md`。
+也可以直接复制 `templates/base-project/`，再按项目实际情况填写 `README.md`、面向 AI 的 `AGENTS.md` 和 `plans/README.md`。
 
 模板内 `.agent/rules/` 是项目级规则，`system-prompts/` 是宿主级全局提示词，两者边界不同：前者随项目走，后者安装到具体 AI 工具或用户配置中。
 
@@ -132,10 +134,13 @@ cp system-prompts/GEMINI.md ~/.gemini/GEMINI.md
 | `pro-exp` | 将解法沉淀为 `.exp/` 经验文档 |
 | `pro-explain` | 面向初学者解释代码或补充必要注释 |
 | `pro-idea` | 生成可分阶段落地的改进建议 |
+| `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文 |
 | `pro-must` | 严格按用户指定方案执行 |
+| `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档 |
+| `pro-readme` | 生成或重写面向人类读者的 README |
 | `pro-rule` | 将稳定偏好整理为 `.agent/rules/` |
 | `pro-struct` | 目录结构整理、组件化和复用性治理 |
-| `pro-summary` | 总结归档、README 与 AI 文档一致性维护 |
+| `pro-summary` | README、面向 AI 的 AGENTS.md、docs 与 plans 的一致性审查 |
 | `pro-test` | 测试、调试和验证流程 |
 | `use-chinese` | 默认使用简体中文输出 |
 | `use-internet` | 联网检索与资料核验路由 |
