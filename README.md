@@ -8,7 +8,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
-[![Port](https://img.shields.io/badge/port-none-orange?style=flat-square)](#启动)
+[![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
 [![Skills](https://img.shields.io/badge/skills-14-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
@@ -17,7 +17,7 @@
 
 </div>
 
-> AI 接手前先读 [AGENTS.md](./AGENTS.md)。本 README 是用户视角速览；公开分发边界、验证规则和目录约束全在 AGENTS.md。
+> AI 接手前先读 [AGENTS.md](./AGENTS.md)。本 README 是用户视角速览；协作规则、验证清单和目录约定见 AGENTS.md。
 
 ---
 
@@ -33,28 +33,28 @@
 
 | 能力 | 实现 |
 |---|---|
-| **跨宿主 skill 分发** | [`skills/`](./skills/) 只保存可公开分发的自研 skill；安装脚本按目录复制，不绑定某个宿主。 |
+| **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
-| **Codex 默认路径兼容** | 未传目标时，脚本使用 `$CODEX_HOME/skills`，未设置 `CODEX_HOME` 时使用用户目录下的 `.codex/skills`。 |
+| **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
 | **宿主级提示词** | [`system-prompts/`](./system-prompts/) 提供 Codex、Claude Code、Gemini 和 Windsurf 的全局提示词入口。 |
 | **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/`、`plans/` 和 `.ai_memory/` 占位结构。 |
-| **外部工具前置说明** | [`system-prompts/`](./system-prompts/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；缺失时需要在宿主侧安装或调整路由。 |
+| **外部工具前置说明** | [`system-prompts/`](./system-prompts/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
 
 ---
 
 ## 启动
 
-本仓不是常驻服务，不占用网络端口，也不提供 Docker 运行面。成功标准是：从仓库根目录把 `skills/` 安装到目标 agent 能读取的 skill 目录。
+这是一个 source-first 资产包。成功标准是：从仓库根目录运行安装脚本，把 `skills/` 复制到目标 agent 能读取的 skill 目录。
 
-### 服务约定
+### 安装对象
 
 | 项 | 值 |
 |---|---|
 | 运行形态 | source-first 资产包 |
-| 网络服务 | 无 |
-| Docker | 不适用 |
-| 默认安装范围 | `skills/*` 下的全部 skill 目录 |
+| 安装内容 | `skills/*` 下的全部 skill 目录 |
+| 默认宿主 | Codex / 通用 coding agent |
+| 安装脚本 | Bash / PowerShell |
 
 ### 本地安装
 
@@ -102,10 +102,10 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 | 步骤 | 做法 |
 |---|---|
-| **1. 确认宿主能力** | 如果 agent 支持 skill 目录，先找到它实际读取的目录；如果不支持，把对应 `SKILL.md` 当作规则文档引用。 |
+| **1. 确认宿主能力** | 支持 skill 目录的 agent 直接使用目标目录安装；其他 agent 可以把对应 `SKILL.md` 作为规则文档引用。 |
 | **2. 安装 skills** | 用安装脚本把 `skills/*` 复制到目标目录；Codex 用户可以省略目标参数使用默认路径。 |
 | **3. 选择宿主提示词** | 只复制你实际使用的 [`system-prompts/`](./system-prompts/) 文件，并先备份宿主已有配置。 |
-| **4. 补齐外部工具** | 如果提示词或 skill 规则提到 `context7`、`fast-context`、专业搜索 CLI、浏览器 MCP 或 subagents，而当前宿主没有这些能力，先在宿主 MCP/CLI 配置中安装或改成你的本机工具名。 |
+| **4. 补齐外部工具** | 按宿主能力注册 `context7`、`fast-context`、专业搜索 CLI、浏览器 MCP 或 subagents，并让提示词中的工具名与本机配置一致。 |
 | **5. 创建项目骨架** | 新项目可运行 [`scripts/new-project.ps1`](./scripts/new-project.ps1)，或直接复制 [`templates/base-project/`](./templates/base-project/)。 |
 | **6. 项目内收口** | 进入具体项目后，以项目根 `AGENTS.md` 为 AI 入口，README 面向人类读者，`docs/` 和 `plans/` 分别承载长期文档和计划索引。 |
 
@@ -124,36 +124,36 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 | 参数 / 变量 | 默认 | 说明 |
 |---|---|---|
-| Bash 第一个参数 | 无 | 传入任意 agent 的 skill 目录，例如 `./scripts/install-skills.sh "<agent-skill-dir>"`。 |
-| PowerShell `-Target` | 无 | 传入任意 agent 的 skill 目录，例如 `.\scripts\install-skills.ps1 -Target "<agent-skill-dir>"`。 |
-| `CODEX_HOME` | 未设置 | 仅在未传目标参数时生效；脚本会安装到 `$CODEX_HOME/skills`。 |
-| 用户默认目录 | `.codex/skills` | 未传目标参数且未设置 `CODEX_HOME` 时使用。 |
-| `system-prompts/` | 不自动安装 | 宿主提示词需要人工选择、备份并复制到对应工具入口。 |
+| Bash 第一个参数 | 目标 skill 目录 | 传入任意 agent 的 skill 目录，例如 `./scripts/install-skills.sh "<agent-skill-dir>"`。 |
+| PowerShell `-Target` | 目标 skill 目录 | 传入任意 agent 的 skill 目录，例如 `.\scripts\install-skills.ps1 -Target "<agent-skill-dir>"`。 |
+| `CODEX_HOME` | Codex 用户目录 | 省略目标参数时，脚本优先安装到 `$CODEX_HOME/skills`。 |
+| 用户默认目录 | `.codex/skills` | 省略目标参数且 `CODEX_HOME` 为空时使用。 |
+| `system-prompts/` | 手动选择 | 宿主提示词按实际工具选择、备份并复制到对应入口。 |
 
-**边界说明**：
+### 安装策略
 
-| 规则 | 说明 |
+| 场景 | 做法 |
 |---|---|
-| 不绑定私有机器 | README、模板和 prompts 不应包含个人绝对路径、真实服务地址或私有组织流程。 |
-| 不假设发布包 | 本仓按 source-first 使用，不写 `npm install agent-kit` 之类未发布包命令。 |
-| 不自动适配所有宿主 | 安装脚本只负责复制目录；宿主是否加载 skill，由宿主自身机制决定。 |
-| 不内置 MCP 配置 | MCP server 的包名、命令、env 和路径随宿主变化，应放在用户自己的宿主配置里。 |
+| Source-first 使用 | 从 Git 仓库 clone 后运行脚本安装。 |
+| 多宿主共用 | 为每个 agent 传入各自的 skill 目录。 |
+| MCP / CLI 配置 | 在宿主自己的配置文件中填写 server、命令、env 和路径。 |
+| 公开分发 | README、模板和 prompts 保持通用路径、通用命令和公开可读描述。 |
 
 ---
 
 ## 外部工具
 
-`skills/` 可以单独安装；但如果你同时安装 [`system-prompts/`](./system-prompts/) 或启用 `use-internet`、`pro-copy` 这类路由 skill，下面这些外部能力会被规则优先使用。缺失时不要静默当作已安装，先补装对应 MCP/CLI，或把提示词里的工具名改成你的宿主实际提供的名字。
+`skills/` 可以单独安装。安装 [`system-prompts/`](./system-prompts/) 或启用 `use-internet`、`pro-copy` 这类路由 skill 后，下面这些外部能力会成为优先路线；按自己的宿主配置补齐 MCP/CLI，或把提示词里的工具名改成宿主实际提供的名字。
 
-| 能力 | 何时需要 | 缺失时怎么处理 |
+| 能力 | 何时需要 | 建议动作 |
 |---|---|---|
-| `context7` MCP | 查询库、SDK、API、CLI 或云服务官方文档时优先使用。 | 在宿主 MCP 配置里注册 Context7；若宿主不支持 MCP，改用官方文档搜索或专业文档 CLI。 |
+| `context7` MCP | 查询库、SDK、API、CLI 或云服务官方文档时优先使用。 | 在宿主 MCP 配置里注册 Context7；也可以配置官方文档搜索或专业文档 CLI 作为同类路线。 |
 | 专业搜索 CLI | 联网搜索、资料核验、网页抓取或 `fetch`/`deep` 类检索时使用。 | 安装你实际采用的搜索 CLI；如果本机叫 `smart-search` 或其他名字，同步修改宿主提示词中的路由名。 |
-| `fast-context` MCP | 大仓库理解、跨文件定位、调用链梳理时优先使用。 | 注册 `fast-context` 或等价 semantic search MCP；没有时按提示词规则降级到 `rg`、`rg --files`。 |
-| 浏览器 MCP / 浏览器工具 | 需要打开网站、表单操作、截图或本地页面 smoke test 时使用。 | 只在宿主已经提供浏览器控制能力时启用；否则用构建、接口检查和人工浏览器验证替代。 |
-| subagents / 并行代理 | 独立阅读、检索、审查任务可并行时使用。 | 宿主没有多代理能力时，主代理串行执行即可。 |
+| `fast-context` MCP | 大仓库理解、跨文件定位、调用链梳理时优先使用。 | 注册 `fast-context` 或等价 semantic search MCP；精确字符串和文件名继续使用 `rg`、`rg --files`。 |
+| 浏览器 MCP / 浏览器工具 | 需要打开网站、表单操作、截图或本地页面 smoke test 时使用。 | 在提供浏览器控制能力的宿主中启用；静态检查、接口检查和人工浏览器验证可以配合使用。 |
+| subagents / 并行代理 | 独立阅读、检索、审查任务可并行时使用。 | 在支持多代理的宿主中启用；单代理宿主按同一流程串行执行。 |
 
-这些工具不是本仓库的 vendored 依赖，也不应把 token、私有 server URL、本机绝对路径或 MCP env 写进公开 README；只在个人宿主配置中保存真实安装细节。
+真实 server URL、env、token 和本机绝对路径放在个人宿主配置中；公开 README 保留通用工具名和配置方向。
 
 ---
 
@@ -202,7 +202,7 @@ grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieAr
 ```text
 agent-kit/
 ├─ README.md                      # 用户视角入口
-├─ AGENTS.md                      # AI 协作与发布边界
+├─ AGENTS.md                      # AI 协作规则
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
@@ -232,8 +232,8 @@ agent-kit/
 
 | 文档 | 说明 |
 |---|---|
-| [AGENTS.md](./AGENTS.md) | AI 协作约束、公开分发边界和发布前验证规则。 |
-| [兼容性说明](./docs/compatibility.md) | `skills/`、`system-prompts/` 和项目模板规则的职责边界。 |
+| [AGENTS.md](./AGENTS.md) | AI 协作约束、公开分发约定和发布前验证规则。 |
+| [兼容性说明](./docs/compatibility.md) | `skills/`、`system-prompts/` 和项目模板规则的职责分工。 |
 | [发布检查清单](./docs/publishing-checklist.md) | 公开发布前的文件范围、文档一致性和敏感内容扫描。 |
 | [迁移说明](./docs/migration-from-00000-model.md) | 从旧项目模板迁移到公开通用模板的注意事项。 |
 | [Changelog](./CHANGELOG.md) | 当前资产包变更记录。 |
@@ -242,7 +242,7 @@ agent-kit/
 
 ## 协同关系
 
-本仓当前按独立开源资产包分发，没有必须同时安装的 sibling repo；它与下列宿主或模板入口发生文件级协同关系。
+本仓按独立开源资产包分发，并与下列宿主或模板入口发生文件级协同关系。
 
 | 关联入口 | 关系 |
 |---|---|
