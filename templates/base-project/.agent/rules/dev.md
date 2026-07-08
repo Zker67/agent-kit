@@ -17,6 +17,8 @@ description: "通用开发规则与行为约束"
 - 优先做根因修复，避免无关重构。
 - 每处改动都应对应明确任务目标、缺陷修复或必要验证。
 - 非平凡任务先写计划到 `plans/`，并同步维护 `plans/README.md`。
+- 稳定项目事实写入 `docs/`；外部文档和外部仓库参考写入 `references/`。
+- 同一类信息只维护一个主事实源，具体归属以 `docs/architecture/source-of-truth.md` 为准。
 
 ## 验证
 

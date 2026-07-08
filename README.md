@@ -8,7 +8,7 @@
 
 - 想把常用 coding agent 工作流沉淀成可安装 skills 的用户。
 - 想统一 Codex、Claude、Gemini、Windsurf 等工具协作规则的用户。
-- 想给新项目快速放入 `AGENTS.md`、`.agent/rules/`、`plans/` 和可选 `.ai_memory/` 结构的用户。
+- 想给新项目快速放入 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/`、`plans/` 和可选 `.ai_memory/` 结构的用户。
 
 ## 内容
 
@@ -120,9 +120,11 @@ cp system-prompts/GEMINI.md ~/.gemini/GEMINI.md
 ./scripts/new-project.ps1 -Name my-agent-project -TargetRoot ../
 ```
 
-也可以直接复制 `templates/base-project/`，再按项目实际情况填写 `README.md`、面向 AI 的 `AGENTS.md` 和 `plans/README.md`。
+也可以直接复制 `templates/base-project/`，再按项目实际情况填写 `README.md`、面向 AI 的 `AGENTS.md`、`docs/README.md`、`references/README.md` 和 `plans/README.md`。
 
 模板内 `.agent/rules/` 是项目级规则，`system-prompts/` 是宿主级全局提示词，两者边界不同：前者随项目走，后者安装到具体 AI 工具或用户配置中。
+
+模板内 `docs/` 承载当前代码和程序的长期文档，`references/` 承载外部文档和外部仓库参考。重要外部来源可以按自身结构建子目录，记录版本、commit、许可和借鉴点；采纳后的当前项目事实应回写到 `docs/` 或源码。
 
 `.ai_memory/` 在模板中只保留说明和空占位，不包含任何真实记忆内容。`MEMO.example.md` 仅作为本地个人笔记示例，复制为实际笔记文件后应按项目策略决定是否纳入版本控制。
 
