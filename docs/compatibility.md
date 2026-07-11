@@ -12,12 +12,14 @@
 
 | 文件 | 目标宿主 | 说明 |
 |---|---|---|
-| `system-prompts/AGENTS.md` | Codex / 通用 coding agent | 来自本机用户级 Codex 标准的开源泛化版 |
-| `system-prompts/CLAUDE.md` | Claude Code | 来自本机用户级 Claude 标准的开源泛化版 |
-| `system-prompts/GEMINI.md` | Gemini / Antigravity 风格工具 | 来自本机用户级 Gemini 标准的开源泛化版 |
-| `system-prompts/WINDSURF.md` | Windsurf | 轻量语言约束入口 |
+| `system-prompts/CHATGPT.md` | Codex / ChatGPT coding agent | 安装到 `~/.codex/AGENTS.md`；来自本机用户级 Codex 标准的开源泛化版 |
+| `system-prompts/CLAUDE.md` | Claude Code | 安装到 `~/.claude/CLAUDE.md`；来自本机用户级 Claude 标准的开源泛化版 |
+| `system-prompts/GEMINI.md` | Gemini / Antigravity 风格工具 | 安装到 `~/.gemini/GEMINI.md`；来自本机用户级 Gemini 标准的开源泛化版 |
+| `system-prompts/GROK.md` | Grok CLI | 安装到 `~/.grok/AGENTS.md`；保留 Grok 工具、subagent 和 skill 路由约定 |
+| `system-prompts/WINDSURF.md` | Windsurf | 安装到 `~/.codeium/windsurf/memories/global_rules.md`；提供轻量语言约束 |
 
 开源泛化版保留工作方式、验证和安全规则，并使用通用路径、通用工具名和公开可读描述。
+各文件的侧重点和安装入口见 [`system-prompts/README.md`](../system-prompts/README.md)。
 
 ## 外部工具路由
 

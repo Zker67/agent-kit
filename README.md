@@ -4,7 +4,7 @@
 
 **面向任意编码代理的可安装 skill 资产包**
 
-`任意目标目录` · `14 个 skills` · `多宿主 prompts` · `通用项目模板`
+`任意目标目录` · `14 个 skills` · `5 类宿主 prompts` · `通用项目模板`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
@@ -36,7 +36,7 @@
 | **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
-| **宿主级提示词** | [`system-prompts/`](./system-prompts/) 提供 Codex、Claude Code、Gemini 和 Windsurf 的全局提示词入口。 |
+| **宿主级提示词** | [`system-prompts/`](./system-prompts/) 提供 Codex、Claude Code、Gemini、Grok 和 Windsurf 的全局提示词入口及选用说明。 |
 | **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/`、`plans/` 和 `.ai_memory/` 占位结构。 |
 | **外部工具前置说明** | [`system-prompts/`](./system-prompts/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
@@ -53,7 +53,7 @@
 |---|---|
 | 运行形态 | source-first 资产包 |
 | 安装内容 | `skills/*` 下的全部 skill 目录 |
-| 默认宿主 | Codex / 通用 coding agent |
+| 默认宿主 | Codex / ChatGPT coding agent |
 | 安装脚本 | Bash / PowerShell |
 
 ### 本地安装
@@ -113,10 +113,11 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 | 宿主 | 文件 | 说明 |
 |---|---|---|
-| Codex / 通用 coding agent | [`system-prompts/AGENTS.md`](./system-prompts/AGENTS.md) | 放到用户级或项目级 `AGENTS.md`。 |
-| Claude Code | [`system-prompts/CLAUDE.md`](./system-prompts/CLAUDE.md) | 放到 Claude Code 识别的 `CLAUDE.md`。 |
-| Gemini / Antigravity 风格工具 | [`system-prompts/GEMINI.md`](./system-prompts/GEMINI.md) | 放到 Gemini 识别的全局或项目入口。 |
-| Windsurf | [`system-prompts/WINDSURF.md`](./system-prompts/WINDSURF.md) | 放到 Windsurf custom instructions 或项目规则入口。 |
+| Codex / ChatGPT coding agent | [`system-prompts/CHATGPT.md`](./system-prompts/CHATGPT.md) | 放到 `~/.codex/AGENTS.md`。 |
+| Claude Code | [`system-prompts/CLAUDE.md`](./system-prompts/CLAUDE.md) | 放到 `~/.claude/CLAUDE.md`。 |
+| Gemini / Antigravity 风格工具 | [`system-prompts/GEMINI.md`](./system-prompts/GEMINI.md) | 放到 `~/.gemini/GEMINI.md`。 |
+| Grok CLI | [`system-prompts/GROK.md`](./system-prompts/GROK.md) | 放到 `~/.grok/AGENTS.md`。 |
+| Windsurf | [`system-prompts/WINDSURF.md`](./system-prompts/WINDSURF.md) | 放到 `~/.codeium/windsurf/memories/global_rules.md`。 |
 
 ---
 
@@ -211,9 +212,11 @@ agent-kit/
 │  ├─ pro-test/                   # 测试、调试与验证 skill
 │  └─ use-internet/               # 联网核验路由 skill
 ├─ system-prompts/
-│  ├─ AGENTS.md
+│  ├─ README.md
+│  ├─ CHATGPT.md
 │  ├─ CLAUDE.md
 │  ├─ GEMINI.md
+│  ├─ GROK.md
 │  └─ WINDSURF.md
 ├─ templates/base-project/        # 通用项目骨架
 ├─ scripts/
@@ -233,6 +236,7 @@ agent-kit/
 | 文档 | 说明 |
 |---|---|
 | [AGENTS.md](./AGENTS.md) | AI 协作约束、公开分发约定和发布前验证规则。 |
+| [System Prompts](./system-prompts/README.md) | 不同宿主提示词的特点、入口和选用建议。 |
 | [兼容性说明](./docs/compatibility.md) | `skills/`、`system-prompts/` 和项目模板规则的职责分工。 |
 | [发布检查清单](./docs/publishing-checklist.md) | 公开发布前的文件范围、文档一致性和敏感内容扫描。 |
 | [迁移说明](./docs/migration-from-00000-model.md) | 从旧项目模板迁移到公开通用模板的注意事项。 |
@@ -246,8 +250,8 @@ agent-kit/
 
 | 关联入口 | 关系 |
 |---|---|
-| Codex / 通用 coding agent | 默认 skill 安装路径和 `AGENTS.md` 提示词入口以 Codex 约定为基线，同时允许传入任意目标目录。 |
-| Claude Code / Gemini / Windsurf | 通过 `system-prompts/` 提供宿主级规则；skill 加载能力由各宿主自身机制决定。 |
+| Codex / ChatGPT coding agent | 默认 skill 安装路径和 `AGENTS.md` 提示词入口以 Codex 约定为基线，同时允许传入任意目标目录。 |
+| Claude Code / Gemini / Grok / Windsurf | 通过 `system-prompts/` 提供宿主级规则；skill 加载能力由各宿主自身机制决定。 |
 | `templates/base-project/` | 新项目从模板继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |
 
 ---

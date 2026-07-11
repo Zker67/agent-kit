@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 - 2026-07-11
+
+- 新增 `system-prompts/README.md`，集中说明五类宿主提示词的特点、确切用户级入口和选用方式。
+- 将 Codex 提示词资产从 `system-prompts/AGENTS.md` 重命名为 `system-prompts/CHATGPT.md`，实际安装入口保持 `~/.codex/AGENTS.md`。
+- 迁入 Grok CLI 的 `GROK.md`，并补齐 Claude Code、Gemini、Grok、Windsurf 的确切用户级安装路径。
+- 按 GPT-5.6 官方实践精简 ChatGPT / Codex 提示词中的重复规则，补充目标与验证导向、授权边界、按需规划和稀疏进度更新。
+- 为 ChatGPT / Codex 板块补充官方参考来源、设计思路、主代理与子代理推荐配置及日常任务输入模板。
+
 ## 0.1.0 - 2026-07-08
 
 - 初始开源整理：加入 14 个自研 skills。

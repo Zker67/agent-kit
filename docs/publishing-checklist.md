@@ -5,7 +5,7 @@
 ## 文件范围
 
 - [ ] `skills/` 只包含 14 个自研 skill。
-- [ ] `system-prompts/` 只包含宿主级提示词文件。
+- [ ] `system-prompts/` 只包含宿主级提示词文件和公开的 `README.md` 索引。
 - [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
 - [ ] `LICENSE` 为 MIT。
