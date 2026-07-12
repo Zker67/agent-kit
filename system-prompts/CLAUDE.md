@@ -25,9 +25,6 @@
 ## Shell
 - bash on Windows: default to `&&` for command chaining so failures stop the chain. Use `;` only when it is intentional for earlier failures to continue, and state why.
 
-## Subagents
-- When calling agent tools, explicitly pass `model: 'haiku'` by default. Use `haiku` for normal exploration, search, and reading. Upgrade to `sonnet` or `opus`, or omit model to inherit the main model, only for deep reasoning, complex synthesis, or high-risk judgment; mention the reason when upgrading.
-
 ## Tool Routing
 Pick by intent; do not fall back to a generic tool when a specialized one is listed.
 
