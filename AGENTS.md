@@ -7,7 +7,8 @@
 - 默认使用简体中文沟通；代码标识符、命令和工具名保持英文。
 - 保持 diff 聚焦，不做无关重构或格式化。
 - `skills/` 只放可公开分发的自研 skill，不放 vendored、external、lockfile 或管理器状态。
-- `system-prompts/` 存放宿主级全局提示词，不与 `templates/base-project/.agent/rules/` 混用。
+- `environments/` 按 coding agent 宿主保存配置指南和公开资产；其中的全局 instructions 不与 `templates/base-project/.agent/rules/` 混用。
+- `system-prompts/` 只保留旧路径迁移索引，不再保存规则正文。
 - `templates/base-project/` 必须保持通用，不绑定任何个人机器、组织流程或特定部署平台。
 - 修改文档后检查链接、数量和路径是否一致。
 

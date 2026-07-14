@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-07-14
+
+- 将 `system-prompts/` 升级为按宿主分层的 `environments/`，覆盖 Codex、Claude Code、Gemini、Grok CLI 和 Windsurf。
+- 每个环境新增中文配置指南，把全局 instructions、运行时配置、skills、工具、项目规则和验证方式分开说明。
+- 将五份规则资产迁移为宿主实际入口文件名，并为 Codex 增加 `config.toml` / subagent 示例、为 Claude Code 增加安全 settings 骨架。
+- 保留 `system-prompts/README.md` 作为旧路径迁移入口，不再在旧目录维护规则正文。
+- 同步 README、AGENTS、兼容性说明、发布检查清单和迁移文档中的路径、数量与职责边界。
+
 ## 0.2.0 - 2026-07-11
 
 - 新增 `system-prompts/README.md`，集中说明五类宿主提示词的特点、确切用户级入口和选用方式。

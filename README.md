@@ -2,9 +2,9 @@
 
 # agent-kit
 
-**面向任意编码代理的可安装 skill 资产包**
+**面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`任意目标目录` · `14 个 skills` · `5 类宿主 prompts` · `通用项目模板`
+`5 类 coding environments` · `14 个 skills` · `可复制配置资产` · `通用项目模板`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
@@ -25,7 +25,7 @@
   <img src="./assets/hero.webp" alt="neon blueprint panels connected by light beams, representing an agent skill kit copied into different coding assistants" width="80%">
 </p>
 
-> 把“给不同 coding agent 安装同一套工作流”这件事——skills 目录 + 宿主提示词 + 项目模板——做到一个仓库、一条目标路径可落地。
+> 把“配置不同 coding agent 并安装同一套工作流”这件事——环境指南 + 全局 instructions + skills + 项目模板——收口到一个公开仓库。
 
 ---
 
@@ -36,23 +36,24 @@
 | **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
-| **宿主级提示词** | [`system-prompts/`](./system-prompts/) 提供 Codex、Claude Code、Gemini、Grok 和 Windsurf 的全局提示词入口及选用说明。 |
+| **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/`、`plans/` 和 `.ai_memory/` 占位结构。 |
-| **外部工具前置说明** | [`system-prompts/`](./system-prompts/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
+| **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
 
 ---
 
 ## 启动
 
-这是一个 source-first 资产包。成功标准是：从仓库根目录运行安装脚本，把 `skills/` 复制到目标 agent 能读取的 skill 目录。
+这是一个 source-first 资产包。环境指南和全局 instructions 由用户按宿主选择、备份并合并；安装脚本只负责把 `skills/` 复制到目标 agent 能读取的目录。成功标准是宿主实际加载了目标 instructions、运行时配置和所需 skills。
 
 ### 安装对象
 
 | 项 | 值 |
 |---|---|
 | 运行形态 | source-first 资产包 |
-| 安装内容 | `skills/*` 下的全部 skill 目录 |
+| 环境配置 | `environments/<host>/` 下的指南与可复制资产 |
+| 脚本安装内容 | `skills/*` 下的全部 skill 目录 |
 | 默认宿主 | Codex / ChatGPT coding agent |
 | 安装脚本 | Bash / PowerShell |
 
@@ -102,22 +103,22 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 | 步骤 | 做法 |
 |---|---|
-| **1. 确认宿主能力** | 支持 skill 目录的 agent 直接使用目标目录安装；其他 agent 可以把对应 `SKILL.md` 作为规则文档引用。 |
-| **2. 安装 skills** | 用安装脚本把 `skills/*` 复制到目标目录；Codex 用户可以省略目标参数使用默认路径。 |
-| **3. 选择宿主提示词** | 只复制你实际使用的 [`system-prompts/`](./system-prompts/) 文件，并先备份宿主已有配置。 |
+| **1. 选择 coding environment** | 进入对应的 [`environments/<host>/`](./environments/) 指南，确认规则入口、配置文件、skill 机制和宿主能力。 |
+| **2. 安装 skills** | 支持 skill 目录的 agent 用安装脚本复制 `skills/*`；其他 agent 可以把对应 `SKILL.md` 作为规则或 workflow 参考。 |
+| **3. 安装全局 instructions** | 只复制当前环境目录中的规则文件，并先备份宿主已有配置。模型、权限、MCP 和凭据按指南合并到宿主自己的配置文件。 |
 | **4. 补齐外部工具** | 按宿主能力注册 `context7`、`fast-context`、专业搜索 CLI、浏览器 MCP 或 subagents，并让提示词中的工具名与本机配置一致。 |
 | **5. 创建项目骨架** | 新项目可运行 [`scripts/new-project.ps1`](./scripts/new-project.ps1)，或直接复制 [`templates/base-project/`](./templates/base-project/)。 |
 | **6. 项目内收口** | 进入具体项目后，以项目根 `AGENTS.md` 为 AI 入口，README 面向人类读者，`docs/` 和 `plans/` 分别承载长期文档和计划索引。 |
 
-### 宿主提示词安装示例
+### Coding environment 入口
 
-| 宿主 | 文件 | 说明 |
+| 宿主 | 配置指南 | 全局 instructions |
 |---|---|---|
-| Codex / ChatGPT coding agent | [`system-prompts/CHATGPT.md`](./system-prompts/CHATGPT.md) | 放到 `~/.codex/AGENTS.md`。 |
-| Claude Code | [`system-prompts/CLAUDE.md`](./system-prompts/CLAUDE.md) | 放到 `~/.claude/CLAUDE.md`。 |
-| Gemini / Antigravity 风格工具 | [`system-prompts/GEMINI.md`](./system-prompts/GEMINI.md) | 放到 `~/.gemini/GEMINI.md`。 |
-| Grok CLI | [`system-prompts/GROK.md`](./system-prompts/GROK.md) | 放到 `~/.grok/AGENTS.md`。 |
-| Windsurf | [`system-prompts/WINDSURF.md`](./system-prompts/WINDSURF.md) | 放到 `~/.codeium/windsurf/memories/global_rules.md`。 |
+| Codex / ChatGPT coding agent | [`environments/codex/README.md`](./environments/codex/README.md) | [`environments/codex/AGENTS.md`](./environments/codex/AGENTS.md) → `~/.codex/AGENTS.md` |
+| Claude Code | [`environments/claude-code/README.md`](./environments/claude-code/README.md) | [`environments/claude-code/CLAUDE.md`](./environments/claude-code/CLAUDE.md) → `~/.claude/CLAUDE.md` |
+| Gemini / Antigravity 风格工具 | [`environments/gemini/README.md`](./environments/gemini/README.md) | [`environments/gemini/GEMINI.md`](./environments/gemini/GEMINI.md) → `~/.gemini/GEMINI.md` |
+| Grok CLI | [`environments/grok/README.md`](./environments/grok/README.md) | [`environments/grok/AGENTS.md`](./environments/grok/AGENTS.md) → `~/.grok/AGENTS.md` |
+| Windsurf | [`environments/windsurf/README.md`](./environments/windsurf/README.md) | [`environments/windsurf/global_rules.md`](./environments/windsurf/global_rules.md) → `~/.codeium/windsurf/memories/global_rules.md` |
 
 ---
 
@@ -129,7 +130,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 | PowerShell `-Target` | 目标 skill 目录 | 传入任意 agent 的 skill 目录，例如 `.\scripts\install-skills.ps1 -Target "<agent-skill-dir>"`。 |
 | `CODEX_HOME` | Codex 用户目录 | 省略目标参数时，脚本优先安装到 `$CODEX_HOME/skills`。 |
 | 用户默认目录 | `.codex/skills` | 省略目标参数且 `CODEX_HOME` 为空时使用。 |
-| `system-prompts/` | 手动选择 | 宿主提示词按实际工具选择、备份并复制到对应入口。 |
+| `environments/` | 手动选择 | 按宿主阅读配置指南，备份现有文件后复制全局 instructions，并合并必要配置。 |
 
 ### 安装策略
 
@@ -144,7 +145,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 ## 外部工具
 
-`skills/` 可以单独安装。安装 [`system-prompts/`](./system-prompts/) 或启用 `use-internet`、`pro-copy` 这类路由 skill 后，下面这些外部能力会成为优先路线；按自己的宿主配置补齐 MCP/CLI，或把提示词里的工具名改成宿主实际提供的名字。
+`skills/` 可以单独安装。采用 [`environments/`](./environments/) 中的全局 instructions，或启用 `use-internet`、`pro-copy` 这类路由 skill 后，下面这些外部能力会成为优先路线；按自己的宿主配置补齐 MCP/CLI，或把规则里的工具名改成宿主实际提供的名字。
 
 | 能力 | 何时需要 | 建议动作 |
 |---|---|---|
@@ -211,13 +212,22 @@ agent-kit/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-test/                   # 测试、调试与验证 skill
 │  └─ use-internet/               # 联网核验路由 skill
-├─ system-prompts/
+├─ environments/                 # 各 coding agent 的完整环境配置指南
 │  ├─ README.md
-│  ├─ CHATGPT.md
-│  ├─ CLAUDE.md
-│  ├─ GEMINI.md
-│  ├─ GROK.md
-│  └─ WINDSURF.md
+│  ├─ codex/
+│  │  ├─ README.md
+│  │  ├─ AGENTS.md
+│  │  ├─ config.example.toml
+│  │  └─ agents/
+│  ├─ claude-code/
+│  │  ├─ README.md
+│  │  ├─ CLAUDE.md
+│  │  └─ settings.example.json
+│  ├─ gemini/
+│  ├─ grok/
+│  └─ windsurf/
+├─ system-prompts/
+│  └─ README.md                   # 旧路径迁移入口
 ├─ templates/base-project/        # 通用项目骨架
 ├─ scripts/
 │  ├─ install-skills.sh
@@ -236,8 +246,9 @@ agent-kit/
 | 文档 | 说明 |
 |---|---|
 | [AGENTS.md](./AGENTS.md) | AI 协作约束、公开分发约定和发布前验证规则。 |
-| [System Prompts](./system-prompts/README.md) | 不同宿主提示词的特点、入口和选用建议。 |
-| [兼容性说明](./docs/compatibility.md) | `skills/`、`system-prompts/` 和项目模板规则的职责分工。 |
+| [Coding Environments](./environments/README.md) | 不同 coding agent 的配置入口、资产分层和迁移映射。 |
+| [兼容性说明](./docs/compatibility.md) | `skills/`、`environments/` 和项目模板规则的职责分工。 |
+| [System Prompts 迁移说明](./system-prompts/README.md) | 旧路径到新环境目录的映射。 |
 | [发布检查清单](./docs/publishing-checklist.md) | 公开发布前的文件范围、文档一致性和敏感内容扫描。 |
 | [迁移说明](./docs/migration-from-00000-model.md) | 从旧项目模板迁移到公开通用模板的注意事项。 |
 | [Changelog](./CHANGELOG.md) | 当前资产包变更记录。 |
@@ -250,8 +261,8 @@ agent-kit/
 
 | 关联入口 | 关系 |
 |---|---|
-| Codex / ChatGPT coding agent | 默认 skill 安装路径和 `AGENTS.md` 提示词入口以 Codex 约定为基线，同时允许传入任意目标目录。 |
-| Claude Code / Gemini / Grok / Windsurf | 通过 `system-prompts/` 提供宿主级规则；skill 加载能力由各宿主自身机制决定。 |
+| Codex / ChatGPT coding agent | `environments/codex/` 提供用户级 instructions、配置示例和子代理示例；skill 安装脚本仍以 Codex 默认目录为回落基线。 |
+| Claude Code / Gemini / Grok / Windsurf | 通过各自的 `environments/<host>/` 提供完整配置指南；skill 加载能力由宿主自身机制决定。 |
 | `templates/base-project/` | 新项目从模板继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |
 
 ---

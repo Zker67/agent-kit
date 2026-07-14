@@ -5,7 +5,8 @@
 ## 文件范围
 
 - [ ] `skills/` 只包含 14 个自研 skill。
-- [ ] `system-prompts/` 只包含宿主级提示词文件和公开的 `README.md` 索引。
+- [ ] `environments/` 只包含五类 coding agent 的公开指南、全局 instructions 和安全配置示例。
+- [ ] `system-prompts/` 只包含旧路径迁移用的 `README.md`。
 - [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
 - [ ] `LICENSE` 为 MIT。
@@ -16,9 +17,9 @@
 - [ ] docs 中引用的文件实际存在。
 - [ ] 模板默认 AI 入口为 `AGENTS.md`，并明确说明它是给 AI 助手读取的。
 - [ ] 模板内 `docs/`、`references/`、`plans/`、`.ai_memory/` 的职责边界说明清楚。
-- [ ] `system-prompts/` 与模板内 `.agent/rules/` 的边界说明清楚。
-- [ ] 计划写作规则只在 `pro-plans` 或项目模板中定义，`system-prompts/` 不重复绑定 `plans/` 流程。
-- [ ] `system-prompts/` 不包含个人供应商、图片/视频生成服务、真实 API 配置或本机绝对路径。
+- [ ] `environments/` 与模板内 `.agent/rules/` 的边界说明清楚。
+- [ ] 计划写作规则只在 `pro-plans` 或项目模板中定义，环境级 instructions 不重复绑定 `plans/` 流程。
+- [ ] `environments/` 不包含个人供应商、图片/视频生成服务、真实 API 配置、本机绝对路径或有效凭据。
 
 ## 敏感内容扫描
 
