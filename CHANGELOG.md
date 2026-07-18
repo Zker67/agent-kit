@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-07-18
+
+- 调整 Codex / ChatGPT coding agent 的联网检索路由，默认先用 `smart-search exa-search "<query>" --num-results 5 --format json` 做轻量来源发现，证据不足或需要多源综合时再升级到完整搜索。
+- 明确技术文档优先 Context7、已知 URL 优先 `smart-search fetch`，并说明完整搜索只部分并行，避免重复调用已经覆盖的路线。
+
 ## 0.3.0 - 2026-07-14
 
 - 将 `system-prompts/` 升级为按宿主分层的 `environments/`，覆盖 Codex、Claude Code、Gemini、Grok CLI 和 Windsurf。
