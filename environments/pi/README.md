@@ -77,6 +77,10 @@ pi install npm:@complexthings/pi-dynamic-context-pruning
 pi install npm:pi-codex-goal
 pi install npm:@ff-labs/pi-fff
 pi install git:github.com/justhil/pi-fast-context
+pi install npm:@juicesharp/rpiv-ask-user-question
+pi install npm:pi-tool-display
+pi install npm:pi-markdown-preview
+pi install npm:pi-nano-context
 ```
 
 | Package | 作用 |
@@ -86,10 +90,23 @@ pi install git:github.com/justhil/pi-fast-context
 | `pi-codex-goal` | 为长任务增加可验证目标和持续执行状态。 |
 | `pi-fff` | 精确文件与内容检索，补充 `rg` 和内置只读工具。 |
 | `pi-fast-context` | 语义代码搜索，用于未知位置、调用链和跨文件探索。 |
+| `rpiv-ask-user-question` | 提供结构化用户提问工具，适合有限选项和关键决策。 |
+| `pi-tool-display` | 提供紧凑的工具调用、结果和 diff 显示。 |
+| `pi-markdown-preview` | 提供 Markdown、LaTeX 和代码预览，以及 HTML、PDF、PNG 等导出能力。 |
+| `pi-nano-context` | 用分段占用条显示当前上下文使用情况。 |
 
 Pi packages 和 extensions 能执行任意本机代码。安装前应检查来源、版本和代码；更新时使用 `pi update --extensions`，同时更新 Pi 和 packages 时使用 `pi update --all`。
 
 示例保留 `defaultProjectTrust: "ask"`。项目 trust 只决定是否加载项目级 `.pi/settings.json`、packages 和 extensions，不是文件系统或命令执行 sandbox。
+
+### 显示与交互优化
+
+- `rpiv-ask-user-question` 注册 `ask_user_question` 工具。缺失信息会显著改变方案、且问题适合有限选项时使用；简单单一问题仍可直接文本询问。
+- `pi-tool-display` 默认提供 OpenCode 风格的紧凑工具调用与 diff 显示，可通过 `/tool-display` 调整。
+- `pi-markdown-preview` 注册 `/preview`、`/preview-browser`、`/preview-pdf`、`/preview-clear-cache` 和 `preview_export`。渲染依赖 Pandoc，终端或 PNG 预览还需要可用的 Chromium 浏览器。
+- `pi-nano-context` 用分段上下文占用条替换默认计量显示，不参与上下文裁剪策略。
+
+安装或更新 package 后执行 `/reload`，再检查对应命令、工具和 widget 是否已经注册。扩展兼容性以目标 Pi 版本中的实际运行结果为准。
 
 ## 模型与努力程度
 
@@ -141,6 +158,8 @@ pi list
 /goal
 /fff-health
 /fast-context-status
+/tool-display
+/preview
 ```
 
 也可以用 RPC 只读检查主模型和努力程度，不触发模型调用：

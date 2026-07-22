@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 - 2026-07-22
+
+- 为 Pi 环境补充结构化用户提问、紧凑工具显示、Markdown 预览导出和分段上下文占用条四个推荐 package。
+- 更新 `settings.example.json` 和安装清单，并补充 `/reload` 后的命令、工具与 widget 验证方式。
+- 在 Pi 全局 instructions 中明确 `ask_user_question` 和 `preview_export` 的使用边界，并记录 Markdown 预览所需的 Pandoc 与 Chromium 依赖。
+
 ## 0.4.0 - 2026-07-22
 
 - 新增 Pi Coding Agent 环境，提供用户级 `AGENTS.md`、`settings.json` 和 `models.json` 公开示例。
