@@ -1,0 +1,16 @@
+{
+  "defaultProvider": "custom-responses",
+  "defaultModel": "gpt-5.6-sol",
+  "defaultThinkingLevel": "xhigh",
+  "defaultProjectTrust": "ask",
+  "packages": [
+    "npm:pi-subagents",
+    "npm:@complexthings/pi-dynamic-context-pruning",
+    "npm:pi-codex-goal",
+    "npm:@ff-labs/pi-fff",
+    "git:github.com/justhil/pi-fast-context"
+  ],
+  "subagents": {
+    "defaultModel": "custom-responses/gpt-5.6-sol:medium"
+  }
+}

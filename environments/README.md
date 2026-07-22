@@ -7,6 +7,7 @@
 | 环境 | 配置指南 | 全局 instructions | 主要配置入口 |
 |---|---|---|---|
 | Codex / ChatGPT coding agent | [`codex/README.md`](./codex/README.md) | [`codex/AGENTS.md`](./codex/AGENTS.md) | `~/.codex/config.toml`、`~/.codex/agents/*.toml` |
+| Pi Coding Agent | [`pi/README.md`](./pi/README.md) | [`pi/AGENTS.md`](./pi/AGENTS.md) | `~/.pi/agent/settings.json`、`~/.pi/agent/models.json` |
 | Claude Code | [`claude-code/README.md`](./claude-code/README.md) | [`claude-code/CLAUDE.md`](./claude-code/CLAUDE.md) | `~/.claude/settings.json` |
 | Gemini / Antigravity 风格工具 | [`gemini/README.md`](./gemini/README.md) | [`gemini/GEMINI.md`](./gemini/GEMINI.md) | `~/.gemini/GEMINI.md` 及宿主自己的设置入口 |
 | Grok CLI | [`grok/README.md`](./grok/README.md) | [`grok/AGENTS.md`](./grok/AGENTS.md) | `~/.grok/config.toml` |
@@ -48,3 +49,5 @@
 | `system-prompts/WINDSURF.md` | `environments/windsurf/global_rules.md` |
 
 [`system-prompts/README.md`](../system-prompts/README.md) 暂时保留为迁移入口，不再保存规则正文。
+
+Pi 环境是直接新增的配置入口，没有对应的旧 `system-prompts/` 文件。

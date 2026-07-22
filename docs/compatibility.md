@@ -14,6 +14,7 @@
 | 环境目录 | 目标宿主 | 全局 instructions |
 |---|---|---|
 | `environments/codex/` | Codex / ChatGPT coding agent | `AGENTS.md` → `~/.codex/AGENTS.md` |
+| `environments/pi/` | Pi Coding Agent | `AGENTS.md` → `~/.pi/agent/AGENTS.md` |
 | `environments/claude-code/` | Claude Code | `CLAUDE.md` → `~/.claude/CLAUDE.md` |
 | `environments/gemini/` | Gemini / Antigravity 风格工具 | `GEMINI.md` → `~/.gemini/GEMINI.md` |
 | `environments/grok/` | Grok CLI | `AGENTS.md` → `~/.grok/AGENTS.md` |

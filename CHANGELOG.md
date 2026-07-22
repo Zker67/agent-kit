@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 - 2026-07-22
+
+- 新增 Pi Coding Agent 环境，提供用户级 `AGENTS.md`、`settings.json` 和 `models.json` 公开示例。
+- 记录主代理 `xhigh`、默认子代理 `medium`、仅关闭 `minimal`、OpenAI Responses、图片输入和 reasoning 的配置思路。
+- 增加 `pi-subagents`、动态上下文裁剪、目标模式、FFF 和 fast-context 的 package 组合与运行时验证方法。
+- 明确只全局安装 Pi CLI，不全局安装 `ai-sdk`；provider 凭据和真实服务地址继续留在个人环境配置中。
+- 同步 README、环境索引、兼容性说明、发布检查清单和迁移文档中的环境数量与路径。
+
 ## 0.3.1 - 2026-07-18
 
 - 调整 Codex / ChatGPT coding agent 的联网检索路由，默认先用 `smart-search exa-search "<query>" --num-results 5 --format json` 做轻量来源发现，证据不足或需要多源综合时再升级到完整搜索。

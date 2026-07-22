@@ -5,7 +5,7 @@
 ## 保留内容
 
 - 14 个自研 skill。
-- 5 类 coding environment 配置指南及其全局 instructions。
+- 6 类 coding environment 配置指南及其全局 instructions。
 - 基础项目模板中的通用 AI 协作结构：`AGENTS.md`、`.agent/rules/`、`docs/`、`references/`、`.ai_memory/` 说明、`.exp/`、`.ui/` 和 `plans/`。
 
 ## 移除或泛化内容

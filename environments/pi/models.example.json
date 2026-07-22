@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "custom-responses": {
+      "name": "Custom Responses API",
+      "baseUrl": "https://api.example.com/v1",
+      "api": "openai-responses",
+      "apiKey": "$OPENAI_COMPATIBLE_API_KEY",
+      "authHeader": true,
+      "models": [
+        {
+          "id": "gpt-5.6-sol",
+          "name": "GPT-5.6 Sol via Custom Responses API",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": "xhigh",
+            "max": "max"
+          },
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 272000,
+          "maxTokens": 128000
+        }
+      ]
+    }
+  }
+}

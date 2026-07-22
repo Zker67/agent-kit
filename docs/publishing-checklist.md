@@ -5,7 +5,7 @@
 ## 文件范围
 
 - [ ] `skills/` 只包含 14 个自研 skill。
-- [ ] `environments/` 只包含五类 coding agent 的公开指南、全局 instructions 和安全配置示例。
+- [ ] `environments/` 只包含六类 coding agent 的公开指南、全局 instructions 和安全配置示例。
 - [ ] `system-prompts/` 只包含旧路径迁移用的 `README.md`。
 - [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
