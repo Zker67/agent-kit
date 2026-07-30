@@ -30,7 +30,7 @@ Copy-Item .\environments\codex\AGENTS.md "$HOME\.codex\AGENTS.md"
 
 ## 配置分工
 
-- `AGENTS.md`：语言、授权边界、工作方式、验证、安全和工具路由。
+- `AGENTS.md`：语言与回复、授权边界、工作原则、验证、安全和具体工具路由。
 - `config.toml`：主模型、推理强度、权限、sandbox、MCP 和宿主功能。
 - `agents/*.toml`：子代理角色、模型和推理强度。
 - 项目根 `AGENTS.md`：项目技术栈、测试命令、目录边界和部署约束。
@@ -52,10 +52,10 @@ Copy-Item .\environments\codex\AGENTS.md "$HOME\.codex\AGENTS.md"
 
 按需在 Codex 中配置以下能力：
 
-- 文档检索 MCP，例如 Context7。
-- 语义代码搜索 MCP，例如 fast-context。
-- 专业搜索 CLI。
-- Codex 内置 Browser；依赖用户已有 Chrome 登录态时使用 Chrome 扩展连接的浏览器。
+- 文档检索使用 Context7。
+- 语义代码搜索使用 `mcp__fast_context__fast_context_search`。
+- 联网检索使用 `smart-search` 的 `exa-search`、`fetch` 和 `search` 路线。
+- 本地网页验证使用 Codex 内置 Browser；依赖用户已有 Chrome 登录态时使用 Chrome 扩展连接的浏览器。
 - 独立 TOML 定义的 subagent 角色。
 
 公开配置不包含 server URL、token、个人 provider 或本机路径。把这些内容留在自己的 `config.toml`、环境变量或密钥管理方案中。
