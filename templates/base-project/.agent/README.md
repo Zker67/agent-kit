@@ -7,8 +7,7 @@
 ```text
 .agent/
 └── rules/
-    ├── dev.md
-    └── memory.md
+    └── dev.md
 ```
 
 ## 规则文件格式

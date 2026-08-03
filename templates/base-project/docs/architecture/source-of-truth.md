@@ -22,10 +22,6 @@
 | 外部文档、标准、教程、资料链接 | `references/external-docs/` | 当前项目事实应沉淀到 `docs/` |
 | 外部代码库、参考实现、对比分析 | `references/external-repos/` | 采纳后的当前实现事实写入 `docs/` 或代码 |
 | 项目级 AI 规则 | `.agent/rules/` | AGENTS 只说明入口 |
-| 长期上下文和当前任务记忆 | `.ai_memory/` | 不替代 README、docs 或 plans |
-| 可复用经验 | `.exp/` | 不承担当前项目事实源 |
-| UI/UX 风格说明 | `.ui/` | README 只做入口 |
-| 本地个人笔记 | 由 `MEMO.example.md` 复制出的本地文件 | 默认不作为项目事实源 |
 
 ## 外部参考规则
 

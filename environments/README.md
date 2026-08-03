@@ -7,6 +7,7 @@
 | 环境 | 配置指南 | 全局 instructions | 主要配置入口 |
 |---|---|---|---|
 | Codex / ChatGPT coding agent | [`codex/README.md`](./codex/README.md) | [`codex/AGENTS.md`](./codex/AGENTS.md) | `~/.codex/config.toml`、`~/.codex/agents/*.toml` |
+| Cline IDE / CLI | [`cline/README.md`](./cline/README.md) | [`cline/000-global.md`](./cline/000-global.md) | `~/Documents/Cline/Rules/`、`~/.cline/`、项目 `.cline/` |
 | Pi Coding Agent | [`pi/README.md`](./pi/README.md) | [`pi/AGENTS.md`](./pi/AGENTS.md) | `~/.pi/agent/settings.json`、`~/.pi/agent/models.json` |
 | Claude Code | [`claude-code/README.md`](./claude-code/README.md) | [`claude-code/CLAUDE.md`](./claude-code/CLAUDE.md) | `~/.claude/settings.json` |
 | Gemini / Antigravity 风格工具 | [`gemini/README.md`](./gemini/README.md) | [`gemini/GEMINI.md`](./gemini/GEMINI.md) | `~/.gemini/GEMINI.md` 及宿主自己的设置入口 |
@@ -36,18 +37,8 @@
 4. 按指南安装 skills，并补齐 MCP、CLI、Browser 或 subagents。
 5. 运行指南中的最小验证，确认宿主确实加载了目标文件。
 
-## 从 `system-prompts/` 迁移
+## 项目规则兼容
 
-旧目录只表示“提示词文件”，无法覆盖完整的 coding environment 配置。当前映射如下：
+基础项目模板以根 `AGENTS.md` 作为跨工具的项目协作入口。Codex 与 Cline 可以直接读取；其他宿主若只识别 `CLAUDE.md`、`GEMINI.md` 或专用规则目录，可以创建一个很薄的宿主入口，指向 `AGENTS.md` 或只补充宿主专属差异。
 
-| 旧文件 | 新位置 |
-|---|---|
-| `system-prompts/CHATGPT.md` | `environments/codex/AGENTS.md` |
-| `system-prompts/CLAUDE.md` | `environments/claude-code/CLAUDE.md` |
-| `system-prompts/GEMINI.md` | `environments/gemini/GEMINI.md` |
-| `system-prompts/GROK.md` | `environments/grok/AGENTS.md` |
-| `system-prompts/WINDSURF.md` | `environments/windsurf/global_rules.md` |
-
-[`system-prompts/README.md`](../system-prompts/README.md) 暂时保留为迁移入口，不再保存规则正文。
-
-Pi 环境是直接新增的配置入口，没有对应的旧 `system-prompts/` 文件。
+同一项目规则不要在多个宿主文件中完整复制。通用规则留在 `AGENTS.md`，宿主文件只做入口或差异层。

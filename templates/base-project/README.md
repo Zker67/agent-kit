@@ -54,10 +54,6 @@
 - **规则文件**：`.agent/rules/*.md`，使用 YAML frontmatter + Markdown。
 - **目录说明**：`.agent/README.md`，说明 `.agent/` 的组织方式与规则写法。
 
-### 记忆系统
-
-`.ai_memory/` 只提供结构说明。是否记录长期上下文、是否提交到版本库，由项目维护者按协作方式决定。
-
 ### 项目文档
 
 `docs/` 承载当前代码和程序的长期文档。`README.md` 只做项目总览和入口分流，`AGENTS.md` 只做 AI 协作约束；同一类信息的主维护位置以 `docs/architecture/source-of-truth.md` 为准。
@@ -66,17 +62,12 @@
 
 `references/` 用于记录可参考的外部文档和外部仓库。重要来源可以按自身结构建立子目录，记录上游目录、版本、commit、许可、借鉴点和采纳结论；采纳后的当前项目事实应回写到 `docs/` 或源码。
 
-### 本地个人笔记
-
-`MEMO.example.md` 是笔记模板。若需要记录个人想法，可复制为自己的本地文件，并按项目策略决定是否提交。
-
 ## 文档结构
 
 ```text
 项目根目录/
 ├── AGENTS.md                 # AI 协作入口
 ├── README.md                 # 项目说明
-├── MEMO.example.md           # 本地个人笔记模板
 ├── docs/                     # 当前代码和程序的长期文档
 │   ├── README.md
 │   ├── api.md
@@ -91,12 +82,9 @@
 │   └── external-repos/
 ├── plans/                    # 计划、设计和改进追踪
 │   └── README.md
-├── .agent/                   # AI 项目规则
+└── .agent/                   # AI 项目规则
 │   ├── README.md
 │   └── rules/
-├── .ai_memory/               # 长期上下文说明与空占位
-├── .exp/                     # 可复用经验文档
-└── .ui/                      # UI/UX 风格说明
 ```
 
 ## 开发路线
