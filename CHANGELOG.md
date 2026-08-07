@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0 - 2026-08-07
+
+- 新增 Cursor IDE Agent 环境：提供与内置 harness 去重的精简 `user-rules.md`、`mcp.example.json`（仅 `context7` + `fast-context`）和可选的 Claude / 外部 MCP 发现脱钩 `settings.example.json`。
+- User Rules 只保留中文偏好、授权边界与 `fast-context` / `context7` / `smart-search` 路由，不重复 Cursor 默认工具循环与验证说教。
+- 明确 Cursor 全局入口为 Settings → User Rules，不把 `~/.cursor/rules` 当作全局规则目录；skills 安装到 `~/.cursor/skills/`。
+- 将 coding environment 数量更新为八类，并同步 README、环境索引和发布检查清单。
+
 ## 0.5.0 - 2026-08-03
 
 - 新增 Cline IDE / CLI 环境，提供与内置系统提示词去重但明确保留 skill、MCP 和搜索工具路由的 `000-global.md`，以及配置分层、skills 安装、CLI 权限和运行时验证说明。

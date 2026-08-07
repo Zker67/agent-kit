@@ -4,7 +4,7 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`7 类 coding environments` · `14 个 skills` · `可复制配置资产` · `通用项目模板`
+`8 类 coding environments` · `14 个 skills` · `可复制配置资产` · `通用项目模板`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
@@ -36,7 +36,7 @@
 | **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
-| **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
+| **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 结构。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
@@ -116,6 +116,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 |---|---|---|
 | Codex / ChatGPT coding agent | [`environments/codex/README.md`](./environments/codex/README.md) | [`environments/codex/AGENTS.md`](./environments/codex/AGENTS.md) → `~/.codex/AGENTS.md` |
 | Cline IDE / CLI | [`environments/cline/README.md`](./environments/cline/README.md) | [`environments/cline/000-global.md`](./environments/cline/000-global.md) → `~/Documents/Cline/Rules/000-global.md` |
+| Cursor IDE Agent | [`environments/cursor/README.md`](./environments/cursor/README.md) | [`environments/cursor/user-rules.md`](./environments/cursor/user-rules.md) → Settings → Rules → User Rules |
 | Pi Coding Agent | [`environments/pi/README.md`](./environments/pi/README.md) | [`environments/pi/AGENTS.md`](./environments/pi/AGENTS.md) → `~/.pi/agent/AGENTS.md` |
 | Claude Code | [`environments/claude-code/README.md`](./environments/claude-code/README.md) | [`environments/claude-code/CLAUDE.md`](./environments/claude-code/CLAUDE.md) → `~/.claude/CLAUDE.md` |
 | Gemini / Antigravity 风格工具 | [`environments/gemini/README.md`](./environments/gemini/README.md) | [`environments/gemini/GEMINI.md`](./environments/gemini/GEMINI.md) → `~/.gemini/GEMINI.md` |
@@ -224,6 +225,11 @@ agent-kit/
 │  ├─ cline/
 │  │  ├─ README.md
 │  │  └─ 000-global.md
+│  ├─ cursor/
+│  │  ├─ README.md
+│  │  ├─ user-rules.md
+│  │  ├─ mcp.example.json
+│  │  └─ settings.example.json
 │  ├─ pi/
 │  │  ├─ README.md
 │  │  ├─ AGENTS.md
@@ -266,6 +272,7 @@ agent-kit/
 |---|---|
 | Codex / ChatGPT coding agent | `environments/codex/` 提供用户级 instructions、配置示例和子代理示例；skill 安装脚本仍以 Codex 默认目录为回落基线。 |
 | Cline IDE / CLI | `environments/cline/` 提供全局规则、配置分层、skills、MCP、hooks、plugins 和 CLI 安全入口；项目通用规则继续使用根 `AGENTS.md`。 |
+| Cursor IDE Agent | `environments/cursor/` 提供精简 User Rules、MCP 示例（`context7` + `fast-context`）和可选的 Claude / 外部 MCP 发现脱钩设置；skills 可安装到 `~/.cursor/skills/`。 |
 | Pi Coding Agent | `environments/pi/` 提供用户级 instructions、Responses API 模型示例、主/子代理努力程度和 package 组合；skills 可安装到 `~/.pi/agent/skills/`。 |
 | Claude Code / Gemini / Grok / Windsurf | 通过各自的 `environments/<host>/` 提供完整配置指南；skill 加载能力由宿主自身机制决定。 |
 | `templates/base-project/` | 新项目从模板继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |

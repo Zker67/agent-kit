@@ -8,6 +8,7 @@
 |---|---|---|---|
 | Codex / ChatGPT coding agent | [`codex/README.md`](./codex/README.md) | [`codex/AGENTS.md`](./codex/AGENTS.md) | `~/.codex/config.toml`、`~/.codex/agents/*.toml` |
 | Cline IDE / CLI | [`cline/README.md`](./cline/README.md) | [`cline/000-global.md`](./cline/000-global.md) | `~/Documents/Cline/Rules/`、`~/.cline/`、项目 `.cline/` |
+| Cursor IDE Agent | [`cursor/README.md`](./cursor/README.md) | [`cursor/user-rules.md`](./cursor/user-rules.md) | Cursor Settings → Rules、`~/.cursor/mcp.json`、User `settings.json` |
 | Pi Coding Agent | [`pi/README.md`](./pi/README.md) | [`pi/AGENTS.md`](./pi/AGENTS.md) | `~/.pi/agent/settings.json`、`~/.pi/agent/models.json` |
 | Claude Code | [`claude-code/README.md`](./claude-code/README.md) | [`claude-code/CLAUDE.md`](./claude-code/CLAUDE.md) | `~/.claude/settings.json` |
 | Gemini / Antigravity 风格工具 | [`gemini/README.md`](./gemini/README.md) | [`gemini/GEMINI.md`](./gemini/GEMINI.md) | `~/.gemini/GEMINI.md` 及宿主自己的设置入口 |

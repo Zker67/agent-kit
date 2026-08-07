@@ -1,0 +1,6 @@
+{
+  "chat.useClaudeMd": false,
+  "chat.useClaudeHooks": false,
+  "chat.agentHost.claudeAgent.enabled": false,
+  "mcp.discovery.enabled": false
+}
