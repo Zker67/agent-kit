@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`8 类 coding environments` · `14 个 skills` · `可复制配置资产` · `通用项目模板`
+`9 类 coding environments` · `11 个 skills` · `可复制配置资产` · `通用项目模板`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-14-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-11-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -36,7 +36,7 @@
 | **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
-| **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
+| **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 结构。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
@@ -117,6 +117,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 | Codex / ChatGPT coding agent | [`environments/codex/README.md`](./environments/codex/README.md) | [`environments/codex/AGENTS.md`](./environments/codex/AGENTS.md) → `~/.codex/AGENTS.md` |
 | Cline IDE / CLI | [`environments/cline/README.md`](./environments/cline/README.md) | [`environments/cline/000-global.md`](./environments/cline/000-global.md) → `~/Documents/Cline/Rules/000-global.md` |
 | Cursor IDE Agent | [`environments/cursor/README.md`](./environments/cursor/README.md) | [`environments/cursor/user-rules.md`](./environments/cursor/user-rules.md) → Settings → Rules → User Rules |
+| OpenCode | [`environments/opencode/README.md`](./environments/opencode/README.md) | [`environments/opencode/AGENTS.md`](./environments/opencode/AGENTS.md) → `~/.config/opencode/AGENTS.md` |
 | Pi Coding Agent | [`environments/pi/README.md`](./environments/pi/README.md) | [`environments/pi/AGENTS.md`](./environments/pi/AGENTS.md) → `~/.pi/agent/AGENTS.md` |
 | Claude Code | [`environments/claude-code/README.md`](./environments/claude-code/README.md) | [`environments/claude-code/CLAUDE.md`](./environments/claude-code/CLAUDE.md) → `~/.claude/CLAUDE.md` |
 | Gemini / Antigravity 风格工具 | [`environments/gemini/README.md`](./environments/gemini/README.md) | [`environments/gemini/GEMINI.md`](./environments/gemini/GEMINI.md) → `~/.gemini/GEMINI.md` |
@@ -148,7 +149,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 
 ## 外部工具
 
-`skills/` 可以单独安装。采用 [`environments/`](./environments/) 中的全局 instructions，或启用 `use-internet`、`pro-copy` 这类路由 skill 后，下面这些外部能力会成为优先路线；按自己的宿主配置补齐 MCP/CLI，或把规则里的工具名改成宿主实际提供的名字。
+`skills/` 可以单独安装。采用 [`environments/`](./environments/) 中的全局 instructions，或使用 `pro-copy` 这类需要外部资料的 skill 时，下面这些外部能力会成为优先路线；按自己的宿主配置补齐 MCP/CLI，或把规则里的工具名改成宿主实际提供的名字。
 
 | 能力 | 何时需要 | 建议动作 |
 |---|---|---|
@@ -168,18 +169,15 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 |---|---|
 | `pro-copy` | 搜索同类项目、借鉴成熟开源实现。 |
 | `pro-exp` | 将解法沉淀为 `.exp/` 经验文档。 |
-| `pro-explain` | 面向初学者解释代码或补充必要注释。 |
+| `pro-explain` | 基于源码证据，按调用链、数据流或错误链面向初学者做只读解释。 |
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
-| `pro-must` | 严格按用户指定方案执行。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
 | `pro-rule` | 将稳定偏好整理为 `.agent/rules/`。 |
 | `pro-struct` | 目录结构整理、组件化和复用性治理。 |
 | `pro-summary` | README、面向 AI 的 AGENTS.md、docs 与 plans 的一致性审查。 |
 | `pro-test` | 测试、调试和验证流程。 |
-| `use-chinese` | 默认使用简体中文输出。 |
-| `use-internet` | 联网检索与资料核验路由。 |
 
 ---
 
@@ -214,7 +212,7 @@ agent-kit/
 ├─ skills/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-test/                   # 测试、调试与验证 skill
-│  └─ use-internet/               # 联网核验路由 skill
+│  └─ pro-summary/                # 文档一致性审查 skill
 ├─ environments/                 # 各 coding agent 的完整环境配置指南
 │  ├─ README.md
 │  ├─ codex/
@@ -230,6 +228,9 @@ agent-kit/
 │  │  ├─ user-rules.md
 │  │  ├─ mcp.example.json
 │  │  └─ settings.example.json
+│  ├─ opencode/
+│  │  ├─ README.md
+│  │  └─ AGENTS.md
 │  ├─ pi/
 │  │  ├─ README.md
 │  │  ├─ AGENTS.md
@@ -273,6 +274,7 @@ agent-kit/
 | Codex / ChatGPT coding agent | `environments/codex/` 提供用户级 instructions、配置示例和子代理示例；skill 安装脚本仍以 Codex 默认目录为回落基线。 |
 | Cline IDE / CLI | `environments/cline/` 提供全局规则、配置分层、skills、MCP、hooks、plugins 和 CLI 安全入口；项目通用规则继续使用根 `AGENTS.md`。 |
 | Cursor IDE Agent | `environments/cursor/` 提供精简 User Rules、MCP 示例（`context7` + `fast-context`）和可选的 Claude / 外部 MCP 发现脱钩设置；skills 可安装到 `~/.cursor/skills/`。 |
+| OpenCode | `environments/opencode/` 提供与内置系统提示词去重的全局 `AGENTS.md` 和配置分层说明；skills 可安装到 `~/.config/opencode/skills/`。 |
 | Pi Coding Agent | `environments/pi/` 提供用户级 instructions、Responses API 模型示例、主/子代理努力程度和 package 组合；skills 可安装到 `~/.pi/agent/skills/`。 |
 | Claude Code / Gemini / Grok / Windsurf | 通过各自的 `environments/<host>/` 提供完整配置指南；skill 加载能力由宿主自身机制决定。 |
 | `templates/base-project/` | 新项目从模板继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |

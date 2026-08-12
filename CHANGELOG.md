@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 - 2026-08-12
+
+- 移除职责属于宿主全局规则或工具路由的 `pro-must`、`use-chinese` 和 `use-internet` skills，并同步清理引用与数量。
+- 精修 `pro-explain` 的解释方法，补充对象分类、最小证据、调用链 / 数据流 / 报错链、初学者表达、证据强度和输出自检。
+
+## 0.7.0 - 2026-08-10
+
+- 新增 OpenCode 环境：提供与 1.18 内置系统提示词去重的精简全局 `AGENTS.md`，并说明自动发现、配置分层、skills、MCP、凭据和重启验证方式。
+- OpenCode 全局规则参考 Codex 基线，只补充简体中文、授权边界、成功标准、根因导向、`fast-context` / Context7 / `smart-search` 路由、前端真实浏览器验证边界和安全要求。
+- 将 coding environment 数量更新为九类，并同步 README、环境索引、目录树和发布检查清单。
+
 ## 0.6.0 - 2026-08-07
 
 - 新增 Cursor IDE Agent 环境：提供与内置 harness 去重的精简 `user-rules.md`、`mcp.example.json`（仅 `context7` + `fast-context`）和可选的 Claude / 外部 MCP 发现脱钩 `settings.example.json`。

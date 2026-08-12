@@ -4,8 +4,8 @@
 
 ## 文件范围
 
-- [ ] `skills/` 只包含 14 个自研 skill。
-- [ ] `environments/` 只包含八类 coding agent 的公开指南、全局 instructions 和安全配置示例。
+- [ ] `skills/` 只包含 11 个自研 skill。
+- [ ] `environments/` 只包含九类 coding agent 的公开指南、全局 instructions 和安全配置示例。
 - [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
 - [ ] `LICENSE` 为 MIT。

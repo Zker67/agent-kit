@@ -92,7 +92,7 @@ Windows 上示例使用 `cmd /c npx ...`；macOS / Linux 可改为直接 `"comma
 
 - 文档检索：`context7` MCP。
 - 语义代码搜索：`fast-context` MCP（`fast_context_search`）。
-- 联网检索：本机 `smart-search` CLI（见 `use-internet` skill）；名称不同时同步改 User Rules。
+- 联网检索：本机 `smart-search` CLI；名称不同时同步改 User Rules。
 - 浏览器：使用会话中真实暴露的浏览器工具（常见 `cursor-ide-browser`）。
 - 精确字符串 / 文件名：Grep / Glob。
 
