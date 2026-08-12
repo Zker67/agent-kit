@@ -79,7 +79,9 @@
 ├── references/               # 外部文档和外部仓库参考
 │   ├── README.md
 │   ├── external-docs/
+│   │   └── README.md
 │   └── external-repos/
+│       └── README.md
 ├── plans/                    # 计划、设计和改进追踪
 │   └── README.md
 └── .agent/                   # AI 项目规则

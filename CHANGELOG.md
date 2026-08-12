@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0 - 2026-08-12
+
+- 新增 `pro-newproj`，用于新建项目或为刚创建的仓库补齐 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 完整文档骨架。
+- 将原 `templates/base-project/` 迁入 `skills/pro-newproj/assets/base-project/`，作为唯一事实源，避免根模板与 skill 双重维护。
+- 将原 `scripts/new-project.ps1` 收入 `pro-newproj`，默认拒绝非空目录；显式 `-Merge` 时只补缺失文件，不覆盖已有内容。
+
 ## 0.8.0 - 2026-08-12
 
 - 移除职责属于宿主全局规则或工具路由的 `pro-must`、`use-chinese` 和 `use-internet` skills，并同步清理引用与数量。

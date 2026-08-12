@@ -1,0 +1,23 @@
+{
+  "skill_name": "pro-newproj",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在当前工作目录下新建一个叫 invoice-lab 的项目，先只建立完整文档结构。它是一个帮助自由职业者整理发票的本地工具，技术栈还没决定，不要初始化 Git，也不要安装依赖。",
+      "expected_output": "创建 invoice-lab 目录并复制完整文档骨架；用已知项目定位更新入口文档，未知技术栈保留明确占位；不执行 Git 或依赖安装。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我刚在 workspace 里创建了 weather-console，里面已经有 README.md 和 src 目录。请保留现有 README，只给这个新仓库补齐 AGENTS、docs、references、plans 和 .agent/rules 结构。",
+      "expected_output": "以安全合并模式补齐缺失文件，不覆盖 README.md 或其他已有文件，并明确报告跳过项。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "这个仓库已经开发半年了，只帮我写一个数据库迁移计划到 plans 目录，先不要改代码。",
+      "expected_output": "识别为 pro-plans 场景，不创建或迁入完整新项目骨架，也不改业务代码。",
+      "files": []
+    }
+  ]
+}

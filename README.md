@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `11 个 skills` · `可复制配置资产` · `通用项目模板`
+`9 类 coding environments` · `12 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-11-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-12-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -25,7 +25,7 @@
   <img src="./assets/hero.webp" alt="neon blueprint panels connected by light beams, representing an agent skill kit copied into different coding assistants" width="80%">
 </p>
 
-> 把“配置不同 coding agent 并安装同一套工作流”这件事——环境指南 + 全局 instructions + skills + 项目模板——收口到一个公开仓库。
+> 把“配置不同 coding agent 并安装同一套工作流”这件事——环境指南 + 全局 instructions + skills + 新项目文档骨架——收口到一个公开仓库。
 
 ---
 
@@ -37,7 +37,7 @@
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
 | **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
-| **新项目模板** | [`templates/base-project/`](./templates/base-project/) 提供通用 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 结构。 |
+| **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 | **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
 
@@ -107,7 +107,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 | **2. 安装 skills** | 支持 skill 目录的 agent 用安装脚本复制 `skills/*`；其他 agent 可以把对应 `SKILL.md` 作为规则或 workflow 参考。 |
 | **3. 安装全局 instructions** | 只复制当前环境目录中的规则文件，并先备份宿主已有配置。模型、权限、MCP 和凭据按指南合并到宿主自己的配置文件。 |
 | **4. 补齐外部工具** | 按宿主能力注册 `context7`、`fast-context`、专业搜索 CLI、浏览器 MCP 或 subagents，并让提示词中的工具名与本机配置一致。 |
-| **5. 创建项目骨架** | 新项目可运行 [`scripts/new-project.ps1`](./scripts/new-project.ps1)，或直接复制 [`templates/base-project/`](./templates/base-project/)。 |
+| **5. 创建项目骨架** | 调用 [`pro-newproj`](./skills/pro-newproj/)；skill 从自身 `assets/base-project/` 复制完整文档结构，并默认保护已有文件。 |
 | **6. 项目内收口** | 进入具体项目后，以项目根 `AGENTS.md` 为 AI 入口，README 面向人类读者，`docs/` 和 `plans/` 分别承载长期文档和计划索引。 |
 
 ### Coding environment 入口
@@ -172,6 +172,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 | `pro-explain` | 基于源码证据，按调用链、数据流或错误链面向初学者做只读解释。 |
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
+| `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
 | `pro-rule` | 将稳定偏好整理为 `.agent/rules/`。 |
@@ -187,7 +188,7 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 |---|---|
 | **文档资产** | Markdown、AGENTS.md、SKILL.md |
 | **安装脚本** | POSIX Shell、PowerShell |
-| **项目模板** | 通用目录骨架、项目级规则、文档索引 |
+| **新项目骨架** | `pro-newproj` 内置通用目录骨架、项目级规则和文档索引 |
 | **外部能力** | `context7`、`fast-context`、专业搜索 CLI、浏览器工具、subagents |
 | **质量检查** | `find`、`grep`、人工发布检查清单 |
 | **许可** | MIT |
@@ -210,6 +211,7 @@ agent-kit/
 ├─ assets/
 │  └─ hero.webp                   # README hero image
 ├─ skills/
+│  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-test/                   # 测试、调试与验证 skill
 │  └─ pro-summary/                # 文档一致性审查 skill
@@ -243,11 +245,9 @@ agent-kit/
 │  ├─ gemini/
 │  ├─ grok/
 │  └─ windsurf/
-├─ templates/base-project/        # 通用项目骨架
 ├─ scripts/
 │  ├─ install-skills.sh
-│  ├─ install-skills.ps1
-│  └─ new-project.ps1
+│  └─ install-skills.ps1
 └─ docs/
    └─ publishing-checklist.md
 ```
@@ -277,7 +277,7 @@ agent-kit/
 | OpenCode | `environments/opencode/` 提供与内置系统提示词去重的全局 `AGENTS.md` 和配置分层说明；skills 可安装到 `~/.config/opencode/skills/`。 |
 | Pi Coding Agent | `environments/pi/` 提供用户级 instructions、Responses API 模型示例、主/子代理努力程度和 package 组合；skills 可安装到 `~/.pi/agent/skills/`。 |
 | Claude Code / Gemini / Grok / Windsurf | 通过各自的 `environments/<host>/` 提供完整配置指南；skill 加载能力由宿主自身机制决定。 |
-| `templates/base-project/` | 新项目从模板继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |
+| `skills/pro-newproj/` | 新项目从 skill 内置骨架继承 AI 入口、文档分层和计划索引，再按项目实际情况补充业务事实。 |
 
 ---
 

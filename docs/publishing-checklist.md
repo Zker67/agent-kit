@@ -4,9 +4,9 @@
 
 ## 文件范围
 
-- [ ] `skills/` 只包含 11 个自研 skill。
+- [ ] `skills/` 只包含 12 个自研 skill。
 - [ ] `environments/` 只包含九类 coding agent 的公开指南、全局 instructions 和安全配置示例。
-- [ ] `templates/base-project/` 是通用模板，不包含真实项目运行态。
+- [ ] `skills/pro-newproj/assets/base-project/` 是新项目文档骨架的唯一事实源，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。
 - [ ] `LICENSE` 为 MIT。
 
@@ -14,10 +14,10 @@
 
 - [ ] `README.md` 中的 skill 数量与 `skills/` 目录一致。
 - [ ] docs 中引用的文件实际存在。
-- [ ] 模板默认 AI 入口为 `AGENTS.md`，并明确说明它是给 AI 助手读取的。
-- [ ] 模板内 `docs/`、`references/`、`plans/` 和 `.agent/rules/` 的职责边界说明清楚。
-- [ ] `environments/` 与模板内 `.agent/rules/` 的边界说明清楚。
-- [ ] 计划写作规则只在 `pro-plans` 或项目模板中定义，环境级 instructions 不重复绑定 `plans/` 流程。
+- [ ] `pro-newproj` 文档骨架默认 AI 入口为 `AGENTS.md`，并明确说明它是给 AI 助手读取的。
+- [ ] `pro-newproj` 文档骨架内 `docs/`、`references/`、`plans/` 和 `.agent/rules/` 的职责边界说明清楚。
+- [ ] `environments/` 与 `pro-newproj` 文档骨架内 `.agent/rules/` 的边界说明清楚。
+- [ ] 计划写作规则只在 `pro-plans` 或 `pro-newproj` 文档骨架中定义，环境级 instructions 不重复绑定 `plans/` 流程。
 - [ ] `environments/` 不包含个人供应商、图片/视频生成服务、真实 API 配置、本机绝对路径或有效凭据。
 
 ## 敏感内容扫描
