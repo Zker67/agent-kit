@@ -1,6 +1,6 @@
-# Gemini 环境配置
+# Antigravity / Gemini 环境配置
 
-本目录面向 Gemini CLI 及采用类似规则分层的 Antigravity 风格工具。
+本目录面向 **Antigravity**（Google Antigravity IDE / Agentic 编码系统）及兼容的 Gemini 体系工具。
 
 ## 目录内容
 
@@ -20,16 +20,17 @@ New-Item -ItemType Directory -Force "$HOME\.gemini" | Out-Null
 Copy-Item .\environments\gemini\GEMINI.md "$HOME\.gemini\GEMINI.md"
 ```
 
-## 配置分工
+## Antigravity 配置分工
 
-- 用户级 `GEMINI.md`：跨工作区稳定规则。
-- 工作区 `.agents/rules/`、仓库级 `GEMINI.md` 或 `AGENTS.md`：项目事实与约束。
-- workflows：重复的多步骤流程。
-- skills：脚本、模板、参考资料和专门能力。
-- 宿主设置：模型、权限、MCP、环境变量和工具连接。
-
-不同 Gemini 或 Antigravity 风格工具的配置文件和 skill 加载能力可能不同。安装前以当前宿主文档为准，不要把某个实现的私有目录当成通用标准。
+- **全局指令 (`~/.gemini/GEMINI.md`)**：跨工作区稳定生效的全局协作与工程规范（唯一事实源，避免在 `~/.gemini/config/` 下重复放置 `AGENTS.md`）。
+- **工作区规则**：项目事实与业务约束，放置于工作区 `.agents/rules/`、根目录 `GEMINI.md` 或 `AGENTS.md`。
+- **Workflows**：重复的多步骤标准流程，放置于 `~/.gemini/antigravity/global_workflows/` 或工作区 `.agents/workflows/`。
+- **Skills**：专用能力、自动化脚本与参考资产，挂载至 `~/.gemini/antigravity/skills/` 或由 `skills.json` 声明。
+- **运行时与扩展**：模型选型（如 Gemini 3.7 Flash/Thinking）、MCP 服务器（如 `fast-context`、`context7`）、权限与 hooks 统一由 `~/.gemini/settings.json` 与 `~/.gemini/config/` 管理。
 
 ## 验证
 
-确认目标文件存在后，新建会话检查语言、规则优先级和工具路由是否实际生效。涉及模型、权限或 MCP 时，应同时检查宿主当前配置与运行时状态。
+1. 确认文件放置于 `~/.gemini/GEMINI.md`。
+2. 新建会话检查全局规则是否正常加载，且未发生多重规则冗余注入。
+3. 检查 MCP 服务与模型配置在运行时状态中正常就绪。
+

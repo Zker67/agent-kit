@@ -12,7 +12,7 @@
 | OpenCode | [`opencode/README.md`](./opencode/README.md) | [`opencode/AGENTS.md`](./opencode/AGENTS.md) | `~/.config/opencode/opencode.json`、`~/.config/opencode/agent/*.md` |
 | Pi Coding Agent | [`pi/README.md`](./pi/README.md) | [`pi/AGENTS.md`](./pi/AGENTS.md) | `~/.pi/agent/settings.json`、`~/.pi/agent/models.json` |
 | Claude Code | [`claude-code/README.md`](./claude-code/README.md) | [`claude-code/CLAUDE.md`](./claude-code/CLAUDE.md) | `~/.claude/settings.json` |
-| Gemini / Antigravity 风格工具 | [`gemini/README.md`](./gemini/README.md) | [`gemini/GEMINI.md`](./gemini/GEMINI.md) | `~/.gemini/GEMINI.md` 及宿主自己的设置入口 |
+| Antigravity / Gemini 体系 | [`gemini/README.md`](./gemini/README.md) | [`gemini/GEMINI.md`](./gemini/GEMINI.md) | `~/.gemini/GEMINI.md`、`~/.gemini/settings.json` |
 | Grok CLI | [`grok/README.md`](./grok/README.md) | [`grok/AGENTS.md`](./grok/AGENTS.md) | `~/.grok/config.toml` |
 | Windsurf | [`windsurf/README.md`](./windsurf/README.md) | [`windsurf/global_rules.md`](./windsurf/global_rules.md) | `~/.codeium/windsurf/memories/global_rules.md` |
 
