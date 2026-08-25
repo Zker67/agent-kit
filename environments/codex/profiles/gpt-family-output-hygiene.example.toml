@@ -1,0 +1,3 @@
+# Optional overlay for the GPT family output-hygiene baseline.
+# Keep model selection in the user's main config.
+model_reasoning_effort = "medium"

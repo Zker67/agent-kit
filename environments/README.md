@@ -1,6 +1,6 @@
 # Coding Environments
 
-本目录保存不同 coding agent 宿主的完整配置指南和可复制资产。全局 instructions 只是环境配置的一部分；模型、权限、工具、skills、subagents 和项目级规则继续由各宿主自己的配置机制承载。
+本目录保存不同 coding agent 宿主的配置指南和可复制默认配置。这里主要告诉 AI 助手：应修改哪个宿主配置、如何选择全局/专用 skill，以及哪些内容必须留在宿主自己的配置中。
 
 ## 环境清单
 
@@ -18,6 +18,15 @@
 
 这些描述用于说明配置入口和资产分工，不是模型能力排名。模型、工具、上下文、规则加载和多代理能力应以宿主当前版本为准。
 
+## 修改默认配置和 skills
+
+1. 先进入目标宿主目录，读取对应的 `README.md`。
+2. 只修改仓库内的公开示例和默认 instructions；用户真实配置仍由宿主目录管理，先备份再合并。
+3. 全局自研 skill 从仓库根目录 [`skills/`](../skills/) 安装。
+4. 通用自研 skill 从仓库根目录 [`skills/`](../skills/) 获取；agent 专用 skill 从对应的 `environments/<agent>/skills/` 获取。
+5. Agent 和模型的说明见 [`docs/agents/`](../docs/agents/) 与 [`docs/models/`](../docs/models/)，不要把说明文档当作运行时配置入口。
+6. 修改后按宿主 README 的最小验证检查实际发现和加载结果。
+
 ## 统一分层
 
 每个环境按同一组边界组织：
@@ -28,16 +37,9 @@
 4. **宿主专属能力**：保存 subagents、hooks、workflows 或浏览器等配置。
 5. **项目级规则**：继续放在具体项目自己的 `AGENTS.md`、`CLAUDE.md`、`GEMINI.md` 或规则目录中。
 6. **可安装 skills**：统一来自仓库根目录 [`skills/`](../skills/)，按宿主实际扫描路径安装。
+7. **skill 分层参考**：通用 skill 在根目录 `skills/`，专用 skill 在对应的 `environments/<agent>/skills/`。
 
 同一事实只在一个层级完整定义。不要把模型参数、token、真实 server URL、本机绝对路径或项目部署流程写进公开的全局 instructions。
-
-## 使用方式
-
-1. 进入对应环境目录并阅读 `README.md`。
-2. 备份本机已有配置。
-3. 复制全局 instructions 到宿主实际识别的入口。
-4. 按指南安装 skills，并补齐 MCP、CLI、Browser 或 subagents。
-5. 运行指南中的最小验证，确认宿主确实加载了目标文件。
 
 ## 项目规则兼容
 

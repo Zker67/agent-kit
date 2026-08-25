@@ -9,6 +9,7 @@
 | [`AGENTS.md`](./AGENTS.md) | 用户级全局 instructions | `~/.codex/AGENTS.md` |
 | [`config.example.toml`](./config.example.toml) | 主任务模型与推理强度示例 | 参考后合并到 `~/.codex/config.toml` |
 | [`agents/default.example.toml`](./agents/default.example.toml) | 子代理角色示例 | 参考后写入 `~/.codex/agents/<role>.toml` |
+| [`profiles/`](./profiles/) | 可选模型/推理参数 overlay 示例 | 参考后按 Codex profile 机制合并 |
 
 ## 安装全局 instructions
 
@@ -33,6 +34,7 @@ Copy-Item .\environments\codex\AGENTS.md "$HOME\.codex\AGENTS.md"
 - `AGENTS.md`：语言与回复、授权边界、工作原则、验证、安全和具体工具路由。
 - `config.toml`：主模型、推理强度、权限、sandbox、MCP 和宿主功能。
 - `agents/*.toml`：子代理角色、模型和推理强度。
+- `profiles/*.toml`：可选模型和推理参数 overlay；统一输出 guard 仍在 `AGENTS.md`。
 - 项目根 `AGENTS.md`：项目技术栈、测试命令、目录边界和部署约束。
 - `skills/`：重复工作流、脚本、模板和专门能力。
 
@@ -49,6 +51,8 @@ Copy-Item .\environments\codex\AGENTS.md "$HOME\.codex\AGENTS.md"
 ```powershell
 .\scripts\install-skills.ps1 -Target "$HOME\.codex\skills"
 ```
+
+Codex 专用 skill 配置参考见 [`skills/README.md`](./skills/README.md)；模型特性记录见 [`../../docs/models/`](../../docs/models/)。
 
 按需在 Codex 中配置以下能力：
 

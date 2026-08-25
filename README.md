@@ -39,7 +39,6 @@
 | **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
-| **公开发布检查** | [`docs/publishing-checklist.md`](./docs/publishing-checklist.md) 约束敏感内容、路径、数量和文档一致性。 |
 
 ---
 
@@ -189,7 +188,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | **安装脚本** | POSIX Shell、PowerShell |
 | **新项目骨架** | `pro-newproj` 内置通用目录骨架、项目级规则和文档索引 |
 | **外部能力** | `context7`、`fast-context`、专业搜索 CLI、浏览器工具、subagents |
-| **质量检查** | `find`、`grep`、人工发布检查清单 |
+| **质量检查** | `find`、`grep`、`git diff --check` |
 | **许可** | MIT |
 
 ```bash
@@ -219,7 +218,8 @@ agent-kit/
 │  │  ├─ README.md
 │  │  ├─ AGENTS.md
 │  │  ├─ config.example.toml
-│  │  └─ agents/
+│  │  ├─ agents/
+│  │  └─ skills/
 │  ├─ cline/
 │  │  ├─ README.md
 │  │  └─ 000-global.md
@@ -242,12 +242,13 @@ agent-kit/
 │  │  └─ settings.example.json
 │  ├─ gemini/
 │  ├─ grok/
-│  └─ windsurf/
+│  └─ windsurf/                 # 各 agent 目录均可包含自己的 skills/
 ├─ scripts/
 │  ├─ install-skills.sh
 │  └─ install-skills.ps1
 └─ docs/
-   └─ publishing-checklist.md
+   ├─ agents/                    # agent 介绍
+   └─ models/                    # 模型介绍与特性记录
 ```
 
 ---
@@ -258,7 +259,9 @@ agent-kit/
 |---|---|
 | [AGENTS.md](./AGENTS.md) | AI 协作约束、公开分发约定和发布前验证规则。 |
 | [Coding Environments](./environments/README.md) | 不同 coding agent 的配置入口、资产分层和项目规则兼容方式。 |
-| [发布检查清单](./docs/publishing-checklist.md) | 公开发布前的文件范围、文档一致性和敏感内容扫描。 |
+| [Skill 分层](./environments/README.md) | 通用 skill 与各 agent 专用 skill 的配置入口。 |
+| [Agent 介绍](./docs/agents/README.md) | 不同 coding agent 的定位和配置边界。 |
+| [模型介绍](./docs/models/README.md) | 模型或模型系列的特性与记录入口。 |
 | [Changelog](./CHANGELOG.md) | 当前资产包变更记录。 |
 
 ---
