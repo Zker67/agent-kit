@@ -111,7 +111,7 @@ cline --auto-approve false --plan "<task>"
 ```powershell
 cline --version
 Test-Path "$HOME\Documents\Cline\Rules\000-global.md"
-Test-Path "$HOME\.cline\skills\pro-test\SKILL.md"
+Test-Path "$HOME\.cline\skills\pro-summary\SKILL.md"
 ```
 
 还应在 Cline Rules / Skills 面板或 CLI 运行态中确认规则与 skills 已被实际发现；不要只凭文件存在判断已经生效。

@@ -66,7 +66,7 @@ PowerShell：
 
 ```powershell
 Test-Path "$HOME\.codex\AGENTS.md"
-Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
+Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 ```
 
 还应在 Codex 中检查实际模型、权限、MCP 和子代理是否被当前会话加载；不要只凭文件存在判断运行时已经生效。

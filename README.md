@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `12 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `11 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-12-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-11-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -86,15 +86,15 @@ PowerShell：
 Git Bash / macOS / Linux：
 
 ```bash
-test -d "$HOME/.codex/skills/pro-test"
-test -f "$HOME/.codex/skills/pro-test/SKILL.md"
+test -d "$HOME/.codex/skills/pro-summary"
+test -f "$HOME/.codex/skills/pro-summary/SKILL.md"
 ```
 
 PowerShell：
 
 ```powershell
-Test-Path "$HOME\.codex\skills\pro-test"
-Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
+Test-Path "$HOME\.codex\skills\pro-summary"
+Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 ```
 
 ---
@@ -178,7 +178,6 @@ Test-Path "$HOME\.codex\skills\pro-test\SKILL.md"
 | `pro-rule` | 将稳定偏好整理为 `.agent/rules/`。 |
 | `pro-struct` | 目录结构整理、组件化和复用性治理。 |
 | `pro-summary` | README、面向 AI 的 AGENTS.md、docs 与 plans 的一致性审查。 |
-| `pro-test` | 测试、调试和验证流程。 |
 
 ---
 
@@ -213,7 +212,6 @@ agent-kit/
 ├─ skills/
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
-│  ├─ pro-test/                   # 测试、调试与验证 skill
 │  └─ pro-summary/                # 文档一致性审查 skill
 ├─ environments/                 # 各 coding agent 的完整环境配置指南
 │  ├─ README.md

@@ -12,7 +12,7 @@ description: 📂 整理目录结构 / 重构文件结构 / 组件化 / 提升�
 
 ## 协同与互斥
 
-- 搬动前后建议跑 `pro-test` 控制 regression。
+- 搬动前后建议运行相关测试控制 regression。
 - 需要把重构方案写入项目计划时，委托 `pro-plans` 维护 `plans/` 和 `plans/README.md`。
 - 遵循全局授权规则；如果结构迁移需要偏离用户已明确的路线，先说明偏离点并等待决定。
 - 与 `pro-explain` 解耦：本 skill 关注结构；解释代码意图交给 `pro-explain`。

@@ -104,7 +104,7 @@ PowerShell：
 
 ```powershell
 Test-Path "$HOME\.cursor\mcp.json"
-Test-Path "$HOME\.cursor\skills\pro-test\SKILL.md"
+Test-Path "$HOME\.cursor\skills\pro-summary\SKILL.md"
 ```
 
 还应在新的 Cursor Agent 会话中确认：

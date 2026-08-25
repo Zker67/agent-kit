@@ -4,7 +4,7 @@
 
 ## 文件范围
 
-- [ ] `skills/` 只包含 12 个自研 skill。
+- [ ] `skills/` 只包含 11 个自研 skill。
 - [ ] `environments/` 只包含九类 coding agent 的公开指南、全局 instructions 和安全配置示例。
 - [ ] `skills/pro-newproj/assets/base-project/` 是新项目文档骨架的唯一事实源，不包含真实项目运行态。
 - [ ] 没有复制版本库元数据、管理器状态、数据库、缓存、构建产物或本地配置。

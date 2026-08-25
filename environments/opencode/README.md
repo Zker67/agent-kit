@@ -81,7 +81,7 @@ PowerShell：
 ```powershell
 opencode --version
 Test-Path "$HOME\.config\opencode\AGENTS.md"
-Test-Path "$HOME\.config\opencode\skills\pro-test\SKILL.md"
+Test-Path "$HOME\.config\opencode\skills\pro-summary\SKILL.md"
 ```
 
 重启后新建会话，并确认：

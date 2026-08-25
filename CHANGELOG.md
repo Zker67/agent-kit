@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.0 - 2026-08-25
+
+- 移除 `pro-test`，测试与修复继续遵循各宿主的通用编码代理流程。
+- 同步更新 skill 数量、安装验证示例和失效引用。
+
 ## 0.9.0 - 2026-08-12
 
 - 新增 `pro-newproj`，用于新建项目或为刚创建的仓库补齐 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 完整文档骨架。
