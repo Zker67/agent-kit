@@ -1,20 +1,21 @@
 ---
 name: pro-summary
-description: 💼 文档一致性审查 / 单一信息源 / 层层索引 / README 与面向 AI 的 AGENTS.md 对齐 / 文档计数校验。用于检查并修复 README、面向 AI 助手的 AGENTS.md、docs、plans 之间的链接、计数、事实和职责边界不一致；不生成 README，不维护 .ai_memory，不处理版本控制发布动作。
+description: 💼 总结、汇总并同步 README、AGENTS.md、docs 和 plans，确保内容、链接、索引与计数保持最新一致。用于文档总结、文档汇总、文档同步或一致性检查；不负责生成 README、维护 .ai_memory 或版本控制发布。
 ---
 
 # Pro Summary
 
 在以下情况触发：
 
-- 用户要求检查 README、面向 AI 的 AGENTS.md、docs 或计划索引之间是否一致。
-- 用户说出 "文档一致性"、"单一信息源"、"层层索引"、"链接检查"、"计数对齐"、"文档对齐" 中的任何一个。
+- 用户要求总结、汇总、同步或核对 README、面向 AI 的 AGENTS.md、docs、plans 的最新状态，并要求它们保持一致。
+- 用户要求检查或修复文档之间的单一信息源、层层索引、链接、计数、事实或职责边界。
+- 用户说出 "总结文档"、"汇总文档"、"同步文档"、"保证文档最新一致"、"文档一致性"、"单一信息源"、"层层索引"、"链接检查"、"计数对齐"、"文档对齐" 中的任何一个。
 
 ## 协同与互斥
 
 - **README 生成委托 `pro-readme`**：用户要求生成、重写、美化、统一风格或给 README 配 hero 图时，改用 `pro-readme`；本 skill 只做一致性审查和修复。
 - **计划维护委托 `pro-plans`**：用户要求写计划、拆计划、迁移计划、runbook 或维护 `plans/README.md` 时，改用 `pro-plans`；本 skill 只检查计划索引是否一致。
-- **记忆归档委托 `pro-memory`**：用户明确要求 `.ai_memory`、AI 记忆、长期上下文、`Archive Context` 或 `Compress History` 时，改用 `pro-memory`；本 skill 不创建或维护 `.ai_memory`。
+- **记忆内容维护委托 `pro-memory`**：用户明确要求 `.ai_memory`、AI 记忆或长期上下文维护时，改用 `pro-memory`；本 skill 不创建或维护 `.ai_memory`。
 - **规则维护委托 `pro-rule`**：文档同步中若发现稳定工作区规则，按需调用 `pro-rule`，避免在这里重复实现 `.agent/rules/` 细节。
 - **经验沉淀委托 `pro-exp`**：如果本次会话产生了可复用的解决方案经验，独立调用 `pro-exp` 生成 `.exp/` 文档；本 skill 不代劳。
 - **发布动作不处理**：提交、标签、发布、PR 创建或远端同步属于版本控制发布流程；本 skill 只负责文档内容与一致性。
@@ -25,7 +26,7 @@ description: 💼 文档一致性审查 / 单一信息源 / 层层索引 / READM
 2. 检查这些入口之间的职责边界：
    - `README.md`：面向人类使用者，描述项目定位、安装、使用和公开结构。
    - `AGENTS.md`：面向 AI 助手，描述协作入口、代码边界、验证方式和项目不变量。
-   - `plans/README.md`：计划索引，指向具体计划、迁移和归档文件。
+   - `plans/README.md`：计划索引，指向具体计划和迁移文件。
    - `docs/`：补充说明、兼容性、发布检查和迁移说明。
 3. 发现缺失链接、过时路径、计数不一致、事实冲突或职责混用时，做最小修正。
 4. 若用户实际要求生成或重写 README，停止本流程并改用 `pro-readme`。
