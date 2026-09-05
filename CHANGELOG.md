@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1 - 2026-09-05
+
+- Claude Code 全局 `CLAUDE.md` 对齐 Codex / Cursor 的作用域与授权边界模型：只读类请求不自动修复，计划不自动实施，Skill 不额外授权，Git 写操作须明确授权；移除“完成模块即提交”的自动提交规则。
+- 补充 Claude Code 2.1.x 的 ToolSearch / deferred MCP 说明与 README 约定覆盖宿主默认的说明。
+- Claude Code README 改为确定的 `~/.claude/skills/` 安装路径，补充 `~/.claude/rules/`、`settings.local.json`、`~/.claude.json` MCP 入口和工具路由前置条件。
+- `settings.example.json` 从空骨架改为去敏的中性字段集合，不含权限白名单与 hooks。
+- 环境索引补全 Claude Code 配置入口；顶层 README 目录树列出全部 11 个 skill。
+
 ## 0.10.0 - 2026-08-25
 
 - 移除 `pro-test`，测试与修复继续遵循各宿主的通用编码代理流程。

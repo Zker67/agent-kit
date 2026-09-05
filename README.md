@@ -208,9 +208,17 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/
+├─ skills/                       # 11 个可安装 skill，每个目录一个 SKILL.md
+│  ├─ pro-copy/
+│  ├─ pro-exp/
+│  ├─ pro-explain/
+│  ├─ pro-idea/
+│  ├─ pro-memory/
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
+│  ├─ pro-plans/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
+│  ├─ pro-rule/
+│  ├─ pro-struct/
 │  └─ pro-summary/                # 文档一致性审查 skill
 ├─ environments/                 # 各 coding agent 的完整环境配置指南
 │  ├─ README.md

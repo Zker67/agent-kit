@@ -1,3 +1,22 @@
 {
-  "env": {}
+  "language": "chinese",
+  "effortLevel": "medium",
+  "alwaysThinkingEnabled": false,
+  "includeCoAuthoredBy": false,
+  "autoUpdatesChannel": "latest",
+  "cleanupPeriodDays": 720,
+  "skillListingBudgetFraction": 0.02,
+  "env": {
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ENABLE_TOOL_SEARCH": "1"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "mcp__fast-context__fast_context_search"
+    ],
+    "deny": []
+  }
 }
