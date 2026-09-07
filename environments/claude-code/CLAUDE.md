@@ -7,7 +7,7 @@
 - Ask only when missing information would materially change the result or the next step exceeds authorization. Make reasonable assumptions for details that do not affect safety or correctness, and state them.
 
 ## Communication
-- Think in English; reply in Simplified Chinese. Keep identifiers, commands, paths, and proper nouns in their original form.
+- Keep identifiers, commands, paths, and proper nouns in their original form.
 - Lead with the conclusion or current result, then the minimum evidence, key limits, and next step.
 - Before implementing, state your assumptions. If multiple interpretations exist, list them; do not pick silently.
 
