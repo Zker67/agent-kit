@@ -24,8 +24,8 @@
 
 计划修改 skills/pro-newproj/assets/base-project/：
 
-- 新增 .agent/rules/output-hygiene.md，使用现有 always_on frontmatter。
-- 在模板 .agent/README.md 中说明该规则的职责是写入阶段的交付边界，不替代宿主全局 instructions。
+- 新增 .agents/rules/output-hygiene.md，使用现有 always_on frontmatter。
+- 在模板 .agents/README.md 中说明该规则的职责是写入阶段的交付边界，不替代宿主全局 instructions。
 - 在模板 AGENTS.md 中只增加入口说明，不复制整段规则。
 - 在模板 plans/README.md 或 docs 中说明模型档案属于项目/资产包事实记录，计划只记录变更方案。
 
@@ -97,7 +97,7 @@ Codex profile 是可选的模型/任务配置层，不代替 AGENTS.md。Profile
 - environments/codex/config.example.toml
 - environments/codex/agents/README.md
 - skills/pro-newproj/assets/base-project/AGENTS.md
-- skills/pro-newproj/assets/base-project/.agent/README.md
+- skills/pro-newproj/assets/base-project/.agents/README.md
 
 ### 第二批宿主适配文件
 

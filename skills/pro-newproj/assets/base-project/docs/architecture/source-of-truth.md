@@ -21,7 +21,7 @@
 | 分阶段方案、设计草案、执行记录、验收状态 | `plans/README.md` 和 `plans/` 具体文件 | 完成后的稳定事实同步回 `docs/` |
 | 外部文档、标准、教程、资料链接 | `references/external-docs/` | 当前项目事实应沉淀到 `docs/` |
 | 外部代码库、参考实现、对比分析 | `references/external-repos/` | 采纳后的当前实现事实写入 `docs/` 或代码 |
-| 项目级 AI 规则 | `.agent/rules/` | AGENTS 只说明入口 |
+| 项目级 AI 规则 | `.agents/rules/` | AGENTS 只说明入口 |
 
 ## 外部参考规则
 

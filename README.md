@@ -37,7 +37,7 @@
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
 | **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
-| **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
+| **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agents/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 
 ---
@@ -174,7 +174,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
-| `pro-rule` | 将稳定偏好整理为 `.agent/rules/`。 |
+| `pro-rule` | 将稳定偏好整理为 `.agents/rules/`。 |
 | `pro-struct` | 目录结构整理、组件化和复用性治理。 |
 | `pro-summary` | README、面向 AI 的 AGENTS.md、docs 与 plans 的一致性审查。 |
 

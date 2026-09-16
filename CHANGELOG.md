@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.2 - 2026-09-16
+
+- 项目级 AI 规则目录从 `.agent/` 统一改名为 `.agents/`：`pro-newproj` 模板目录及其 README、AGENTS、docs 说明同步更新；`pro-rule`、`pro-memory`、`pro-summary` 的规则写入位置改为 `.agents/rules/`。
+
 ## 0.10.1 - 2026-09-05
 
 - Claude Code 全局 `CLAUDE.md` 对齐 Codex / Cursor 的作用域与授权边界模型：只读类请求不自动修复，计划不自动实施，Skill 不额外授权，Git 写操作须明确授权；移除“完成模块即提交”的自动提交规则。

@@ -51,8 +51,8 @@
 ### AI 行为配置
 
 - **协作入口**：`AGENTS.md`，AI 首次进入项目时先读取。
-- **规则文件**：`.agent/rules/*.md`，使用 YAML frontmatter + Markdown。
-- **目录说明**：`.agent/README.md`，说明 `.agent/` 的组织方式与规则写法。
+- **规则文件**：`.agents/rules/*.md`，使用 YAML frontmatter + Markdown。
+- **目录说明**：`.agents/README.md`，说明 `.agents/` 的组织方式与规则写法。
 
 ### 项目文档
 
@@ -84,7 +84,7 @@
 │       └── README.md
 ├── plans/                    # 计划、设计和改进追踪
 │   └── README.md
-└── .agent/                   # AI 项目规则
+└── .agents/                   # AI 项目规则
 │   ├── README.md
 │   └── rules/
 ```

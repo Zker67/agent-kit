@@ -35,7 +35,7 @@
 
 - skills/ 只保存可公开分发的自研 skill；第三方 skill 只能作为外部依赖/参考记录。
 - environments/ 保存宿主指南、全局 instructions 和公开运行配置示例；模型、权限、provider、MCP 和本机路径不写进通用规则正文。
-- skills/pro-newproj/assets/base-project/ 是新项目文档骨架的唯一事实源；模板中的 .agent/rules/、docs/、plans/ 职责不能被新目录破坏。
+- skills/pro-newproj/assets/base-project/ 是新项目文档骨架的唯一事实源；模板中的 .agents/rules/、docs/、plans/ 职责不能被新目录破坏。
 - README.md 当前记录 9 类宿主、11 个自研 skill；本计划不改变该计数，新增公开文件后要检查链接和发布清单。
 - 根工作树在计划开始时干净；后续执行阶段仍须只处理任务文件，保留用户并行修改。
 - Codex 当前支持用户级/项目级 AGENTS.md、profile 文件、developer_instructions 和 model_instructions_file 等配置入口，但 model_instructions_file 是替换内置 instructions 的路径，不能在未验证语义前直接采用。

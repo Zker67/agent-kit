@@ -16,7 +16,7 @@ description: 💼 总结、汇总并同步 README、AGENTS.md、docs 和 plans�
 - **README 生成委托 `pro-readme`**：用户要求生成、重写、美化、统一风格或给 README 配 hero 图时，改用 `pro-readme`；本 skill 只做一致性审查和修复。
 - **计划维护委托 `pro-plans`**：用户要求写计划、拆计划、迁移计划、runbook 或维护 `plans/README.md` 时，改用 `pro-plans`；本 skill 只检查计划索引是否一致。
 - **记忆内容维护委托 `pro-memory`**：用户明确要求 `.ai_memory`、AI 记忆或长期上下文维护时，改用 `pro-memory`；本 skill 不创建或维护 `.ai_memory`。
-- **规则维护委托 `pro-rule`**：文档同步中若发现稳定工作区规则，按需调用 `pro-rule`，避免在这里重复实现 `.agent/rules/` 细节。
+- **规则维护委托 `pro-rule`**：文档同步中若发现稳定工作区规则，按需调用 `pro-rule`，避免在这里重复实现 `.agents/rules/` 细节。
 - **经验沉淀委托 `pro-exp`**：如果本次会话产生了可复用的解决方案经验，独立调用 `pro-exp` 生成 `.exp/` 文档；本 skill 不代劳。
 - **发布动作不处理**：提交、标签、发布、PR 创建或远端同步属于版本控制发布流程；本 skill 只负责文档内容与一致性。
 

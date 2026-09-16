@@ -9,7 +9,7 @@
     },
     {
       "id": 2,
-      "prompt": "我刚在 workspace 里创建了 weather-console，里面已经有 README.md 和 src 目录。请保留现有 README，只给这个新仓库补齐 AGENTS、docs、references、plans 和 .agent/rules 结构。",
+      "prompt": "我刚在 workspace 里创建了 weather-console，里面已经有 README.md 和 src 目录。请保留现有 README，只给这个新仓库补齐 AGENTS、docs、references、plans 和 .agents/rules 结构。",
       "expected_output": "以安全合并模式补齐缺失文件，不覆盖 README.md 或其他已有文件，并明确报告跳过项。",
       "files": []
     },

@@ -14,7 +14,7 @@ description: 🧠 AI 记忆 / .ai_memory / 长期上下文 / 归档记忆 / Arch
 ## 协同与互斥
 
 - **与 `pro-summary` 区分**：README、AGENTS.md、文档结构、层层索引和一致性审查交给 `pro-summary`；本 skill 只维护项目级长期上下文。
-- **规则维护委托 `pro-rule`**：稳定用户偏好或工作区硬性规则应写入 `.agent/rules/`，不要混进 `.ai_memory/`。
+- **规则维护委托 `pro-rule`**：稳定用户偏好或工作区硬性规则应写入 `.agents/rules/`，不要混进 `.ai_memory/`。
 - **经验沉淀委托 `pro-exp`**：通用解决方案经验应写入 `.exp/`，不要用项目记忆替代经验文档。
 - **默认不启用**：若项目没有 `.ai_memory/` 且用户只是要求更新 README、AGENTS.md 或 plans，不要创建记忆系统。
 
@@ -52,7 +52,7 @@ description: 🧠 AI 记忆 / .ai_memory / 长期上下文 / 归档记忆 / Arch
 
 1. 只记录对后续协作有复用价值的信息：稳定事实、关键决策、当前阻断、下一步和已验证结论。
 2. 不记录真实凭据、token、密码、私有服务地址、客户信息、个人隐私、本地机器细节或不可公开流程。
-3. 不把 README、AGENTS.md、plans、`.agent/rules/` 或 `.exp/` 已经表达清楚的信息重复完整复制进 `.ai_memory/`。
+3. 不把 README、AGENTS.md、plans、`.agents/rules/` 或 `.exp/` 已经表达清楚的信息重复完整复制进 `.ai_memory/`。
 4. 记忆内容要引用权威文档或源码位置，避免形成新的事实来源。
 5. 无法判断是否应长期记录时，先问用户，不要擅自写入。
 
@@ -73,5 +73,5 @@ description: 🧠 AI 记忆 / .ai_memory / 长期上下文 / 归档记忆 / Arch
 
 - 是否启用了或跳过 `.ai_memory/`。
 - 更新了哪些记忆文件。
-- 哪些内容因应写入 README、AGENTS.md、plans、`.agent/rules/` 或 `.exp/` 而未写入记忆。
+- 哪些内容因应写入 README、AGENTS.md、plans、`.agents/rules/` 或 `.exp/` 而未写入记忆。
 - 如涉及敏感信息，说明已跳过或已脱敏。

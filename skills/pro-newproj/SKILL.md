@@ -1,6 +1,6 @@
 ---
 name: pro-newproj
-description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffold / bootstrap repo / 完整文档结构。用于创建新项目，或给刚创建的空仓库补齐 `AGENTS.md`、`README.md`、`.agent/rules/`、`docs/`、`references/` 和 `plans/` 的完整文档骨架；模板随 skill 自带，默认不初始化 Git、不安装依赖、不覆盖已有文件。
+description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffold / bootstrap repo / 完整文档结构。用于创建新项目，或给刚创建的空仓库补齐 `AGENTS.md`、`README.md`、`.agents/rules/`、`docs/`、`references/` 和 `plans/` 的完整文档骨架；模板随 skill 自带，默认不初始化 Git、不安装依赖、不覆盖已有文件。
 ---
 
 # Pro New Project
@@ -12,7 +12,7 @@ description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffo
 - 用户要求“新建项目”、“初始化项目”、“创建项目骨架”、“创建空仓库结构”。
 - 用户提到 `pro-newproj`、`project scaffold`、`bootstrap repo` 或“完整文档结构”。
 - 用户刚创建代码仓库，希望补齐 AI 协作入口、长期文档、外部参考和计划索引。
-- 用户希望多个新项目采用一致的 `README.md`、`AGENTS.md`、`docs/`、`references/`、`plans/` 和 `.agent/rules/` 分层。
+- 用户希望多个新项目采用一致的 `README.md`、`AGENTS.md`、`docs/`、`references/`、`plans/` 和 `.agents/rules/` 分层。
 
 ## 与相邻 skill 的边界
 
@@ -28,7 +28,7 @@ description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffo
 项目根目录/
 ├── AGENTS.md
 ├── README.md
-├── .agent/
+├── .agents/
 │   ├── README.md
 │   └── rules/
 │       └── dev.md
@@ -106,7 +106,7 @@ description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffo
 至少检查：
 
 1. 内置结构中的文件全部存在。
-2. `.agent/` 等隐藏目录已复制。
+2. `.agents/` 等隐藏目录已复制。
 3. Markdown 相对链接指向真实文件。
 4. README、AGENTS、docs、references 和 plans 的职责没有互相冲突。
 5. 没有真实凭据、本机绝对路径、运行态数据或私有组织信息。
