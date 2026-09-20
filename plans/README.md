@@ -6,6 +6,7 @@
 
 | 状态 | 计划 | 说明 |
 |---|---|---|
+| [partial] | [agent-kit 仓库工程化加固](./2026-09-16-repo-hardening/00-overview.md) | 已完成最小 CI 门禁、安装脚本 clean/dry-run 和清除过期引用；skill evals 阶段按指示跳过。 |
 | [done] | [agent-kit 结构与独立 skill 配置](./2026-08-25-agent-kit-structure-external-skills/00-overview.md) | 区分公共、agent 专用和模型专用 skill，并以外部仓库链接代替复制。 |
 | [partial] | [Codex 与 GPT 系列特性及定向防污染修改](./2026-08-25-codex-gpt-family-hardening/00-overview.md) | 已建立模型档案、Codex guard 和 profile 示例；评测方案保留在计划第三阶段，跨模型运行态评测仍待可用模型入口。 |
 | [dropped] | [原合并计划：模型档案与输出污染防护](./2026-08-25-model-profiles-output-hygiene/00-overview.md) | 已拆分为上面两个独立计划；保留作为历史方案，不再按原阶段执行。 |

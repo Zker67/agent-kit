@@ -1,0 +1,43 @@
+# 敏感扫描允许清单：已人工判定为说明文字、非真实敏感内容的命中行。
+# 格式：相对路径:行内容（不含行号，避免行号漂移）。
+# 由 bash scripts/verify.sh --update-allowlist 生成；新增条目须逐条人工确认
+# 不含真实凭据、内网地址、本机绝对路径或私有组织标识。
+skills/pro-summary/SKILL.md:3. **信息一致性**：在所有文档中找出对同一实体（如 skill 名称、端口号、命令格式）的全部提及，确认描述完全一致。
+skills/pro-memory/SKILL.md:2. 不记录真实凭据、token、密码、私有服务地址、客户信息、个人隐私、本地机器细节或不可公开流程。
+skills/pro-readme/assets/commit-message.md:- `table-heavy sections: 4-dimension weights / API / theme tokens / structure`
+skills/pro-readme/assets/quality-checklist.md:| Env vars match | 配置 table matches `.env.example` / actual settings — no invented vars |
+skills/pro-readme/assets/readme-template.md:### 端口约定
+skills/pro-readme/assets/readme-template.md:| 通道 | 端口 |
+skills/pro-readme/assets/readme-template.md:{{1~2 sentence note about what npm start does, e.g. "同时启前后端；浏览器始终从前端访问，/api/* 内部代理到后端。"}}
+skills/pro-readme/assets/readme-template.md:**自定义端口**：
+skills/pro-readme/assets/readme-template.md:- {{risk-1, written as honest engineering limitation, not marketing fluff}}
+skills/pro-plans/SKILL.md:description: 创建、拆分、维护和归档项目 plans/ 计划文档，并同步 plans/README.md 索引。仅在用户要求计划落盘或项目规则明确要求时使用；对话中的规划、只读分析或实施任务的内部步骤不触发文件创建。本 Skill 不自动授权执行计划，也不阻断用户已明确授权的后续实施。
+skills/pro-newproj/SKILL.md:信息未知时保留明确占位注释或 `-`，不要猜测端口、命令、框架、部署方式、API 或业务功能。
+skills/pro-newproj/SKILL.md:5. 没有真实凭据、本机绝对路径、运行态数据或私有组织信息。
+scripts/verify.sh:sensitive_pattern='secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI'
+scripts/verify.sh:      printf '# 不含真实凭据、内网地址、本机绝对路径或私有组织标识。\n'
+AGENTS.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
+README.md:真实 server URL、env、token 和本机绝对路径放在个人宿主配置中；公开 README 保留通用工具名和配置方向。
+README.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
+environments/codex/agents/README.md:公开示例不包含个人 provider、token、私有工具地址或项目专属指令。
+environments/codex/AGENTS.md:- 需要 Git Bash 时，从 PowerShell 显式调用 `C:\Program Files\Git\bin\bash.exe`，例如 `& 'C:\Program Files\Git\bin\bash.exe' ./scripts/check.sh`。保持 shell 选择器为 PowerShell，避免被路由到 WSL。
+environments/codex/README.md:公开配置不包含 server URL、token、个人 provider 或本机路径。把这些内容留在自己的 `config.toml`、环境变量或密钥管理方案中。
+environments/claude-code/README.md:不要把 token、密码、私有组织名、内网地址或本机绝对路径写进公开文件。`settings.example.json` 只保留与身份、路径无关的中性字段；权限白名单和 hooks 与本机强绑定，不进入公开骨架。
+environments/claude-code/CLAUDE.md:- Secrets via env vars and environment files; never hardcode. Validate external input at system boundaries; use parameterized queries; keep secrets out of logs and error messages.
+environments/gemini/GEMINI.md:- **Windows 执行环境**：常规 Git 操作及类 Unix 脚本优先使用 Git Bash (`C:\Program Files\Git\bin\bash.exe`)；Windows 原生任务与 `.ps1` 使用 PowerShell。
+environments/gemini/GEMINI.md:- 严禁泄露 secrets、token、密码或敏感数据；凭据走环境变量，数据库一律参数化查询。
+environments/grok/README.md:仓库中的规则正文包含经过泛化的工具路由。安装后应按本机已经启用的 MCP、skill 和模型目录调整，不要复制个人 provider 或私有服务地址。
+environments/grok/AGENTS.md:- New modules/directories must include a Chinese README.md; existing modules' READMEs must be updated when public surface (API、CLI、配置项、目录结构) changes. Pure 内部小修不必动 README。
+environments/grok/AGENTS.md:- Secrets via env vars and `.env`; never hardcode.
+environments/README.md:同一事实只在一个层级完整定义。不要把模型参数、token、真实 server URL、本机绝对路径或项目部署流程写进公开的全局 instructions。
+environments/pi/README.md:不要把模型参数、provider 参数和工具连接信息写进 `AGENTS.md`。不要把 token、真实 server URL、个人 provider 名称或本机绝对路径提交到公开仓库。
+environments/pi/README.md:pi install npm:@juicesharp/rpiv-ask-user-question
+environments/pi/README.md:| `rpiv-ask-user-question` | 提供结构化用户提问工具，适合有限选项和关键决策。 |
+environments/pi/README.md:- `rpiv-ask-user-question` 注册 `ask_user_question` 工具。缺失信息会显著改变方案、且问题适合有限选项时使用；简单单一问题仍可直接文本询问。
+environments/pi/AGENTS.md:  - 保留关键命令和来源 URL，不暴露 API key、token 或本地搜索配置中的敏感字段。
+environments/pi/AGENTS.md:- NEVER 暴露 secrets、token、密码或敏感数据。
+environments/pi/settings.example.json:    "npm:@juicesharp/rpiv-ask-user-question",
+environments/cline/000-global.md:- NEVER 暴露 secrets、token、密码或敏感数据；凭据使用环境变量或密钥管理方案。
+environments/cursor/README.md:公开配置不包含 server URL、token、个人 provider 或本机绝对路径。
+environments/opencode/AGENTS.md:- NEVER 暴露 secrets、token、密码或敏感数据；凭据使用环境变量或密钥管理方案，不写入代码、公开配置、日志或回复。
+environments/opencode/README.md:API key、provider token 和私有服务地址应通过环境变量、`{env:VAR}` 或本机私有配置管理，不写入公开资产。公开仓库中的配置示例不得包含真实凭据。

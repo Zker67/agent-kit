@@ -17,6 +17,7 @@ description: 创建、拆分、维护和归档项目 plans/ 计划文档，并�
 - **与 `pro-summary` 区分**：`pro-plans` 负责写作和维护 `plans/`；`pro-summary` 只负责文档一致性审查时检查 `plans/README.md` 是否与实际计划一致。
 - **与 `pro-struct` 协同**：结构重构计划可由 `pro-plans` 先落计划，再由 `pro-struct` 按计划执行迁移。
 - **与 `pro-memory` 区分**：计划是项目内可追踪的执行方案；长期上下文和会话归档交给 `pro-memory`。
+- **与 `pro-handoff` 区分**：计划是长期可追踪、有索引的；角色间的一次性交棒文件交给 `pro-handoff` 写入 `handoff/`，不进入 `plans/README.md`。
 - **不扩大授权**：仅要求计划时只完成计划；用户已明确要求规划并实施时，本 Skill 只负责计划部分，随后继续已授权实施，不要求用户另发一次执行指令。
 
 ## 一、目录约定

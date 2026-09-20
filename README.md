@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `11 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `12 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-11-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-12-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -80,6 +80,20 @@ PowerShell：
 .\scripts\install-skills.ps1 -Target "<agent-skill-dir>"
 ```
 
+升级时可以先预览变化，再带清理执行：
+
+```bash
+./scripts/install-skills.sh --dry-run --clean "<agent-skill-dir>"
+./scripts/install-skills.sh --clean "<agent-skill-dir>"
+```
+
+```powershell
+.\scripts\install-skills.ps1 -Target "<agent-skill-dir>" -DryRun -Clean
+.\scripts\install-skills.ps1 -Target "<agent-skill-dir>" -Clean
+```
+
+每个 skill 在复制前会先删除目标同名目录，因此放在 `skills/<name>/` 内的本地改动会在重装时丢失；需要保留的内容请放在该目录之外。
+
 ### 验证安装
 
 Git Bash / macOS / Linux：
@@ -131,6 +145,8 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 |---|---|---|
 | Bash 第一个参数 | 目标 skill 目录 | 传入任意 agent 的 skill 目录，例如 `./scripts/install-skills.sh "<agent-skill-dir>"`。 |
 | PowerShell `-Target` | 目标 skill 目录 | 传入任意 agent 的 skill 目录，例如 `.\scripts\install-skills.ps1 -Target "<agent-skill-dir>"`。 |
+| `--dry-run` / `-DryRun` | 关闭 | 只打印将执行的复制与删除，不写盘；输出加 `[dry-run] ` 前缀。 |
+| `--clean` / `-Clean` | 关闭 | 复制前删除目标目录中已从本仓库移除的 skill。只影响 `pro-` 前缀目录，其他 skill 保持不动。 |
 | `CODEX_HOME` | Codex 用户目录 | 省略目标参数时，脚本优先安装到 `$CODEX_HOME/skills`。 |
 | 用户默认目录 | `.codex/skills` | 省略目标参数且 `CODEX_HOME` 为空时使用。 |
 | `environments/` | 手动选择 | 按宿主阅读配置指南，备份现有文件后复制全局 instructions，并合并必要配置。 |
@@ -169,6 +185,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-copy` | 搜索同类项目、借鉴成熟开源实现。 |
 | `pro-exp` | 将解法沉淀为 `.exp/` 经验文档。 |
 | `pro-explain` | 基于源码证据，按调用链、数据流或错误链面向初学者做只读解释。 |
+| `pro-handoff` | 在项目根 `handoff/` 留下按角色分阶段的一次性交接件，让零上下文的下一个角色只看文件接着干。 |
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
@@ -188,14 +205,16 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | **安装脚本** | POSIX Shell、PowerShell |
 | **新项目骨架** | `pro-newproj` 内置通用目录骨架、项目级规则和文档索引 |
 | **外部能力** | `context7`、`fast-context`、专业搜索 CLI、浏览器工具、subagents |
-| **质量检查** | `find`、`grep`、`git diff --check` |
+| **质量检查** | [`scripts/verify.sh`](./scripts/verify.sh)、`find`、`grep`、`git diff --check` |
 | **许可** | MIT |
 
+发布前的全部检查收敛在一个脚本里，任何一项不通过即非 0 退出；CI 在 push 与 pull request 上执行同一脚本。
+
 ```bash
-git status --short
-find . -maxdepth 4 -type f | sort
-grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
+bash scripts/verify.sh
 ```
+
+覆盖敏感扫描、skill 与 environment 数量对账、README Skill 清单对账、Markdown 相对链接、`SKILL.md` frontmatter、`evals.json` 结构和 `git diff --check`。敏感扫描的预期噪声登记在 `scripts/verify-allowlist.txt`，文案变动后用 `bash scripts/verify.sh --update-allowlist` 重新生成并人工复核。
 
 ---
 
@@ -208,10 +227,11 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/                       # 11 个可安装 skill，每个目录一个 SKILL.md
+├─ skills/                       # 12 个可安装 skill，每个目录一个 SKILL.md
 │  ├─ pro-copy/
 │  ├─ pro-exp/
 │  ├─ pro-explain/
+│  ├─ pro-handoff/                # 角色间一次性交接件，含 handoff / ticket 模板
 │  ├─ pro-idea/
 │  ├─ pro-memory/
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
@@ -251,9 +271,14 @@ agent-kit/
 │  ├─ gemini/
 │  ├─ grok/
 │  └─ windsurf/                 # 各 agent 目录均可包含自己的 skills/
+├─ .github/
+│  └─ workflows/
+│     └─ verify.yml               # push / PR 上运行 scripts/verify.sh
 ├─ scripts/
 │  ├─ install-skills.sh
-│  └─ install-skills.ps1
+│  ├─ install-skills.ps1
+│  ├─ verify.sh                   # 发布前验证门禁
+│  └─ verify-allowlist.txt        # 敏感扫描预期噪声清单
 └─ docs/
    ├─ agents/                    # agent 介绍
    └─ models/                    # 模型介绍与特性记录

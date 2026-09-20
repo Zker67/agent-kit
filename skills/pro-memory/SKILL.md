@@ -16,6 +16,7 @@ description: 🧠 AI 记忆 / .ai_memory / 长期上下文 / 归档记忆 / Arch
 - **与 `pro-summary` 区分**：README、AGENTS.md、文档结构、层层索引和一致性审查交给 `pro-summary`；本 skill 只维护项目级长期上下文。
 - **规则维护委托 `pro-rule`**：稳定用户偏好或工作区硬性规则应写入 `.agents/rules/`，不要混进 `.ai_memory/`。
 - **经验沉淀委托 `pro-exp`**：通用解决方案经验应写入 `.exp/`，不要用项目记忆替代经验文档。
+- **角色交接委托 `pro-handoff`**：一个角色停下、另一个零上下文角色接着干时，写 `handoff/` 交接件；`.ai_memory/` 面向同一项目的所有后续会话，不针对某一次交棒。
 - **默认不启用**：若项目没有 `.ai_memory/` 且用户只是要求更新 README、AGENTS.md 或 plans，不要创建记忆系统。
 
 ## 一、启用条件

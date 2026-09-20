@@ -46,7 +46,6 @@
 - **联网搜索**：直接用 Grok 内置 `web_search` / `web_fetch` / `open_page` 等，不必额外说明，也不必绕去 smart-search CLI。
 - **本地代码搜索**：优先 `fast-context` MCP（先 `search_tool` 取 schema，再 `use_tool` 调用）。理解上下文、探索性查找、自然语言定位、找引用与实现，优先走它。`grep` / 精确路径 `read_file` 仅用于已知确切字符串或已知路径。
 - **库 / SDK 文档**：优先 `context7` MCP；失败再用内置联网工具。
-- **生图 / 图编辑**：走 Skill `image-gen-pro`（内部用 `imagen` CLI），不要绕开。
 
 ## Skills
 

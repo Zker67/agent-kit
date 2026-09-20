@@ -18,6 +18,7 @@ description: 💼 总结、汇总并同步 README、AGENTS.md、docs 和 plans�
 - **记忆内容维护委托 `pro-memory`**：用户明确要求 `.ai_memory`、AI 记忆或长期上下文维护时，改用 `pro-memory`；本 skill 不创建或维护 `.ai_memory`。
 - **规则维护委托 `pro-rule`**：文档同步中若发现稳定工作区规则，按需调用 `pro-rule`，避免在这里重复实现 `.agents/rules/` 细节。
 - **经验沉淀委托 `pro-exp`**：如果本次会话产生了可复用的解决方案经验，独立调用 `pro-exp` 生成 `.exp/` 文档；本 skill 不代劳。
+- **`handoff/` 不纳入审查**：`pro-handoff` 写入的交接件是一次性的，没有索引也不计入文档结构；本 skill 不要求为其建 README 或链接。
 - **发布动作不处理**：提交、标签、发布、PR 创建或远端同步属于版本控制发布流程；本 skill 只负责文档内容与一致性。
 
 ## 一、审查范围

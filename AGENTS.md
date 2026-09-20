@@ -27,3 +27,11 @@ grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieAr
 ```
 
 若扫描命中安全说明类文本，需要逐条判断是否为真实敏感内容。
+
+上述检查连同数量对账、链接与 frontmatter 校验已收敛为一个脚本，等价于运行：
+
+```bash
+bash scripts/verify.sh
+```
+
+敏感扫描的预期噪声登记在 `scripts/verify-allowlist.txt`。文案变动导致条目失效时，用 `bash scripts/verify.sh --update-allowlist` 重新生成，并逐条人工确认新增项不含真实敏感内容后再提交。CI 在 push 与 pull request 上执行同一脚本。

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.12.0 - 2026-09-20
+
+- 新增 `pro-handoff`：一个 agent 做完或做到一半停下时，在项目根 `handoff/` 留下按角色分阶段的一次性交接件（spec / tickets / progress），让零上下文的下一个角色只看文件接着干。交接的是工件不是对话；`handoff/` 不建索引，不替代 `plans/`、`.ai_memory/` 或 `.exp/`。
+- `pro-handoff` 附带 `handoff-template.md`、`ticket-template.md` 与 evals；同时在 `pro-plans`、`pro-memory`、`pro-summary` 中补充与交接件的边界说明。
+- skill 数量从 11 更新为 12。
+
+## 0.11.0 - 2026-09-16
+
+- 新增 `scripts/verify.sh` 发布前验证门禁：敏感扫描、skill 与 environment 数量对账、README Skill 清单对账、Markdown 相对链接、`SKILL.md` frontmatter、`evals.json` 结构和 `git diff --check`，任一不通过即非 0 退出。
+- 敏感扫描的预期噪声登记在 `scripts/verify-allowlist.txt`，按「路径:行内容」比对以避免行号漂移；`--update-allowlist` 复用脚本内同一份规则重新生成清单。
+- 新增 `.github/workflows/verify.yml`，在 push 与 pull request 上执行同一脚本，不安装额外依赖。
+- 安装脚本支持 `--dry-run` / `-DryRun` 预览和 `--clean` / `-Clean` 清理：清理只删除目标目录中已从本仓库移除的 `pro-` 前缀 skill，不触碰用户放置的其他 skill；每个 skill 复制前先删除目标同名目录，避免已删除的文件残留。
+- 移除 `environments/grok/AGENTS.md` 中指向 `image-gen-pro` 的失效图片生成路由，与其余八类环境保持一致。
+
 ## 0.10.2 - 2026-09-16
 
 - 项目级 AI 规则目录从 `.agent/` 统一改名为 `.agents/`：`pro-newproj` 模板目录及其 README、AGENTS、docs 说明同步更新；`pro-rule`、`pro-memory`、`pro-summary` 的规则写入位置改为 `.agents/rules/`。
