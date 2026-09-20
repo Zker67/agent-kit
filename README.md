@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `12 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `13 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-12-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-13-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -189,6 +189,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
+| `pro-pick` | 为需要人拍板的接入点（图、音、视频、布局、文案）陈列候选到离线交互 HTML，人勾选后返回 JSON 再接入。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
 | `pro-rule` | 将稳定偏好整理为 `.agents/rules/`。 |
@@ -227,7 +228,7 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/                       # 12 个可安装 skill，每个目录一个 SKILL.md
+├─ skills/                       # 13 个可安装 skill，每个目录一个 SKILL.md
 │  ├─ pro-copy/
 │  ├─ pro-exp/
 │  ├─ pro-explain/
@@ -235,6 +236,7 @@ agent-kit/
 │  ├─ pro-idea/
 │  ├─ pro-memory/
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
+│  ├─ pro-pick/                   # 候选陈列 HTML 模板与 manifest / result 协议
 │  ├─ pro-plans/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-rule/

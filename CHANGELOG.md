@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0 - 2026-09-20
+
+- 新增 `pro-pick`：图片、音乐、视频、布局、文案等需要人拍板的接入点，AI 只记接入点、取候选、陈列成离线单文件交互 HTML；人在页面上浏览、播放、勾选、批注并导出 `result.json`，AI 再按 JSON 正式接入或补候选迭代。判断权在人，AI 意见只出现在单独的“AI 建议”字段；仅在用户明确要求时触发。
+- `pro-pick` 附带 `gallery-template.html`、`protocol.md` 与 evals；产物写入项目根 `pick/`，不建索引。
+- skill 数量从 12 更新为 13。
+
 ## 0.12.0 - 2026-09-20
 
 - 新增 `pro-handoff`：一个 agent 做完或做到一半停下时，在项目根 `handoff/` 留下按角色分阶段的一次性交接件（spec / tickets / progress），让零上下文的下一个角色只看文件接着干。交接的是工件不是对话；`handoff/` 不建索引，不替代 `plans/`、`.ai_memory/` 或 `.exp/`。
