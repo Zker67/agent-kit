@@ -14,11 +14,61 @@ skills/pro-readme/assets/readme-template.md:- {{risk-1, written as honest engine
 skills/pro-plans/SKILL.md:description: 创建、拆分、维护和归档项目 plans/ 计划文档，并同步 plans/README.md 索引。仅在用户要求计划落盘或项目规则明确要求时使用；对话中的规划、只读分析或实施任务的内部步骤不触发文件创建。本 Skill 不自动授权执行计划，也不阻断用户已明确授权的后续实施。
 skills/pro-newproj/SKILL.md:信息未知时保留明确占位注释或 `-`，不要猜测端口、命令、框架、部署方式、API 或业务功能。
 skills/pro-newproj/SKILL.md:5. 没有真实凭据、本机绝对路径、运行态数据或私有组织信息。
+skills/pro-notify/scripts/notify.py:    value = os.environ.get(name)
+skills/pro-notify/scripts/notify.py:            value = secure_keyring().get_password(SERVICE, ref["keyring"])
+skills/pro-notify/scripts/notify.py:            or parts.username is not None or parts.password is not None
+skills/pro-notify/scripts/notify.py:                "dingtalk": ("oapi.dingtalk.com", "/robot/send", "access_token"),
+skills/pro-notify/scripts/notify.py:            or set(channel) - {"provider", "webhook", "signing_secret"}
+skills/pro-notify/scripts/notify.py:        if channel["provider"] == "wecom" and "signing_secret" in channel:
+skills/pro-notify/scripts/notify.py:            raise NotifyError("wecom_does_not_use_signing_secret")
+skills/pro-notify/scripts/notify.py:        for field in ("webhook", "signing_secret"):
+skills/pro-notify/scripts/notify.py:def configure(name, provider, webhook_env, signing_secret_env=None,
+skills/pro-notify/scripts/notify.py:    if provider == "wecom" and signing_secret_env:
+skills/pro-notify/scripts/notify.py:        raise NotifyError("wecom_does_not_use_signing_secret")
+skills/pro-notify/scripts/notify.py:    if signing_secret_env:
+skills/pro-notify/scripts/notify.py:        values["signing_secret"] = env_value(signing_secret_env)
+skills/pro-notify/scripts/notify.py:        refs["signing_secret"] = {"env": signing_secret_env}
+skills/pro-notify/scripts/notify.py:                    backend.set_password(SERVICE, account, value)
+skills/pro-notify/scripts/notify.py:                    backend.delete_password(SERVICE, account)
+skills/pro-notify/scripts/notify.py:                       "key" if provider == "wecom" else "access_token"
+skills/pro-notify/scripts/notify.py:    if "signing_secret" in channel:
+skills/pro-notify/scripts/notify.py:        secret = resolve(channel["signing_secret"])
+skills/pro-notify/scripts/notify.py:            digest = hmac.new(f"{stamp}\n{secret}".encode(), b"", hashlib.sha256).digest()
+skills/pro-notify/scripts/notify.py:                secret.encode(), f"{stamp}\n{secret}".encode(), hashlib.sha256
+skills/pro-notify/scripts/notify.py:    setup.add_argument("--signing-secret-env")
+skills/pro-notify/scripts/notify.py:    notify.add_argument("--task-id")
+skills/pro-notify/scripts/notify.py:                args.name, args.provider, args.webhook_env, args.signing_secret_env,
+skills/pro-notify/SKILL.md:4. **事件**：默认立即发送为 `manual`。任务通知分配一个不含个人信息的稳定 `task-id`，三类事件沿用它。`needs-input` 发完仍在当前对话中提问，不阻塞等待群聊回复。
+skills/pro-notify/SKILL.md:# 仅在用户明确启用了本次任务通知时；复用同一个 task-id
+skills/pro-notify/SKILL.md:python "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
+skills/pro-notify/references/channels.md:- HTTPS 主机 `oapi.dingtalk.com`，路径 `/robot/send`，查询参数 `access_token`。
+skills/pro-notify/references/configuration.md:| 无桌面 / CI | 通常选环境变量引用，由现有 secret manager 注入 |
+skills/pro-notify/references/configuration.md:os.environ["PRO_NOTIFY_SETUP_WEBHOOK"] = getpass.getpass("Webhook: ")
+skills/pro-notify/references/configuration.md:    os.environ.pop("PRO_NOTIFY_SETUP_WEBHOOK", None)
+skills/pro-notify/references/configuration.md:AI 不生成聊天中的真实密钥替换版本。若要配置飞书 / 钉钉签名，用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。如果终端不能隐藏输入，应中止并改用已有的安全输入设施。
+skills/pro-notify/references/configuration.md:python "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
+skills/pro-notify/references/configuration.md:python "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
+skills/pro-notify/references/configuration.md:    event="completed", task_id="task-001", dry_run=False,
+skills/pro-notify/evals/evals.json:      "expected_output": "只对当前任务建立稳定 task-id，发送一条 needs-input 纯文本，并继续在当前对话提问；不提前发送完成或失败，不扩大到其他任务；重复同一事件不重发。",
+skills/pro-notify/tests/test_notify.py:    "dingtalk": "https://oapi.dingtalk.com/robot/send?access_token=unit-test-only",
+skills/pro-notify/tests/test_notify.py:        self.env_patch = patch.dict(os.environ, {
+skills/pro-notify/tests/test_notify.py:        self.env_patch.start()
+skills/pro-notify/tests/test_notify.py:        self.addCleanup(self.env_patch.stop)
+skills/pro-notify/tests/test_notify.py:        backend.set_password.side_effect = lambda service, name, value: vault.update({name: value})
+skills/pro-notify/tests/test_notify.py:        backend.get_password.side_effect = lambda service, name: vault.get(name)
+skills/pro-notify/tests/test_notify.py:            with patch.dict(os.environ, {}, clear=True):
+skills/pro-notify/tests/test_notify.py:        backend.delete_password.assert_called_once()
+skills/pro-notify/tests/test_notify.py:            self.configure(signing_secret_env="TEST_SIGN")
+skills/pro-notify/tests/test_notify.py:        self.configure(provider="feishu", signing_secret_env="TEST_SIGN")
+skills/pro-notify/tests/test_notify.py:        self.configure(provider="dingtalk", signing_secret_env="TEST_SIGN")
+skills/pro-notify/tests/test_notify.py:        with patch.dict(os.environ, {"TEST_WECOM": URLS["wecom"].replace(
+skills/pro-notify/tests/test_notify.py:        with patch.dict(os.environ, {"TEST_FEISHU": ""}), patch.object(notify, "post") as post:
+skills/pro-notify/tests/test_notify.py:            self.send(text="PRIVATE BODY EXAMPLE", event="completed", task_id="example-task")
+skills/pro-notify/tests/test_notify.py:        for value in ("PRIVATE BODY EXAMPLE", URLS["wecom"], "example-task"):
+skills/pro-notify/tests/test_notify.py:                "--event", "failed", "--task-id", "example")
+skills/pro-notify/tests/test_notify.py:                "--event", "completed", "--task-id", "example")
 scripts/verify.sh:sensitive_pattern='secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI'
 scripts/verify.sh:      printf '# 不含真实凭据、内网地址、本机绝对路径或私有组织标识。\n'
-AGENTS.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
-README.md:真实 server URL、env、token 和本机绝对路径放在个人宿主配置中；公开 README 保留通用工具名和配置方向。
-README.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
 environments/codex/agents/README.md:公开示例不包含个人 provider、token、私有工具地址或项目专属指令。
 environments/codex/AGENTS.md:- 需要 Git Bash 时，从 PowerShell 显式调用 `C:\Program Files\Git\bin\bash.exe`，例如 `& 'C:\Program Files\Git\bin\bash.exe' ./scripts/check.sh`。保持 shell 选择器为 PowerShell，避免被路由到 WSL。
 environments/codex/README.md:公开配置不包含 server URL、token、个人 provider 或本机路径。把这些内容留在自己的 `config.toml`、环境变量或密钥管理方案中。
@@ -41,3 +91,5 @@ environments/cline/000-global.md:- NEVER 暴露 secrets、token、密码或敏�
 environments/cursor/README.md:公开配置不包含 server URL、token、个人 provider 或本机绝对路径。
 environments/opencode/AGENTS.md:- NEVER 暴露 secrets、token、密码或敏感数据；凭据使用环境变量或密钥管理方案，不写入代码、公开配置、日志或回复。
 environments/opencode/README.md:API key、provider token 和私有服务地址应通过环境变量、`{env:VAR}` 或本机私有配置管理，不写入公开资产。公开仓库中的配置示例不得包含真实凭据。
+AGENTS.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
+README.md:真实 server URL、env、token 和本机绝对路径放在个人宿主配置中；公开 README 保留通用工具名和配置方向。

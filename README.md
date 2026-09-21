@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `13 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `14 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-13-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-14-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -189,6 +189,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
+| `pro-notify` | 用户主动启用的飞书 / Lark、钉钉、企业微信群机器人纯文本通知；CLI / Python 复用本机凭据，支持多渠道、事件去重和限流。 |
 | `pro-pick` | 为需要人拍板的接入点（图、音、视频、布局、文案）陈列候选到离线交互 HTML，人勾选后返回 JSON 再接入。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
@@ -204,6 +205,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 |---|---|
 | **文档资产** | Markdown、AGENTS.md、SKILL.md |
 | **安装脚本** | POSIX Shell、PowerShell |
+| **通知发送** | `pro-notify` 使用 Python 3.10+ 标准库；系统凭据库模式额外使用 `keyring` |
 | **新项目骨架** | `pro-newproj` 内置通用目录骨架、项目级规则和文档索引 |
 | **外部能力** | `context7`、`fast-context`、专业搜索 CLI、浏览器工具、subagents |
 | **质量检查** | [`scripts/verify.sh`](./scripts/verify.sh)、`find`、`grep`、`git diff --check` |
@@ -217,6 +219,12 @@ bash scripts/verify.sh
 
 覆盖敏感扫描、skill 与 environment 数量对账、README Skill 清单对账、Markdown 相对链接、`SKILL.md` frontmatter、`evals.json` 结构和 `git diff --check`。敏感扫描的预期噪声登记在 `scripts/verify-allowlist.txt`，文案变动后用 `bash scripts/verify.sh --update-allowlist` 重新生成并人工复核。
 
+`pro-notify` 的离线脚本测试（不使用真实凭据或发送消息）也在 CI 中运行：
+
+```bash
+python -B -m unittest discover -s skills/pro-notify/tests -v
+```
+
 ---
 
 ## 目录结构
@@ -228,7 +236,7 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/                       # 13 个可安装 skill，每个目录一个 SKILL.md
+├─ skills/                       # 14 个可安装 skill，每个目录一个 SKILL.md
 │  ├─ pro-copy/
 │  ├─ pro-exp/
 │  ├─ pro-explain/
@@ -236,6 +244,7 @@ agent-kit/
 │  ├─ pro-idea/
 │  ├─ pro-memory/
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
+│  ├─ pro-notify/                 # 主动通知、凭据引用与多渠道发送脚本
 │  ├─ pro-pick/                   # 候选陈列 HTML 模板与 manifest / result 协议
 │  ├─ pro-plans/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
