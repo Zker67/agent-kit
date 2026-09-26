@@ -13,6 +13,7 @@
 - 保持 diff 聚焦，不做无关重构或格式化。
 - `skills/` 只放可公开分发的自研 skill，不放 vendored、external、lockfile 或管理器状态。
 - `environments/` 按 coding agent 宿主保存配置指南和公开资产；其中的全局 instructions 不与 `skills/pro-newproj/assets/base-project/.agents/rules/` 混用。
+- 全局 instructions 中随操作系统变化的规则（shell、路径、包管理）只写在 `environments/<host>/platform/macos.md` 与 `windows.md`，本体在对应位置只留独占一行的 `{{PLATFORM}}`；不在本体中同时写多个平台的规则。
 - `skills/pro-newproj/assets/base-project/` 是新项目文档骨架的唯一事实源，必须保持通用，不绑定任何个人机器、组织流程或特定部署平台。
 - 修改文档后检查链接、数量和路径是否一致。
 
@@ -28,7 +29,7 @@ grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieAr
 
 若扫描命中安全说明类文本，需要逐条判断是否为真实敏感内容。
 
-上述检查连同数量对账、链接与 frontmatter 校验已收敛为一个脚本，等价于运行：
+上述检查连同数量对账、链接、frontmatter 与平台装配校验已收敛为一个脚本，等价于运行：
 
 ```bash
 bash scripts/verify.sh

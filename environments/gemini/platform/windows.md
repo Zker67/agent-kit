@@ -1,0 +1,1 @@
+- **Windows 执行环境**：常规 Git 操作及类 Unix 脚本优先使用 Git Bash (`C:\Program Files\Git\bin\bash.exe`)；Windows 原生任务与 `.ps1` 使用 PowerShell。

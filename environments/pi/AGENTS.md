@@ -74,9 +74,7 @@
 
 ## 命令执行环境
 
-- Windows 上常规仓库操作、Git、`rg`、`sed`、`awk` 和类 Unix 脚本优先通过 Pi 的 `bash` 使用 Git Bash。
-- Windows 原生命令、服务、注册表、权限、COM、`.ps1` 和 Windows 路径语义任务使用 `powershell.exe` 或 `cmd.exe`。
-- 命令失败时，先判断是 shell 语法、路径转换、权限还是工具缺失，再选择重试方式。
+{{PLATFORM}}
 - 搜索文本和文件时优先使用 `rg` 或 FFF 工具；不可用时再选择其他方案。
 
 ## 文件与工作区安全

@@ -5,7 +5,11 @@
 Python 3.10+。网络发送、环境变量引用、签名、限流只用标准库。**只有系统凭据库模式**需要：
 
 ```bash
-python -m pip install keyring
+python3 -m pip install keyring
+```
+
+```powershell
+py -3 -m pip install keyring
 ```
 
 使用和发送脚本相同的 Python 环境，是否安装由用户及宿主权限决定。
@@ -52,20 +56,20 @@ AI 不生成聊天中的真实密钥替换版本。若要配置飞书 / 钉钉�
 
 ## AI 非交互配置
 
-下面假定变量已经由用户安全提供；命令参数都是**变量名**：
+下面假定变量已经由用户安全提供；命令参数都是**变量名**。命令以 macOS / Linux 的 `python3` 书写，Windows PowerShell 中换成 `py -3`：
 
 ```bash
 # 企业微信：只需要机器人地址，默认存进系统凭据库
-python "<skill-dir>/scripts/notify.py" configure --name work --provider wecom --webhook-env PRO_NOTIFY_WECOM_WEBHOOK
+python3 "<skill-dir>/scripts/notify.py" configure --name work --provider wecom --webhook-env PRO_NOTIFY_WECOM_WEBHOOK
 
 # 飞书（Lark 也使用 feishu）：支持可选的签名校验
-python "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
+python3 "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
 
 # 钉钉：用户现有机器人选择了加签时提供签名变量
-python "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
+python3 "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
 
 # 不存值，只保存变量引用；后续每次运行都必须注入该变量
-python "<skill-dir>/scripts/notify.py" configure --name ci --provider wecom --webhook-env PRO_NOTIFY_WECOM_WEBHOOK --store env
+python3 "<skill-dir>/scripts/notify.py" configure --name ci --provider wecom --webhook-env PRO_NOTIFY_WECOM_WEBHOOK --store env
 ```
 
 - `configure` 不联网、不测试发送，不创建群机器人、不生成平台密钥。

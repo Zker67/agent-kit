@@ -32,10 +32,7 @@
   - 轻量结果足够时直接回答；仅在用户明确要求完整研究，或证据不足、相互冲突、需要多源综合时，升级到 `smart-search search "<query>" --format json`。
 - 只使用当前会话真实暴露的 skill、MCP 和 CLI；若某次会话缺少上述入口，明确说明缺失后再选择最接近的可用路线，不伪造工具调用。
 
-## Windows 命令环境
-
-- 仓库操作、Git、`rg` 和类 Unix 脚本优先使用 Git Bash；Windows 服务、注册表、权限、COM、`.ps1` 和 Windows 路径语义任务使用 PowerShell 或 `cmd.exe`。
-- 命令失败时先判断当前 shell、语法、路径转换、权限或工具缺失，再决定是否重试。
+{{PLATFORM}}
 
 ## 安全与 Git
 

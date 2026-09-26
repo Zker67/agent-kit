@@ -7,18 +7,23 @@
 | 文件 | 用途 | 建议入口 |
 |---|---|---|
 | [`GEMINI.md`](./GEMINI.md) | 用户级全局 instructions | `~/.gemini/GEMINI.md` |
+| [`platform/`](./platform/) | `GEMINI.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 
 ## 安装
 
+macOS / Git Bash：
+
 ```bash
-mkdir -p "$HOME/.gemini"
-cp environments/gemini/GEMINI.md "$HOME/.gemini/GEMINI.md"
+bash scripts/install-prompt.sh gemini
 ```
 
+PowerShell：
+
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.gemini" | Out-Null
-Copy-Item .\environments\gemini\GEMINI.md "$HOME\.gemini\GEMINI.md"
+.\scripts\install-prompt.ps1 gemini
 ```
+
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
 
 ## Antigravity 配置分工
 

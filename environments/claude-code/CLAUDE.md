@@ -34,7 +34,7 @@
 - For each new feature write integration tests against a real environment (happy path + edges + errors). Prefer real services; mocks are allowed only for paid SaaS or uncontrollable third parties, and must be paired with contract tests or recorded replay. Do not substitute unit tests for integration coverage.
 
 ## Shell
-- bash on Windows: default to `&&` for command chaining so failures stop the chain. Use `;` only when it is intentional for earlier failures to continue, and state why.
+{{PLATFORM}}
 
 ## Tool Routing
 Pick by intent; do not fall back to a generic tool when a specialized one is listed.

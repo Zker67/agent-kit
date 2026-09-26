@@ -5,7 +5,7 @@ description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffo
 
 # Pro New Project
 
-为新项目建立一套可直接协作、可长期维护的文档骨架。完整模板位于 `assets/base-project/`，它是这套结构的唯一事实源；优先调用 `scripts/new-project.ps1` 复制，不要在其他位置维护第二份模板。
+为新项目建立一套可直接协作、可长期维护的文档骨架。完整模板位于 `assets/base-project/`，它是这套结构的唯一事实源；优先调用自带脚本复制（macOS / Linux 用 `scripts/new-project.sh`，Windows 用 `scripts/new-project.ps1`），不要在其他位置维护第二份模板。
 
 ## 触发场景
 
@@ -69,24 +69,28 @@ description: 🆕 新建项目 / 初始化项目 / 项目骨架 / project scaffo
 
 - 新目录或空目录可以直接初始化。
 - 非空目录默认停止，不覆盖任何文件。
-- 用户明确要求给现有新仓库补文档时，使用 `-Merge`；脚本只复制缺失文件，并列出跳过的冲突文件。
+- 用户明确要求给现有新仓库补文档时，使用 `--merge`（PowerShell 为 `-Merge`）；脚本只复制缺失文件，并列出跳过的冲突文件。
 - 如果现有 `README.md`、`AGENTS.md` 或文档包含真实内容，保留它们，先读取再做聚焦合并。
 
 ### 3. 复制内置骨架
 
-在 PowerShell 中调用本 skill 自带脚本：
+按当前系统选择本 skill 自带脚本，两个脚本行为一致。
+
+macOS / Linux：
+
+```bash
+bash "<skill-dir>/scripts/new-project.sh" --name "<project-name>" --target-root "<parent-dir>"
+```
+
+Windows（PowerShell）：
 
 ```powershell
 & "<skill-dir>\scripts\new-project.ps1" -Name "<project-name>" -TargetRoot "<parent-dir>"
 ```
 
-给现有新仓库补缺失文档：
+给现有新仓库补缺失文档时，追加 `--merge`（PowerShell 为 `-Merge`）。
 
-```powershell
-& "<skill-dir>\scripts\new-project.ps1" -Name "<project-name>" -TargetRoot "<parent-dir>" -Merge
-```
-
-宿主无法执行 PowerShell 时，按 `assets/base-project/` 的相对路径完整复制文件，并遵守相同的“不覆盖已有文件”规则。
+宿主无法执行脚本时，按 `assets/base-project/` 的相对路径完整复制文件，并遵守相同的“不覆盖已有文件”规则。
 
 ### 4. 用已确认事实完成初始化
 

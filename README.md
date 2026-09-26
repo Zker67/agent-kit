@@ -35,6 +35,7 @@
 |---|---|
 | **跨宿主 skill 分发** | [`skills/`](./skills/) 保存可公开分发的自研 skill；安装脚本按目录复制到目标宿主读取的位置。 |
 | **任意目标目录安装** | [`scripts/install-skills.sh`](./scripts/install-skills.sh) 接收第一个路径参数；[`scripts/install-skills.ps1`](./scripts/install-skills.ps1) 接收 `-Target`。 |
+| **按平台装配全局 instructions** | [`scripts/install-prompt.sh`](./scripts/install-prompt.sh) / [`scripts/install-prompt.ps1`](./scripts/install-prompt.ps1) 把 `environments/<host>/platform/` 中当前平台（macOS 或 Windows）的片段填入 `{{PLATFORM}}` 后安装，宿主只看到一套平台规则。 |
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
 | **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agents/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
@@ -44,7 +45,7 @@
 
 ## 启动
 
-这是一个 source-first 资产包。环境指南和全局 instructions 由用户按宿主选择、备份并合并；安装脚本只负责把 `skills/` 复制到目标 agent 能读取的目录。成功标准是宿主实际加载了目标 instructions、运行时配置和所需 skills。
+这是一个 source-first 资产包。环境指南由用户按宿主选择；全局 instructions 由 `install-prompt` 脚本按当前平台装配后安装，`install-skills` 脚本把 `skills/` 复制到目标 agent 能读取的目录。成功标准是宿主实际加载了目标 instructions、运行时配置和所需 skills。
 
 ### 安装对象
 
@@ -149,7 +150,9 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `--clean` / `-Clean` | 关闭 | 复制前删除目标目录中已从本仓库移除的 skill。只影响 `pro-` 前缀目录，其他 skill 保持不动。 |
 | `CODEX_HOME` | Codex 用户目录 | 省略目标参数时，脚本优先安装到 `$CODEX_HOME/skills`。 |
 | 用户默认目录 | `.codex/skills` | 省略目标参数且 `CODEX_HOME` 为空时使用。 |
-| `environments/` | 手动选择 | 按宿主阅读配置指南，备份现有文件后复制全局 instructions，并合并必要配置。 |
+| `install-prompt` `<host>` | 必填 | 要安装全局 instructions 的宿主，例如 `bash scripts/install-prompt.sh claude-code`。 |
+| `--platform` / `-Platform` | 自动识别 | `install-prompt` 脚本指定 `macos` 或 `windows`；`--print` / `-Print` 只输出装配结果，`--dry-run` / `-DryRun` 只预览备份与写入。 |
+| `environments/` | 手动选择 | 按宿主阅读配置指南，用 `install-prompt` 脚本安装全局 instructions，并合并必要配置。 |
 
 ### 安装策略
 
@@ -256,12 +259,14 @@ agent-kit/
 │  ├─ codex/
 │  │  ├─ README.md
 │  │  ├─ AGENTS.md
+│  │  ├─ platform/                # {{PLATFORM}} 的 macOS / Windows 片段
 │  │  ├─ config.example.toml
 │  │  ├─ agents/
 │  │  └─ skills/
 │  ├─ cline/
 │  │  ├─ README.md
-│  │  └─ 000-global.md
+│  │  ├─ 000-global.md
+│  │  └─ platform/
 │  ├─ cursor/
 │  │  ├─ README.md
 │  │  ├─ user-rules.md
@@ -273,11 +278,13 @@ agent-kit/
 │  ├─ pi/
 │  │  ├─ README.md
 │  │  ├─ AGENTS.md
+│  │  ├─ platform/
 │  │  ├─ settings.example.json
 │  │  └─ models.example.json
 │  ├─ claude-code/
 │  │  ├─ README.md
 │  │  ├─ CLAUDE.md
+│  │  ├─ platform/
 │  │  └─ settings.example.json
 │  ├─ gemini/
 │  ├─ grok/
@@ -288,6 +295,8 @@ agent-kit/
 ├─ scripts/
 │  ├─ install-skills.sh
 │  ├─ install-skills.ps1
+│  ├─ install-prompt.sh           # 按平台装配并安装全局 instructions
+│  ├─ install-prompt.ps1
 │  ├─ verify.sh                   # 发布前验证门禁
 │  └─ verify-allowlist.txt        # 敏感扫描预期噪声清单
 └─ docs/

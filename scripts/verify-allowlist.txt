@@ -9,7 +9,7 @@ skills/pro-readme/assets/quality-checklist.md:| Env vars match | 配置 table ma
 skills/pro-readme/assets/readme-template.md:### 端口约定
 skills/pro-readme/assets/readme-template.md:| 通道 | 端口 |
 skills/pro-readme/assets/readme-template.md:{{1~2 sentence note about what npm start does, e.g. "同时启前后端；浏览器始终从前端访问，/api/* 内部代理到后端。"}}
-skills/pro-readme/assets/readme-template.md:**自定义端口**：
+skills/pro-readme/assets/readme-template.md:**自定义端口**（只保留项目实际支持平台的代码块）：
 skills/pro-readme/assets/readme-template.md:- {{risk-1, written as honest engineering limitation, not marketing fluff}}
 skills/pro-plans/SKILL.md:description: 创建、拆分、维护和归档项目 plans/ 计划文档，并同步 plans/README.md 索引。仅在用户要求计划落盘或项目规则明确要求时使用；对话中的规划、只读分析或实施任务的内部步骤不触发文件创建。本 Skill 不自动授权执行计划，也不阻断用户已明确授权的后续实施。
 skills/pro-newproj/SKILL.md:信息未知时保留明确占位注释或 `-`，不要猜测端口、命令、框架、部署方式、API 或业务功能。
@@ -40,14 +40,14 @@ skills/pro-notify/scripts/notify.py:    notify.add_argument("--task-id")
 skills/pro-notify/scripts/notify.py:                args.name, args.provider, args.webhook_env, args.signing_secret_env,
 skills/pro-notify/SKILL.md:4. **事件**：默认立即发送为 `manual`。任务通知分配一个不含个人信息的稳定 `task-id`，三类事件沿用它。`needs-input` 发完仍在当前对话中提问，不阻塞等待群聊回复。
 skills/pro-notify/SKILL.md:# 仅在用户明确启用了本次任务通知时；复用同一个 task-id
-skills/pro-notify/SKILL.md:python "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
+skills/pro-notify/SKILL.md:python3 "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
 skills/pro-notify/references/channels.md:- HTTPS 主机 `oapi.dingtalk.com`，路径 `/robot/send`，查询参数 `access_token`。
 skills/pro-notify/references/configuration.md:| 无桌面 / CI | 通常选环境变量引用，由现有 secret manager 注入 |
 skills/pro-notify/references/configuration.md:os.environ["PRO_NOTIFY_SETUP_WEBHOOK"] = getpass.getpass("Webhook: ")
 skills/pro-notify/references/configuration.md:    os.environ.pop("PRO_NOTIFY_SETUP_WEBHOOK", None)
 skills/pro-notify/references/configuration.md:AI 不生成聊天中的真实密钥替换版本。若要配置飞书 / 钉钉签名，用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。如果终端不能隐藏输入，应中止并改用已有的安全输入设施。
-skills/pro-notify/references/configuration.md:python "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
-skills/pro-notify/references/configuration.md:python "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
+skills/pro-notify/references/configuration.md:python3 "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
+skills/pro-notify/references/configuration.md:python3 "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
 skills/pro-notify/references/configuration.md:    event="completed", task_id="task-001", dry_run=False,
 skills/pro-notify/evals/evals.json:      "expected_output": "只对当前任务建立稳定 task-id，发送一条 needs-input 纯文本，并继续在当前对话提问；不提前发送完成或失败，不扩大到其他任务；重复同一事件不重发。",
 skills/pro-notify/tests/test_notify.py:    "dingtalk": "https://oapi.dingtalk.com/robot/send?access_token=unit-test-only",
@@ -70,11 +70,11 @@ skills/pro-notify/tests/test_notify.py:                "--event", "completed", "
 scripts/verify.sh:sensitive_pattern='secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI'
 scripts/verify.sh:      printf '# 不含真实凭据、内网地址、本机绝对路径或私有组织标识。\n'
 environments/codex/agents/README.md:公开示例不包含个人 provider、token、私有工具地址或项目专属指令。
-environments/codex/AGENTS.md:- 需要 Git Bash 时，从 PowerShell 显式调用 `C:\Program Files\Git\bin\bash.exe`，例如 `& 'C:\Program Files\Git\bin\bash.exe' ./scripts/check.sh`。保持 shell 选择器为 PowerShell，避免被路由到 WSL。
+environments/codex/platform/windows.md:- 需要 Git Bash 时，从 PowerShell 显式调用 `C:\Program Files\Git\bin\bash.exe`，例如 `& 'C:\Program Files\Git\bin\bash.exe' ./scripts/check.sh`。保持 shell 选择器为 PowerShell，避免被路由到 WSL。
 environments/codex/README.md:公开配置不包含 server URL、token、个人 provider 或本机路径。把这些内容留在自己的 `config.toml`、环境变量或密钥管理方案中。
 environments/claude-code/README.md:不要把 token、密码、私有组织名、内网地址或本机绝对路径写进公开文件。`settings.example.json` 只保留与身份、路径无关的中性字段；权限白名单和 hooks 与本机强绑定，不进入公开骨架。
 environments/claude-code/CLAUDE.md:- Secrets via env vars and environment files; never hardcode. Validate external input at system boundaries; use parameterized queries; keep secrets out of logs and error messages.
-environments/gemini/GEMINI.md:- **Windows 执行环境**：常规 Git 操作及类 Unix 脚本优先使用 Git Bash (`C:\Program Files\Git\bin\bash.exe`)；Windows 原生任务与 `.ps1` 使用 PowerShell。
+environments/gemini/platform/windows.md:- **Windows 执行环境**：常规 Git 操作及类 Unix 脚本优先使用 Git Bash (`C:\Program Files\Git\bin\bash.exe`)；Windows 原生任务与 `.ps1` 使用 PowerShell。
 environments/gemini/GEMINI.md:- 严禁泄露 secrets、token、密码或敏感数据；凭据走环境变量，数据库一律参数化查询。
 environments/grok/README.md:仓库中的规则正文包含经过泛化的工具路由。安装后应按本机已经启用的 MCP、skill 和模型目录调整，不要复制个人 provider 或私有服务地址。
 environments/grok/AGENTS.md:- New modules/directories must include a Chinese README.md; existing modules' READMEs must be updated when public surface (API、CLI、配置项、目录结构) changes. Pure 内部小修不必动 README。

@@ -25,7 +25,35 @@
 3. 全局自研 skill 从仓库根目录 [`skills/`](../skills/) 安装。
 4. 通用自研 skill 从仓库根目录 [`skills/`](../skills/) 获取；agent 专用 skill 从对应的 `environments/<agent>/skills/` 获取。
 5. Agent 和模型的说明见 [`docs/agents/`](../docs/agents/) 与 [`docs/models/`](../docs/models/)，不要把说明文档当作运行时配置入口。
-6. 修改后按宿主 README 的最小验证检查实际发现和加载结果。
+6. 全局 instructions 用 [`scripts/install-prompt.sh`](../scripts/install-prompt.sh) 或 [`scripts/install-prompt.ps1`](../scripts/install-prompt.ps1) 按平台装配安装，见下方「平台片段」。
+7. 修改后按宿主 README 的最小验证检查实际发现和加载结果。
+
+## 平台片段
+
+shell、路径和包管理这类随操作系统变化的规则，不同时写进同一份全局 instructions；装进宿主的文件只包含当前平台的一套规则，避免 AI 在两套规则之间误选。
+
+| 位置 | 内容 |
+|---|---|
+| `environments/<agent>/<全局 instructions>` | 本体；平台规则所在位置只留独占一行的 `{{PLATFORM}}` |
+| `environments/<agent>/platform/macos.md` | macOS 规则片段 |
+| `environments/<agent>/platform/windows.md` | Windows 规则片段 |
+
+安装脚本把 `{{PLATFORM}}` 替换为对应片段后写入宿主位置；目标文件已存在且内容不同时先备份为 `<目标>.bak-<时间戳>`。没有平台差异的宿主（Cursor、OpenCode、Windsurf）不含占位，脚本原样安装。
+
+```bash
+bash scripts/install-prompt.sh <agent>                      # 按 uname 自动识别平台
+bash scripts/install-prompt.sh <agent> --platform windows   # 显式指定
+bash scripts/install-prompt.sh <agent> --dry-run            # 预览备份与写入
+bash scripts/install-prompt.sh cursor --print               # 只输出，用于在设置界面粘贴
+```
+
+```powershell
+.\scripts\install-prompt.ps1 <agent>
+.\scripts\install-prompt.ps1 <agent> -Platform macos -DryRun
+.\scripts\install-prompt.ps1 cursor -Print
+```
+
+手动安装时复制本体，再把 `{{PLATFORM}}` 那一行替换为对应平台片段的全文。新增平台规则时只改 `platform/` 片段；`bash scripts/verify.sh` 会检查占位唯一、两个片段齐全、装配结果不混入另一平台的规则，并在有 `pwsh` 时对账两个脚本的输出。
 
 ## 统一分层
 

@@ -11,7 +11,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $SkillDir = Resolve-Path (Join-Path $PSScriptRoot "..")
-$TemplateDir = Join-Path $SkillDir "assets\base-project"
+$TemplateDir = Join-Path $SkillDir "assets/base-project"
 $TargetRootPath = [System.IO.Path]::GetFullPath($TargetRoot)
 $ProjectDir = [System.IO.Path]::GetFullPath((Join-Path $TargetRootPath $Name))
 

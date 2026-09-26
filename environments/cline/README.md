@@ -7,6 +7,7 @@
 | 文件 | 用途 | 默认安装位置 |
 |---|---|---|
 | [`000-global.md`](./000-global.md) | Cline 专属用户级全局规则 | `~/Documents/Cline/Rules/000-global.md` |
+| [`platform/`](./platform/) | `000-global.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 
 `000-` 只是稳定排序前缀，不是 Cline 强制文件名。规则目录中的 Markdown 会进入 Cline 上下文，因此内容应保持简短、高信号，不重复 Cline 已经内置的系统提示词。
 
@@ -29,19 +30,19 @@ Cline 当前系统提示词和工具定义已经覆盖：
 
 ## 安装全局规则
 
+macOS / Git Bash：
+
+```bash
+bash scripts/install-prompt.sh cline
+```
+
 PowerShell：
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\Documents\Cline\Rules" | Out-Null
-Copy-Item .\environments\cline\000-global.md "$HOME\Documents\Cline\Rules\000-global.md" -Force
+.\scripts\install-prompt.ps1 cline
 ```
 
-Git Bash / macOS / Linux：
-
-```bash
-mkdir -p "$HOME/Documents/Cline/Rules"
-cp environments/cline/000-global.md "$HOME/Documents/Cline/Rules/000-global.md"
-```
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
 
 本资产默认只安装到 Cline Rules Bank：
 

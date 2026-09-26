@@ -78,7 +78,15 @@ docker compose down
 
 [OPTIONAL — only if env-var port overrides are supported]
 
-**自定义端口**：
+**自定义端口**（只保留项目实际支持平台的代码块）：
+
+macOS / Linux：
+
+```bash
+FRONTEND_PORT=30007 BACKEND_PORT=30008 docker compose up -d --build
+```
+
+Windows（PowerShell）：
 
 ```powershell
 $env:FRONTEND_PORT = "30007"; $env:BACKEND_PORT = "30008"
@@ -116,7 +124,16 @@ curl http://localhost:{{port}}/health
 | `POST /api/{{...}}` | {{...}} |
 <!-- LIST: every public endpoint, grouped under H3 subheaders if there are >10 -->
 
-[OPTIONAL — sample request]
+[OPTIONAL — sample request; keep only the blocks for platforms the project supports]
+
+macOS / Linux：
+
+```bash
+curl -X POST http://localhost:{{port}}/api/{{...}} \
+  -H 'Content-Type: application/json' -d '{{...}}'
+```
+
+Windows（PowerShell）：
 
 ```powershell
 $body = @{ {{...}} } | ConvertTo-Json

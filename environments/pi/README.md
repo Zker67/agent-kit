@@ -7,6 +7,7 @@
 | 文件 | 用途 | 安装位置 |
 |---|---|---|
 | [`AGENTS.md`](./AGENTS.md) | 用户级全局 instructions | `~/.pi/agent/AGENTS.md` |
+| [`platform/`](./platform/) | `AGENTS.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 | [`settings.example.json`](./settings.example.json) | 主模型、推理档位、packages 和子代理默认值示例 | 参考后合并到 `~/.pi/agent/settings.json` |
 | [`models.example.json`](./models.example.json) | OpenAI Responses 兼容 provider、图片输入和 reasoning 模型示例 | 参考后合并到 `~/.pi/agent/models.json` |
 
@@ -35,21 +36,19 @@ pi --version
 
 ## 安装全局 instructions
 
-先备份已有文件，再复制公开基线。
-
-Git Bash / macOS / Linux：
+macOS / Git Bash：
 
 ```bash
-mkdir -p "$HOME/.pi/agent"
-cp environments/pi/AGENTS.md "$HOME/.pi/agent/AGENTS.md"
+bash scripts/install-prompt.sh pi
 ```
 
 PowerShell：
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.pi\agent" | Out-Null
-Copy-Item .\environments\pi\AGENTS.md "$HOME\.pi\agent\AGENTS.md"
+.\scripts\install-prompt.ps1 pi
 ```
+
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
 
 修改 instructions 后，重启 Pi 或执行 `/reload`。
 

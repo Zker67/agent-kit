@@ -30,10 +30,10 @@ description: 主动通知 / pro-notify / 发到飞书、钉钉、企业微信 / 
 
 ## 二、定位与配置
 
-先定位**本 skill 安装目录**下的 [scripts/notify.py](scripts/notify.py)，使用绝对路径执行。下面的 `<skill-dir>` 指该安装目录，绝不是假定当前业务仓库包含 `skills/`。需要 Python 3.10+；Windows 可用 `py -3`，其他环境通常为 `python3`。
+先定位**本 skill 安装目录**下的 [scripts/notify.py](scripts/notify.py)，使用绝对路径执行。下面的 `<skill-dir>` 指该安装目录，绝不是假定当前业务仓库包含 `skills/`。需要 Python 3.10+。下面的命令以 macOS / Linux 的 `python3` 书写，Windows PowerShell 中换成 `py -3`。macOS 自带的 `python3` 可能是 Xcode 命令行工具提供的 3.9，先用 `python3 --version` 确认；版本不足时告知用户，不擅自安装。
 
 ```bash
-python "<skill-dir>/scripts/notify.py" list
+python3 "<skill-dir>/scripts/notify.py" list
 ```
 
 - 默认配置在 `~/.config/pro-notify/config.json`，与宿主、工作目录和 skill 重装分离；配置只保存别名、平台和凭据引用。
@@ -53,14 +53,20 @@ python "<skill-dir>/scripts/notify.py" list
 
 ```bash
 # 文件路径替换成用户批准的 UTF-8 消息文件；同一命令可选择多个渠道
-python "<skill-dir>/scripts/notify.py" send --channel work --channel alerts --message-file "<message-file>" --dry-run
-python "<skill-dir>/scripts/notify.py" send --channel work --message-file "<message-file>"
+python3 "<skill-dir>/scripts/notify.py" send --channel work --channel alerts --message-file "<message-file>" --dry-run
+python3 "<skill-dir>/scripts/notify.py" send --channel work --message-file "<message-file>"
 
 # 仅在用户明确启用了本次任务通知时；复用同一个 task-id
-python "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
+python3 "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
 ```
 
-PowerShell 标准输入示例（UTF-8）：
+标准输入示例（UTF-8），macOS / Linux：
+
+```bash
+printf '%s\n' '本次任务已完成，检查通过。' | python3 -X utf8 "<skill-dir>/scripts/notify.py" send --channel work --message-stdin
+```
+
+Windows（PowerShell）：
 
 ```powershell
 $OutputEncoding = [System.Text.UTF8Encoding]::new()

@@ -7,25 +7,26 @@
 | 文件 | 用途 | 安装位置 |
 |---|---|---|
 | [`CLAUDE.md`](./CLAUDE.md) | 用户级全局 instructions | `~/.claude/CLAUDE.md` |
+| [`platform/`](./platform/) | `CLAUDE.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 | [`settings.example.json`](./settings.example.json) | 去敏后的 settings 骨架 | 参考后合并到 `~/.claude/settings.json` |
 
 ## 安装全局 instructions
 
-Git Bash / macOS / Linux：
+macOS / Git Bash：
 
 ```bash
-mkdir -p "$HOME/.claude"
-cp environments/claude-code/CLAUDE.md "$HOME/.claude/CLAUDE.md"
+bash scripts/install-prompt.sh claude-code
 ```
 
 PowerShell：
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.claude" | Out-Null
-Copy-Item .\environments\claude-code\CLAUDE.md "$HOME\.claude\CLAUDE.md"
+.\scripts\install-prompt.ps1 claude-code
 ```
 
-覆盖前先备份本机已有文件。本机副本可以在仓库版之上追加只属于自己的路由，例如生图 / 生视频 skill、部署 skill，这些不回写到公开仓库。
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
+
+本机副本可以在仓库版之上追加只属于自己的路由，例如生图 / 生视频 skill、部署 skill，这些不回写到公开仓库；重新安装后从备份中把这些追加内容合并回来。
 
 ## 安装 skills
 

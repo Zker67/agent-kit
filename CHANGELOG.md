@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0 - 2026-09-27
+
+- 全局 instructions 改为按平台装配：Codex、Cline、Pi、Claude Code、Gemini、Grok 的本体只留一行 `{{PLATFORM}}`，Windows 规则原样移入 `environments/<host>/platform/windows.md`，新增对应的 `platform/macos.md`；装进宿主的文件只包含当前平台的一套规则。
+- 新增 `scripts/install-prompt.sh` 与 `scripts/install-prompt.ps1`：按当前系统自动识别平台（可用 `--platform` / `-Platform` 指定），装配后写入宿主位置，目标已存在且内容不同时先备份；支持 `--print` / `-Print` 与 `--dry-run` / `-DryRun`。Cursor、OpenCode、Windsurf 没有平台差异，原样安装。
+- `scripts/verify.sh` 新增平台装配检查：占位唯一、两个片段齐全、装配结果不残留占位且不混入另一平台的规则；有 `pwsh` 时对账两个安装脚本的输出。各宿主 README 的安装步骤改为调用 `install-prompt` 脚本。
+- skills 与脚本适配 macOS / Windows 双版本：`pro-newproj` 新增与 `new-project.ps1` 行为一致的 `new-project.sh`（`--name`、`--target-root`、`--merge`，兼容 macOS 自带 bash 3.2），`new-project.ps1` 模板路径改用正斜杠以便在 macOS / Linux 的 `pwsh` 下运行；`pro-notify` 命令示例改用 `python3` 并注明 Windows 换成 `py -3`，补充 macOS 自带 Python 可能低于 3.10 的提醒和 bash 标准输入示例；`pro-readme` 模板的端口覆盖与请求示例补充 bash 写法。
+- `scripts/verify.sh` 新增 `pro-newproj` 双版本脚本检查（新建结果与模板一致、非空目录默认拒绝，有 `pwsh` 时同时检查 `.ps1`）；CI 改为在 Ubuntu 与 macOS 上各跑一遍。
+
 ## 0.14.0 - 2026-09-21
 
 - 新增 `pro-notify`：仅由用户明确触发，支持飞书 / Lark、钉钉、企业微信群机器人纯文本通知；可立即发送，或显式启用本次任务完成、失败、需要处理三类事件通知，不默认安装 hooks。

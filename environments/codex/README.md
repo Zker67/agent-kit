@@ -7,27 +7,26 @@
 | 文件 | 用途 | 安装位置 |
 |---|---|---|
 | [`AGENTS.md`](./AGENTS.md) | 用户级全局 instructions | `~/.codex/AGENTS.md` |
+| [`platform/`](./platform/) | `AGENTS.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 | [`config.example.toml`](./config.example.toml) | 主任务模型与推理强度示例 | 参考后合并到 `~/.codex/config.toml` |
 | [`agents/default.example.toml`](./agents/default.example.toml) | 子代理角色示例 | 参考后写入 `~/.codex/agents/<role>.toml` |
 | [`profiles/`](./profiles/) | 可选模型/推理参数 overlay 示例 | 参考后按 Codex profile 机制合并 |
 
 ## 安装全局 instructions
 
-先备份已有文件，再复制公开基线。
-
-Git Bash / macOS / Linux：
+macOS / Git Bash：
 
 ```bash
-mkdir -p "$HOME/.codex"
-cp environments/codex/AGENTS.md "$HOME/.codex/AGENTS.md"
+bash scripts/install-prompt.sh codex
 ```
 
 PowerShell：
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.codex" | Out-Null
-Copy-Item .\environments\codex\AGENTS.md "$HOME\.codex\AGENTS.md"
+.\scripts\install-prompt.ps1 codex
 ```
+
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
 
 ## 配置分工
 

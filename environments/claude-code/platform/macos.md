@@ -1,0 +1,1 @@
+- macOS: use zsh as the default shell and default to `&&` for command chaining so failures stop the chain. Use `;` only when it is intentional for earlier failures to continue, and state why.

@@ -39,8 +39,4 @@
 - 网页技术检查按任务需要使用当前可用的 Codex 内置 Browser；依赖用户已有登录态时使用用户通过 Chrome 扩展连接的浏览器。安装扩展和更改登录状态另行确认。
 - 独立读取和检索可并行，有依赖或共享编辑时串行。多 agent 或多模型在宿主允许、已有授权且能改善效率或质量时使用，并明确分工与交付范围。
 
-## Windows 命令环境
-
-- 以 PowerShell 作为命令执行器外层，Windows 原生操作使用 PowerShell 或 cmd.exe。
-- 需要 Git Bash 时，从 PowerShell 显式调用 `C:\Program Files\Git\bin\bash.exe`，例如 `& 'C:\Program Files\Git\bin\bash.exe' ./scripts/check.sh`。保持 shell 选择器为 PowerShell，避免被路由到 WSL。
-- 命令失败后，依据错误判断 shell 语法、路径转换、权限或工具缺失，再选择重试方式。
+{{PLATFORM}}

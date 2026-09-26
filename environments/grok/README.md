@@ -7,18 +7,23 @@
 | 文件 | 用途 | 安装位置 |
 |---|---|---|
 | [`AGENTS.md`](./AGENTS.md) | 用户级全局 instructions | `~/.grok/AGENTS.md` |
+| [`platform/`](./platform/) | `AGENTS.md` 中 `{{PLATFORM}}` 的 macOS / Windows 片段 | 由安装脚本按平台填入 |
 
 ## 安装
 
+macOS / Git Bash：
+
 ```bash
-mkdir -p "$HOME/.grok"
-cp environments/grok/AGENTS.md "$HOME/.grok/AGENTS.md"
+bash scripts/install-prompt.sh grok
 ```
 
+PowerShell：
+
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.grok" | Out-Null
-Copy-Item .\environments\grok\AGENTS.md "$HOME\.grok\AGENTS.md"
+.\scripts\install-prompt.ps1 grok
 ```
+
+脚本按当前平台把 [`platform/`](./platform/) 中对应的片段填入 `{{PLATFORM}}`，目标文件已存在且内容不同时先自动备份；`--dry-run` / `-DryRun` 只预览。手动安装方式见 [平台片段](../README.md#平台片段)。
 
 ## 配置分工
 

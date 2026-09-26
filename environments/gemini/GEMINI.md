@@ -20,7 +20,7 @@
 ## 4. 工具与环境路由
 - **代码与文件检索**：优先使用 `fast-context` 或 `rg`；使用 Skill 时只读取最小必要参考并注明所用 Skill。
 - **网络与媒体生成**：联网搜索与核验优先使用专业搜索 CLI；图像与视频生成走对应的 Pro 工具。
-- **Windows 执行环境**：常规 Git 操作及类 Unix 脚本优先使用 Git Bash (`C:\Program Files\Git\bin\bash.exe`)；Windows 原生任务与 `.ps1` 使用 PowerShell。
+{{PLATFORM}}
 
 ## 5. 安全边界
 - 严禁泄露 secrets、token、密码或敏感数据；凭据走环境变量，数据库一律参数化查询。

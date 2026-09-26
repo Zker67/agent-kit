@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 发布前验证门禁。等价于 AGENTS.md「验证」段的人工检查，任何一项不通过即非 0 退出。
-# 只依赖 Bash、find、grep、git；evals JSON 校验可选使用 python3 或 jq。
+# 只依赖 Bash、find、grep、git；evals JSON 校验可选使用 python3 或 jq，平台装配对账可选使用 pwsh。
 # 链接检查以 Linux 结果为准：Windows Git Bash 下大小写不敏感，可能漏报大小写错误的链接。
 set -euo pipefail
 
@@ -282,7 +282,111 @@ PY
   fi
 }
 
-# --- 7. git diff --check -----------------------------------------------------
+# --- 7. 全局 instructions 平台装配 --------------------------------------------
+# 本体只留一行 {{PLATFORM}}，平台规则只写在 platform/<平台>.md；装配结果不得混入另一平台的规则。
+# 装配逻辑只在 install-prompt.sh / .ps1 中实现一次，这里直接调用；有 pwsh 时对账两个脚本的输出。
+check_platform_prompts() {
+  local bad=0 dir host has_marker p out other windows_words macos_words pwsh_ok=0
+  windows_words='Windows|PowerShell|Git Bash|cmd\.exe|\.ps1'
+  macos_words='macOS|zsh|Homebrew'
+  pwsh -NoProfile -Command 'exit 0' >/dev/null 2>&1 && pwsh_ok=1
+
+  for dir in environments/*/; do
+    host="$(basename "$dir")"
+    [ -f "$dir/README.md" ] || continue
+
+    if ! out="$(bash scripts/install-prompt.sh "$host" --platform macos --print 2>&1)"; then
+      printf '      install-prompt.sh 无法装配 %s: %s\n' "$host" "$out"
+      bad=$((bad + 1)); continue
+    fi
+
+    has_marker=0
+    grep -rlFx --include='*.md' --exclude=README.md --exclude-dir=platform '{{PLATFORM}}' "$dir" >/dev/null 2>&1 && has_marker=1
+
+    if [ "$has_marker" -eq 0 ]; then
+      if [ -d "$dir/platform" ]; then
+        printf '      %s 有 platform/ 但本体没有 {{PLATFORM}}\n' "$host"
+        bad=$((bad + 1))
+      fi
+      if printf '%s\n' "$out" | grep -qE "$windows_words|$macos_words"; then
+        printf '      %s 本体含平台规则，应移入 platform/ 片段\n' "$host"
+        bad=$((bad + 1))
+      fi
+      continue
+    fi
+
+    for p in macos windows; do
+      if [ ! -f "$dir/platform/$p.md" ]; then
+        printf '      缺少平台片段: %splatform/%s.md\n' "$dir" "$p"
+        bad=$((bad + 1)); continue
+      fi
+      out="$(bash scripts/install-prompt.sh "$host" --platform "$p" --print)"
+      if printf '%s\n' "$out" | grep -qF '{{PLATFORM}}'; then
+        printf '      %s (%s) 装配后仍残留 {{PLATFORM}}\n' "$host" "$p"
+        bad=$((bad + 1))
+      fi
+      other="$macos_words"; [ "$p" = "macos" ] && other="$windows_words"
+      if printf '%s\n' "$out" | grep -qE "$other"; then
+        printf '      %s (%s) 装配结果混入了另一平台的规则\n' "$host" "$p"
+        bad=$((bad + 1))
+      fi
+      if [ "$pwsh_ok" -eq 1 ] && ! cmp -s \
+        <(bash scripts/install-prompt.sh "$host" --platform "$p" --print) \
+        <(pwsh -NoProfile -File scripts/install-prompt.ps1 "$host" -Platform "$p" -Print); then
+        printf '      %s (%s) install-prompt.sh 与 install-prompt.ps1 装配结果不一致\n' "$host" "$p"
+        bad=$((bad + 1))
+      fi
+    done
+  done
+
+  [ "$pwsh_ok" -eq 0 ] && printf 'WARN  平台装配：未找到 pwsh，跳过 install-prompt.ps1 对账\n'
+  if [ "$bad" -eq 0 ]; then
+    pass "平台装配：各宿主装配结果只含单一平台规则"
+  else
+    fail "平台装配：$bad 处问题"
+  fi
+}
+
+# --- 8. pro-newproj 双版本脚本 -------------------------------------------------
+# new-project.sh 与 new-project.ps1 行为须一致：新建结果与模板逐文件相同，非空目录不加 merge 时拒绝。
+check_newproj_scripts() {
+  local tmp template bad=0
+  template="skills/pro-newproj/assets/base-project"
+  tmp="$(mktemp -d)"
+
+  if ! bash skills/pro-newproj/scripts/new-project.sh --name sh-demo --target-root "$tmp" >/dev/null \
+    || ! diff -r "$template" "$tmp/sh-demo" >/dev/null; then
+    printf '      new-project.sh 新建结果与模板不一致\n'
+    bad=$((bad + 1))
+  fi
+  if bash skills/pro-newproj/scripts/new-project.sh --name sh-demo --target-root "$tmp" >/dev/null 2>&1; then
+    printf '      new-project.sh 未拒绝非空目录\n'
+    bad=$((bad + 1))
+  fi
+
+  if pwsh -NoProfile -Command 'exit 0' >/dev/null 2>&1; then
+    if ! pwsh -NoProfile -File skills/pro-newproj/scripts/new-project.ps1 -Name ps-demo -TargetRoot "$tmp" >/dev/null \
+      || ! diff -r "$template" "$tmp/ps-demo" >/dev/null; then
+      printf '      new-project.ps1 新建结果与模板不一致\n'
+      bad=$((bad + 1))
+    fi
+    if pwsh -NoProfile -File skills/pro-newproj/scripts/new-project.ps1 -Name ps-demo -TargetRoot "$tmp" >/dev/null 2>&1; then
+      printf '      new-project.ps1 未拒绝非空目录\n'
+      bad=$((bad + 1))
+    fi
+  else
+    printf 'WARN  pro-newproj 脚本：未找到 pwsh，跳过 new-project.ps1 检查\n'
+  fi
+  rm -rf "$tmp"
+
+  if [ "$bad" -eq 0 ]; then
+    pass "pro-newproj 脚本：新建结果与模板一致，非空目录默认拒绝"
+  else
+    fail "pro-newproj 脚本：$bad 处问题"
+  fi
+}
+
+# --- 9. git diff --check -----------------------------------------------------
 check_whitespace() {
   if ! git rev-parse --git-dir >/dev/null 2>&1; then
     printf 'WARN  git diff --check：非 Git 工作树，跳过\n'
@@ -304,6 +408,8 @@ check_skill_list
 check_links
 check_frontmatter
 check_evals
+check_platform_prompts
+check_newproj_scripts
 check_whitespace
 
 printf '\n'
