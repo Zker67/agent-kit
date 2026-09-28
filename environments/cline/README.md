@@ -99,7 +99,7 @@ cline --version
 cline --help
 ```
 
-本机 Cline CLI 3.0.49 的帮助信息显示：直接传入 prompt 时默认进入 Act 模式并开启 auto-approve。审查、诊断或计划任务可显式关闭：
+本机 Cline CLI 3.0.65 的帮助信息显示：直接传入 prompt 时默认进入 Act 模式并开启 auto-approve。审查、诊断或计划任务可显式关闭：
 
 ```bash
 cline --auto-approve false --plan "<task>"

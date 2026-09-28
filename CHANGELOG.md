@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.1 - 2026-09-28
+
+- Cline 全局规则对齐 Codex / Claude Code 的授权模型：补充作用域与优先级、计划落盘条件、Git 写操作含暂存、阻断时先推进已授权部分、分阶段汇报、视觉效果由用户验收，以及 Context7 MCP 不可用时的 `smart-search c7d` 退路；README 中 CLI 版本更新为 3.0.65。
+
 ## 0.15.0 - 2026-09-27
 
 - 全局 instructions 改为按平台装配：Codex、Cline、Pi、Claude Code、Gemini、Grok 的本体只留一行 `{{PLATFORM}}`，Windows 规则原样移入 `environments/<host>/platform/windows.md`，新增对应的 `platform/macos.md`；装进宿主的文件只包含当前平台的一套规则。
