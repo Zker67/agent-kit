@@ -2,7 +2,7 @@
 
 ## 0.15.1 - 2026-09-28
 
-- Cline 全局规则对齐 Codex / Claude Code 的授权模型：补充作用域与优先级、计划落盘条件、Git 写操作含暂存、阻断时先推进已授权部分、分阶段汇报、视觉效果由用户验收，以及 Context7 MCP 不可用时的 `smart-search c7d` 退路；README 中 CLI 版本更新为 3.0.65。
+- Cline 全局规则按 Codex 基线的结构与密度重写：补充作用域与优先级、计划落盘条件、消息发送与重要数据删除授权、阻断时先推进已授权部分、视觉效果由用户验收；删除 `fast-context` 调参与联网命令模板等展开说明，只保留 auto-approve、`browser_action`、`skills` 等 Cline 专属差异。README 中 CLI 版本更新为 3.0.65。
 
 ## 0.15.0 - 2026-09-27
 
