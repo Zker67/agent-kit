@@ -18,16 +18,8 @@ skills/pro-notify/scripts/notify.py:    value = os.environ.get(name)
 skills/pro-notify/scripts/notify.py:            value = secure_keyring().get_password(SERVICE, ref["keyring"])
 skills/pro-notify/scripts/notify.py:            or parts.username is not None or parts.password is not None
 skills/pro-notify/scripts/notify.py:                "dingtalk": ("oapi.dingtalk.com", "/robot/send", "access_token"),
-skills/pro-notify/scripts/notify.py:            or set(channel) - {"provider", "webhook", "signing_secret"}
 skills/pro-notify/scripts/notify.py:        if channel["provider"] == "wecom" and "signing_secret" in channel:
 skills/pro-notify/scripts/notify.py:            raise NotifyError("wecom_does_not_use_signing_secret")
-skills/pro-notify/scripts/notify.py:        for field in ("webhook", "signing_secret"):
-skills/pro-notify/scripts/notify.py:def configure(name, provider, webhook_env, signing_secret_env=None,
-skills/pro-notify/scripts/notify.py:    if provider == "wecom" and signing_secret_env:
-skills/pro-notify/scripts/notify.py:        raise NotifyError("wecom_does_not_use_signing_secret")
-skills/pro-notify/scripts/notify.py:    if signing_secret_env:
-skills/pro-notify/scripts/notify.py:        values["signing_secret"] = env_value(signing_secret_env)
-skills/pro-notify/scripts/notify.py:        refs["signing_secret"] = {"env": signing_secret_env}
 skills/pro-notify/scripts/notify.py:                    backend.set_password(SERVICE, account, value)
 skills/pro-notify/scripts/notify.py:                    backend.delete_password(SERVICE, account)
 skills/pro-notify/scripts/notify.py:                       "key" if provider == "wecom" else "access_token"
@@ -38,16 +30,9 @@ skills/pro-notify/scripts/notify.py:                secret.encode(), f"{stamp}\n
 skills/pro-notify/scripts/notify.py:    setup.add_argument("--signing-secret-env")
 skills/pro-notify/scripts/notify.py:    notify.add_argument("--task-id")
 skills/pro-notify/scripts/notify.py:                args.name, args.provider, args.webhook_env, args.signing_secret_env,
-skills/pro-notify/SKILL.md:4. **事件**：默认立即发送为 `manual`。任务通知分配一个不含个人信息的稳定 `task-id`，三类事件沿用它。`needs-input` 发完仍在当前对话中提问，不阻塞等待群聊回复。
-skills/pro-notify/SKILL.md:# 仅在用户明确启用了本次任务通知时；复用同一个 task-id
-skills/pro-notify/SKILL.md:python3 "<skill-dir>/scripts/notify.py" send --channel work --event completed --task-id task-001 --message-file "<message-file>"
-skills/pro-notify/references/channels.md:- HTTPS 主机 `oapi.dingtalk.com`，路径 `/robot/send`，查询参数 `access_token`。
 skills/pro-notify/references/configuration.md:| 无桌面 / CI | 通常选环境变量引用，由现有 secret manager 注入 |
 skills/pro-notify/references/configuration.md:os.environ["PRO_NOTIFY_SETUP_WEBHOOK"] = getpass.getpass("Webhook: ")
 skills/pro-notify/references/configuration.md:    os.environ.pop("PRO_NOTIFY_SETUP_WEBHOOK", None)
-skills/pro-notify/references/configuration.md:AI 不生成聊天中的真实密钥替换版本。若要配置飞书 / 钉钉签名，用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。如果终端不能隐藏输入，应中止并改用已有的安全输入设施。
-skills/pro-notify/references/configuration.md:python3 "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
-skills/pro-notify/references/configuration.md:python3 "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
 skills/pro-notify/references/configuration.md:    event="completed", task_id="task-001", dry_run=False,
 skills/pro-notify/evals/evals.json:      "expected_output": "只对当前任务建立稳定 task-id，发送一条 needs-input 纯文本，并继续在当前对话提问；不提前发送完成或失败，不扩大到其他任务；重复同一事件不重发。",
 skills/pro-notify/tests/test_notify.py:    "dingtalk": "https://oapi.dingtalk.com/robot/send?access_token=unit-test-only",
@@ -93,3 +78,91 @@ environments/opencode/AGENTS.md:- NEVER 暴露 secrets、token、密码或敏感
 environments/opencode/README.md:API key、provider token 和私有服务地址应通过环境变量、`{env:VAR}` 或本机私有配置管理，不写入公开资产。公开仓库中的配置示例不得包含真实凭据。
 AGENTS.md:grep -RInE 'secret|token|password|api[_-]?key|sk-|AKIA|PRIVATE|C:\\|D:\\|IndieArk|github.com/indieark|192\.168|\.env|私有|内部|客户|公司|GHCR|PROJECTS.md|端口|奇数|偶数|20001|Steam_UI' .
 README.md:真实 server URL、env、token 和本机绝对路径放在个人宿主配置中；公开 README 保留通用工具名和配置方向。
+skills/pro-notify/evals/evals.json:      "prompt": "用 pro-notify 加一个 ntfy 渠道，别名 phone，用我自建的服务器 https://ntfy.example.com，主题 deploy，永久 token 已安全注入 PRO_NOTIFY_NTFY_TOKEN。配好就行，先别发。",
+skills/pro-notify/evals/evals.json:      "expected_output": "只配置 ntfy 渠道：服务器地址和主题作为普通参数，token 只按变量名传入并默认存进系统凭据库，不可用时询问是否改为环境变量引用；不回显 token，不联网，不发测试消息。若用户改用官方 ntfy.sh 且不配 token，提醒主题名即访问凭证，应选难猜的名字。",
+skills/pro-notify/references/channels.md:| [ntfy 发布文档](https://docs.ntfy.sh/publish/) | JSON 发布到根路径、access token 鉴权、主题命名与返回的消息对象。 |
+skills/pro-notify/references/configuration.md:- `configure` 不联网、不测试发送，不创建群机器人、ntfy 用户或 token，不生成平台密钥。
+skills/pro-notify/references/configuration.md:      "token": {"env": "PRO_NOTIFY_NTFY_TOKEN"}
+skills/pro-notify/tests/test_notify.py:        # Default store is keyring, but with no token there is nothing to put in it.
+skills/pro-notify/tests/test_notify.py:    def test_ntfy_self_hosted_token_is_reference_and_bearer_header(self):
+skills/pro-notify/tests/test_notify.py:        result = self.configure_ntfy(server="https://NTFY.Example.com:443/", token_env="TEST_NTFY_TOKEN")
+skills/pro-notify/tests/test_notify.py:        self.assertEqual(channel["token"], {"env": "TEST_NTFY_TOKEN"})
+skills/pro-notify/tests/test_notify.py:    def test_ntfy_token_persists_in_keyring(self):
+skills/pro-notify/tests/test_notify.py:                             token_env="TEST_NTFY_TOKEN", config_path=self.config)
+skills/pro-notify/tests/test_notify.py:    def test_ntfy_rejects_invalid_server_topic_token_and_mixed_options(self):
+skills/pro-notify/tests/test_notify.py:        for token in ("not-a-token", "tk_" + "A" * 29, "tk_" + "0" * 28, NTFY_TOKEN + "\r\nX: y"):
+skills/pro-notify/tests/test_notify.py:            with self.subTest(token=token[:8]), patch.dict(os.environ, {"TEST_NTFY_TOKEN": token}):
+skills/pro-notify/tests/test_notify.py:                with self.assertRaisesRegex(notify.NotifyError, "invalid_ntfy_token"):
+skills/pro-notify/tests/test_notify.py:                    self.configure_ntfy(token_env="TEST_NTFY_TOKEN")
+skills/pro-notify/tests/test_notify.py:        with self.assertRaisesRegex(notify.NotifyError, "ntfy_uses_server_topic_token"):
+skills/pro-notify/tests/test_notify.py:        with self.assertRaisesRegex(notify.NotifyError, "server_topic_token_require_ntfy"):
+skills/pro-notify/tests/test_notify.py:                         "token": NTFY_TOKEN},
+skills/pro-notify/tests/test_notify.py:        self.configure_ntfy(server="https://ntfy.example.com", token_env="TEST_NTFY_TOKEN")
+skills/pro-notify/tests/test_notify.py:                                "--token-env", "TEST_NTFY_TOKEN", "--store", "env")
+skills/pro-notify/scripts/notify.py:def validate_token(token):
+skills/pro-notify/scripts/notify.py:    if not NTFY_TOKEN.fullmatch(token):
+skills/pro-notify/scripts/notify.py:        raise NotifyError("invalid_ntfy_token")
+skills/pro-notify/scripts/notify.py:        secrets = ("token",) if ntfy else ("webhook", "signing_secret")
+skills/pro-notify/scripts/notify.py:        if set(channel) - {"provider", *required, *secrets} or required - set(channel):
+skills/pro-notify/scripts/notify.py:        for field in secrets:
+skills/pro-notify/scripts/notify.py:def configure(name, provider, webhook_env=None, signing_secret_env=None,
+skills/pro-notify/scripts/notify.py:    ntfy takes a plain server URL and topic plus an optional access-token env name.
+skills/pro-notify/scripts/notify.py:        if webhook_env or signing_secret_env:
+skills/pro-notify/scripts/notify.py:            raise NotifyError("ntfy_uses_server_topic_token")
+skills/pro-notify/scripts/notify.py:        if token_env:
+skills/pro-notify/scripts/notify.py:            values["token"] = env_value(token_env)
+skills/pro-notify/scripts/notify.py:            validate_token(values["token"])
+skills/pro-notify/scripts/notify.py:            refs["token"] = {"env": token_env}
+skills/pro-notify/scripts/notify.py:        if server or topic or token_env:
+skills/pro-notify/scripts/notify.py:            raise NotifyError("server_topic_token_require_ntfy")
+skills/pro-notify/scripts/notify.py:        if provider == "wecom" and signing_secret_env:
+skills/pro-notify/scripts/notify.py:        if signing_secret_env:
+skills/pro-notify/scripts/notify.py:            values["signing_secret"] = env_value(signing_secret_env)
+skills/pro-notify/scripts/notify.py:            refs["signing_secret"] = {"env": signing_secret_env}
+skills/pro-notify/scripts/notify.py:        if "token" in channel:
+skills/pro-notify/scripts/notify.py:            token = resolve(channel["token"])
+skills/pro-notify/scripts/notify.py:            validate_token(token)
+skills/pro-notify/scripts/notify.py:            headers["Authorization"] = f"Bearer {token}"
+skills/pro-notify/scripts/notify.py:    setup.add_argument("--token-env", help="ntfy only, optional access token")
+skills/pro-notify/evals/evals.json:      "expected_output": "只读渠道指南与 channel-ntfy.md，不读其他渠道文档；说明 Android / iOS / 网页版订阅方式，官方 ntfy.sh 可匿名或注册拿 token、自建服务器用 ntfy user / access / token 命令建只写用户和永久 token；推荐自建用 agent 主题，官方匿名用 agent 加随机后缀。只回答，不配置、不发送。",
+skills/pro-notify/references/channel-feishu.md:python3 "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
+skills/pro-notify/references/channel-feishu.md:交互终端里用 `getpass` 录入时，签名密钥用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。
+skills/pro-notify/references/channel-feishu.md:- HTTPS 主机 `open.feishu.cn` 或 `open.larksuite.com`，路径 `/open-apis/bot/v2/hook/<id>`，不带查询参数；端口只允许 443。
+skills/pro-notify/references/channels.md:- 只记录安全状态，不回显地址、签名、token、响应正文或异常原文。
+skills/pro-notify/references/configuration.md:| `send … --event completed\|failed\|needs-input --task-id <id>` | 本次任务通知，去重 | 同上 |
+skills/pro-notify/references/configuration.md:- 默认 `--store keyring` 把变量值导入系统凭据库，后续发送不需要原变量；`--store env` 只保存变量名，后续每次运行都必须注入。输出的 `store` 为 `none` 表示该渠道没有任何凭据（例如不带 token 的 ntfy），无需凭据库。
+skills/pro-notify/references/channel-ntfy.md:| 客户端 | 获取方式 | 订阅自建服务器 |
+skills/pro-notify/references/channel-ntfy.md:## 二、怎么注册 / 拿 token
+skills/pro-notify/references/channel-ntfy.md:token 是 `tk_` 开头的 32 位永久 access token，只用于发送端（本 skill），手机端用自己的账号登录即可。
+skills/pro-notify/references/channel-ntfy.md:- 不注册也能用：匿名主题谁知道名字谁就能订阅和发送，此时不配 token。
+skills/pro-notify/references/channel-ntfy.md:- 要 token：在网页版注册并登录账号，进入账户页的访问令牌（Access tokens）创建，过期时间选永不过期。只有自己能用的保留主题按官方账户套餐提供。
+skills/pro-notify/references/channel-ntfy.md:ntfy token add agent-bot                   # 输出 tk_…，不带 --expires 即永久
+skills/pro-notify/references/channel-ntfy.md:- 也可以用声明式配置 `auth-users` / `auth-tokens`（环境变量 `NTFY_AUTH_USERS` / `NTFY_AUTH_TOKENS`）写死用户和 token，或在网页版账户页创建。
+skills/pro-notify/references/channel-ntfy.md:- token 生成后由用户在自己的终端放进环境变量，不贴进聊天。
+skills/pro-notify/references/channel-ntfy.md:| 自建（deny-all + token） | `agent` | 有访问控制，名字简单无妨 |
+skills/pro-notify/references/channel-ntfy.md:地址、主题、token 都由 `configure` 配置；地址和主题是普通参数，token 只传**环境变量名**。命令以 macOS / Linux 的 `python3` 书写，Windows PowerShell 中换成 `py -3`。
+skills/pro-notify/references/channel-ntfy.md:# 自建服务器：token 默认存进系统凭据库，之后发送不需要原变量；--default 设为默认渠道
+skills/pro-notify/references/channel-ntfy.md:python3 "<skill-dir>/scripts/notify.py" configure --name agent --provider ntfy --server https://ntfy.example.com --topic agent --token-env PRO_NOTIFY_NTFY_TOKEN --default
+skills/pro-notify/references/channel-ntfy.md:python3 "<skill-dir>/scripts/notify.py" configure --name agent --provider ntfy --server https://ntfy.example.com --topic agent --token-env PRO_NOTIFY_NTFY_TOKEN --store env
+skills/pro-notify/references/channel-ntfy.md:- `--server` 只接受 `https://主机[:端口]`，不带用户信息、路径、查询参数或片段；保存前统一为小写主机，去掉默认端口 443 和末尾斜杠。
+skills/pro-notify/references/channel-ntfy.md:- ntfy 只用 `--server`、`--topic`、`--token-env`；不接受 `--webhook-env` / `--signing-secret-env`。
+skills/pro-notify/references/channel-ntfy.md:- 交互终端里用 `getpass` 录入时，把 token 收集到临时环境变量后调用 `notify.configure("agent", "ntfy", server="https://ntfy.example.com", topic="agent", token_env="<临时变量名>")`。
+skills/pro-notify/references/channel-ntfy.md:- `configure` 不联网，不创建 ntfy 用户、权限或 token。
+skills/pro-notify/references/channel-ntfy.md:- POST 到服务器根路径 `/`，`Content-Type: application/json`，有 token 时加 `Authorization: Bearer <token>`；不使用用户名密码，不把 token 放进 URL 的 `?auth=`。
+skills/pro-notify/references/channel-ntfy.md:| `invalid_ntfy_server` | 改为 `https://主机[:端口]`，不支持 HTTP 或子路径。 |
+skills/pro-notify/references/channel-ntfy.md:| `invalid_ntfy_token` | 须为 `tk_` 加 29 位小写字母或数字；不支持密码。 |
+skills/pro-notify/references/channel-ntfy.md:| `ntfy_uses_server_topic_token` / `server_topic_token_require_ntfy` | 参数与平台不匹配，ntfy 只用 `--server` / `--topic` / `--token-env`。 |
+skills/pro-notify/references/channel-ntfy.md:| `http_rejected` | 多为 401 / 403：token 无效、过期，或该用户对主题没有写权限。 |
+skills/pro-notify/references/channel-dingtalk.md:钉钉**自定义群机器人 Webhook**，不是企业内部应用机器人。通用的 CLI 用法、默认渠道、凭据存储和通用错误见 [配置指南](configuration.md)。
+skills/pro-notify/references/channel-dingtalk.md:在目标群的群设置里添加机器人，选择自定义机器人。钉钉要求至少选一种安全设置：自定义关键词、加签或 IP 地址段。完成后复制 Webhook 地址，形如 `https://oapi.dingtalk.com/robot/send?access_token=<token>`；选了加签时同时复制签名密钥。两者都是凭据，不贴进聊天。官方说明见 [钉钉机器人安全设置](https://open.dingtalk.com/document/group/customize-robot-security-settings)。
+skills/pro-notify/references/channel-dingtalk.md:python3 "<skill-dir>/scripts/notify.py" configure --name ops --provider dingtalk --webhook-env PRO_NOTIFY_DING_WEBHOOK --signing-secret-env PRO_NOTIFY_DING_SIGN
+skills/pro-notify/references/channel-dingtalk.md:交互终端里用 `getpass` 录入时，签名密钥用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。
+skills/pro-notify/references/channel-dingtalk.md:- HTTPS 主机 `oapi.dingtalk.com`，路径 `/robot/send`，查询参数只有一个非空 `access_token`；端口只允许 443。
+skills/pro-notify/references/channel-wecom.md:企业微信不使用签名，传 `--signing-secret-env` 会报 `wecom_does_not_use_signing_secret`。
+skills/pro-notify/references/channel-wecom.md:- HTTPS 主机 `qyapi.weixin.qq.com`，路径 `/cgi-bin/webhook/send`，查询参数只有一个非空 `key`；端口只允许 443。
+skills/pro-notify/references/channel-wecom.md:| `wecom_does_not_use_signing_secret` | 去掉签名参数。 |
+skills/pro-notify/scripts/notify.py:              server=None, topic=None, token_env=None, make_default=False):
+skills/pro-notify/scripts/notify.py:                args.server, args.topic, args.token_env, args.default,
+skills/pro-notify/SKILL.md:- 本次任务通知只按实际发生的 `completed`、`failed`、`needs-input` 各发一次，三类事件复用同一个不含个人信息的 `task-id`；`needs-input` 发完仍在当前对话中提问。
+skills/pro-notify/SKILL.md:- 不修改宿主 hooks、全局 instructions 或调度器；不回显 Webhook、签名、token、配置原文或服务端响应。宿主要求走 MCP / Connectors 时遵循该路由，但保持同样边界。
+skills/pro-notify/SKILL.md:   printf '%s\n' '…' | python3 -X utf8 "<skill-dir>/scripts/notify.py" send --message-stdin --event completed --task-id task-001

@@ -20,12 +20,18 @@ import uuid
 
 
 HOME = Path.home() / ".config" / "pro-notify"
-PROVIDERS = ("feishu", "dingtalk", "wecom")
+PROVIDERS = ("feishu", "dingtalk", "wecom", "ntfy")
+# The only message format each provider accepts; ntfy is user-triggered, so always loud Markdown.
+FORMATS = {"feishu": "text", "dingtalk": "text", "wecom": "text", "ntfy": "markdown"}
 EVENTS = ("manual", "completed", "failed", "needs-input")
 SERVICE = "pro-notify"
 DEDUP_SECONDS = 86400
+NTFY_SERVER = "https://ntfy.sh"
 NAME = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}\Z")
 ENV_NAME = re.compile(r"[a-zA-Z_][a-zA-Z0-9_]*\Z")
+TOPIC = re.compile(r"[a-zA-Z0-9_-]{1,64}\Z")
+NTFY_TOKEN = re.compile(r"tk_[a-z0-9]{29}\Z")
+HOST = re.compile(r"[a-z0-9]([a-z0-9.-]*[a-z0-9])?\Z")
 
 
 class NotifyError(Exception):
@@ -165,24 +171,60 @@ def validate_url(provider, url):
         raise NotifyError("invalid_webhook_url") from None
 
 
+def validate_server(url):
+    """Return the canonical https://host[:port] form of an ntfy server."""
+    try:
+        parts = urllib.parse.urlsplit(url)
+        port = parts.port
+        if (
+            parts.scheme != "https" or not HOST.fullmatch(parts.hostname or "")
+            or parts.username is not None or parts.password is not None
+            or parts.path not in ("", "/") or parts.query or parts.fragment
+            or any(c.isspace() or ord(c) < 32 for c in url)
+        ):
+            raise ValueError
+    except (ValueError, TypeError, AttributeError):
+        raise NotifyError("invalid_ntfy_server") from None
+    return f"https://{parts.hostname}" + (f":{port}" if port not in (None, 443) else "")
+
+
+def validate_topic(topic):
+    if not isinstance(topic, str) or not TOPIC.fullmatch(topic):
+        raise NotifyError("invalid_ntfy_topic")
+
+
+def validate_token(token):
+    if not NTFY_TOKEN.fullmatch(token):
+        raise NotifyError("invalid_ntfy_token")
+
+
 def load_config(path, missing_ok=False):
     data = read_json(path, {"version": 1, "channels": {}} if missing_ok else None)
     if (
         not isinstance(data, dict) or type(data.get("version")) is not int
         or data["version"] != 1 or not isinstance(data.get("channels"), dict)
+        or set(data) - {"version", "channels", "default"}
+        or ("default" in data and data["default"] not in data["channels"])
     ):
         raise NotifyError("invalid_config")
     for name, channel in data["channels"].items():
         if (
             not NAME.fullmatch(name) or not isinstance(channel, dict)
             or channel.get("provider") not in PROVIDERS
-            or set(channel) - {"provider", "webhook", "signing_secret"}
-            or "webhook" not in channel
         ):
             raise NotifyError("invalid_channel")
+        ntfy = channel["provider"] == "ntfy"
+        required = {"server", "topic"} if ntfy else {"webhook"}
+        secrets = ("token",) if ntfy else ("webhook", "signing_secret")
+        if set(channel) - {"provider", *required, *secrets} or required - set(channel):
+            raise NotifyError("invalid_channel")
+        if ntfy:
+            if validate_server(channel["server"]) != channel["server"]:
+                raise NotifyError("invalid_ntfy_server")
+            validate_topic(channel["topic"])
         if channel["provider"] == "wecom" and "signing_secret" in channel:
             raise NotifyError("wecom_does_not_use_signing_secret")
-        for field in ("webhook", "signing_secret"):
+        for field in secrets:
             if field not in channel:
                 continue
             ref = channel[field]
@@ -195,27 +237,45 @@ def load_config(path, missing_ok=False):
     return data
 
 
-def configure(name, provider, webhook_env, signing_secret_env=None,
-              store="keyring", replace=False, config_path=None):
-    """Persist references, optionally copying process env values to the OS vault."""
+def configure(name, provider, webhook_env=None, signing_secret_env=None,
+              store="keyring", replace=False, config_path=None,
+              server=None, topic=None, token_env=None, make_default=False):
+    """Persist references, optionally copying process env values to the OS vault.
+
+    ntfy takes a plain server URL and topic plus an optional access-token env name.
+    The first configured channel, or one configured with make_default, becomes the default.
+    """
     path = Path(config_path) if config_path else HOME / "config.json"
     if not isinstance(name, str) or not NAME.fullmatch(name) or provider not in PROVIDERS:
         raise NotifyError("invalid_channel")
     if store not in ("env", "keyring"):
         raise NotifyError("invalid_store")
-    if provider == "wecom" and signing_secret_env:
-        raise NotifyError("wecom_does_not_use_signing_secret")
-    values = {"webhook": env_value(webhook_env)}
-    validate_url(provider, values["webhook"])
-    refs = {"webhook": {"env": webhook_env}}
-    if signing_secret_env:
-        values["signing_secret"] = env_value(signing_secret_env)
-        refs["signing_secret"] = {"env": signing_secret_env}
+    if provider == "ntfy":
+        if webhook_env or signing_secret_env:
+            raise NotifyError("ntfy_uses_server_topic_token")
+        refs = {"server": validate_server(server or NTFY_SERVER), "topic": topic}
+        validate_topic(topic)
+        values = {}
+        if token_env:
+            values["token"] = env_value(token_env)
+            validate_token(values["token"])
+            refs["token"] = {"env": token_env}
+    else:
+        if server or topic or token_env:
+            raise NotifyError("server_topic_token_require_ntfy")
+        if provider == "wecom" and signing_secret_env:
+            raise NotifyError("wecom_does_not_use_signing_secret")
+        values = {"webhook": env_value(webhook_env)}
+        validate_url(provider, values["webhook"])
+        refs = {"webhook": {"env": webhook_env}}
+        if signing_secret_env:
+            values["signing_secret"] = env_value(signing_secret_env)
+            refs["signing_secret"] = {"env": signing_secret_env}
     with locked(path):
         data = load_config(path, missing_ok=True)
         if name in data["channels"] and not replace:
             raise NotifyError("channel_exists_use_replace")
-        backend = secure_keyring() if store == "keyring" else None
+        backend = secure_keyring() if store == "keyring" and values else None
         created = []
         try:
             if backend:
@@ -224,6 +284,8 @@ def configure(name, provider, webhook_env, signing_secret_env=None,
                     backend.set_password(SERVICE, account, value)
                     created.append(account)
                     refs[field] = {"keyring": account}
+            if make_default or not data["channels"]:
+                data["default"] = name
             data["channels"][name] = {"provider": provider, **refs}
             write_json(path, data)
         except Exception:
@@ -233,11 +295,46 @@ def configure(name, provider, webhook_env, signing_secret_env=None,
                 except Exception:
                     pass
             raise NotifyError("configuration_write_failed") from None
-    return {"channel": name, "provider": provider, "status": "configured", "store": store}
+    return {"channel": name, "provider": provider, "status": "configured",
+            "store": store if values else "none", "default": data.get("default") == name}
+
+
+def set_default(name, config_path=None):
+    path = Path(config_path) if config_path else HOME / "config.json"
+    with locked(path):
+        data = load_config(path)
+        if name not in data["channels"]:
+            raise NotifyError("channel_not_found")
+        data["default"] = name
+        try:
+            write_json(path, data)
+        except Exception:
+            raise NotifyError("configuration_write_failed") from None
+    return {"channel": name, "status": "default_set"}
+
+
+def list_channels(config_path=None):
+    """Aliases with provider, message format and default flag; never credentials."""
+    data = load_config(config_path or HOME / "config.json")
+    return [{"channel": name, "provider": channel["provider"],
+             "format": FORMATS[channel["provider"]], "default": data.get("default") == name}
+            for name, channel in data["channels"].items()]
 
 
 def build_request(channel, text, now=None):
     provider = channel["provider"]
+    if provider == "ntfy":
+        headers = {}
+        if "token" in channel:
+            token = resolve(channel["token"])
+            validate_token(token)
+            headers["Authorization"] = f"Bearer {token}"
+        endpoint_id = hashlib.sha256(
+            json.dumps([channel["server"], channel["topic"]]).encode()
+        ).hexdigest()
+        # User-triggered only, so every ntfy message is Markdown at max priority.
+        payload = {"topic": channel["topic"], "message": text, "markdown": True, "priority": 5}
+        return provider, channel["server"] + "/", payload, endpoint_id, headers
     url = resolve(channel["webhook"])
     validate_url(provider, url)
     parts = urllib.parse.urlsplit(url)
@@ -268,7 +365,7 @@ def build_request(channel, text, now=None):
                 "timestamp": stamp, "sign": base64.b64encode(digest).decode()
             })
     # Hash the destination, not the signature or alias, for shared rate limits.
-    return provider, url, payload, endpoint_id
+    return provider, url, payload, endpoint_id, {}
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -276,10 +373,10 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def post(provider, url, payload):
+def post(provider, url, payload, headers=None):
     request = urllib.request.Request(
         url, data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        headers={"Content-Type": "application/json"}, method="POST"
+        headers={"Content-Type": "application/json", **(headers or {})}, method="POST"
     )
     try:
         opener = urllib.request.build_opener(NoRedirect())
@@ -292,6 +389,14 @@ def post(provider, url, payload):
         result = json.loads(raw)
         if not isinstance(result, dict):
             raise NotifyError("response_unconfirmed")
+        if provider == "ntfy":
+            # ntfy echoes the stored message; anything else is not a confirmed publish.
+            if (
+                result.get("event") != "message" or result.get("topic") != payload["topic"]
+                or not isinstance(result.get("id"), str) or not result["id"]
+            ):
+                raise NotifyError("response_unconfirmed")
+            return
         field = "code" if provider == "feishu" else "errcode"
         if provider == "feishu" and field not in result:
             field = "StatusCode"
@@ -365,14 +470,21 @@ def finish(path, event_id, status):
 
 def send(channels, text, event="manual", task_id=None, dry_run=False,
          config_path=None, state_path=None):
-    """Send only to selected aliases; the caller must already have user authorization."""
+    """Send to selected aliases, or the default one when channels is None.
+
+    The caller must already have user authorization.
+    """
     if not isinstance(text, str) or not text.strip() or len(text.encode("utf-8")) > 2048:
         raise NotifyError("text_required_max_2048_bytes")
     if event not in EVENTS or (event != "manual" and (not isinstance(task_id, str) or not task_id.strip())):
         raise NotifyError("event_requires_task_id")
-    if not isinstance(channels, (list, tuple)) or not channels:
+    if channels is not None and (not isinstance(channels, (list, tuple)) or not channels):
         raise NotifyError("select_channels")
     data = load_config(config_path or HOME / "config.json")
+    if channels is None:
+        if "default" not in data:
+            raise NotifyError("no_default_channel")
+        channels = [data["default"]]
     selected = list(dict.fromkeys(channels))
     if any(name not in data["channels"] for name in selected):
         raise NotifyError("channel_not_found")
@@ -380,7 +492,7 @@ def send(channels, text, event="manual", task_id=None, dry_run=False,
     plans = [(name, build_request(data["channels"][name], text)) for name in selected]
     results = []
     path = Path(state_path) if state_path else HOME / "state.json"
-    for name, (provider, url, payload, endpoint_id) in plans:
+    for name, (provider, url, payload, endpoint_id, headers) in plans:
         result = {"channel": name, "provider": provider}
         if dry_run:
             results.append({**result, "status": "dry_run"})
@@ -399,7 +511,7 @@ def send(channels, text, event="manual", task_id=None, dry_run=False,
             results.append({**result, "status": "failed", "error": "state_unavailable"})
             continue
         try:
-            post(provider, url, payload)
+            post(provider, url, payload, headers)
             result["status"] = "accepted"
         except NotifyError as exc:
             result.update(
@@ -424,13 +536,19 @@ def main(argv=None):
     setup = commands.add_parser("configure", help="Configure using named process environment values")
     setup.add_argument("--name", required=True)
     setup.add_argument("--provider", choices=PROVIDERS, required=True)
-    setup.add_argument("--webhook-env", required=True)
+    setup.add_argument("--webhook-env")
     setup.add_argument("--signing-secret-env")
+    setup.add_argument("--server", help=f"ntfy only, default {NTFY_SERVER}")
+    setup.add_argument("--topic", help="ntfy only")
+    setup.add_argument("--token-env", help="ntfy only, optional access token")
     setup.add_argument("--store", choices=("keyring", "env"), default="keyring")
     setup.add_argument("--replace", action="store_true")
-    commands.add_parser("list", help="List aliases, never credentials")
-    notify = commands.add_parser("send", help="Send an explicitly authorized plain-text message")
-    notify.add_argument("--channel", action="append", required=True)
+    setup.add_argument("--default", action="store_true", help="Make this the default channel")
+    commands.add_parser("list", help="List aliases, formats and the default, never credentials")
+    choose = commands.add_parser("default", help="Set the default channel")
+    choose.add_argument("--name", required=True)
+    notify = commands.add_parser("send", help="Send an explicitly authorized message")
+    notify.add_argument("--channel", action="append", help="Repeatable; omit for the default")
     source = notify.add_mutually_exclusive_group(required=True)
     source.add_argument("--message-stdin", action="store_true")
     source.add_argument("--message-file", type=Path)
@@ -443,11 +561,12 @@ def main(argv=None):
             output = configure(
                 args.name, args.provider, args.webhook_env, args.signing_secret_env,
                 args.store, args.replace, args.config,
+                args.server, args.topic, args.token_env, args.default,
             )
         elif args.command == "list":
-            config = load_config(args.config)
-            output = [{"channel": name, "provider": channel["provider"]}
-                      for name, channel in config["channels"].items()]
+            output = list_channels(args.config)
+        elif args.command == "default":
+            output = set_default(args.name, args.config)
         else:
             import sys
             text = (sys.stdin.read() if args.message_stdin

@@ -30,6 +30,7 @@ URLS = {
     "feishu": "https://open.feishu.cn/open-apis/bot/v2/hook/unit-test-only",
     "dingtalk": "https://oapi.dingtalk.com/robot/send?access_token=unit-test-only",
 }
+NTFY_TOKEN = "tk_" + "0" * 29
 
 
 class NotifyTests(unittest.TestCase):
@@ -47,6 +48,7 @@ class NotifyTests(unittest.TestCase):
             "TEST_FEISHU": URLS["feishu"],
             "TEST_DINGTALK": URLS["dingtalk"],
             "TEST_SIGN": "unit-test-signing-value",
+            "TEST_NTFY_TOKEN": NTFY_TOKEN,
         })
         self.env_patch.start()
         self.addCleanup(self.env_patch.stop)
@@ -65,6 +67,10 @@ class NotifyTests(unittest.TestCase):
     def configure(self, name="work", provider="wecom", **kwargs):
         return notify.configure(name, provider, f"TEST_{provider.upper()}",
                                 store="env", config_path=self.config, **kwargs)
+
+    def configure_ntfy(self, name="phone", topic="alerts", **kwargs):
+        return notify.configure(name, "ntfy", topic=topic, store="env",
+                                config_path=self.config, **kwargs)
 
     def send(self, text="任务已完成", channels=None, **kwargs):
         return notify.send(channels or ["work"], text, config_path=self.config,
@@ -199,15 +205,16 @@ class NotifyTests(unittest.TestCase):
     def test_wecom_payload_is_exact_plain_text(self):
         self.configure()
         channel = notify.load_config(self.config)["channels"]["work"]
-        provider, url, payload, _ = notify.build_request(channel, "这里是通知")
+        provider, url, payload, _, headers = notify.build_request(channel, "这里是通知")
         self.assertEqual(provider, "wecom")
         self.assertEqual(url, URLS["wecom"])
         self.assertEqual(payload, {"msgtype": "text", "text": {"content": "这里是通知"}})
+        self.assertEqual(headers, {})
 
     def test_feishu_signing_uses_empty_message(self):
         self.configure(provider="feishu", signing_secret_env="TEST_SIGN")
         channel = notify.load_config(self.config)["channels"]["work"]
-        _, _, payload, _ = notify.build_request(channel, "hello", now=1234.5)
+        _, _, payload, _, _ = notify.build_request(channel, "hello", now=1234.5)
         expected = base64.b64encode(hmac.new(
             b"1234\nunit-test-signing-value", b"", hashlib.sha256
         ).digest()).decode()
@@ -217,7 +224,7 @@ class NotifyTests(unittest.TestCase):
     def test_dingtalk_signing_and_endpoint_identity(self):
         self.configure(provider="dingtalk", signing_secret_env="TEST_SIGN")
         channel = notify.load_config(self.config)["channels"]["work"]
-        _, url, payload, identity = notify.build_request(channel, "hello", now=1234.5)
+        _, url, payload, identity, _ = notify.build_request(channel, "hello", now=1234.5)
         query = urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)
         expected = base64.b64encode(hmac.new(
             b"unit-test-signing-value", b"1234500\nunit-test-signing-value", hashlib.sha256
@@ -448,7 +455,8 @@ class NotifyTests(unittest.TestCase):
         self.configure()
         code, result = self.cli("list")
         self.assertEqual(code, 0)
-        self.assertEqual(result, [{"channel": "work", "provider": "wecom"}])
+        self.assertEqual(result, [{"channel": "work", "provider": "wecom",
+                                   "format": "text", "default": True}])
         code, result = self.cli("send", "--channel", "work", "--message-stdin", "--dry-run")
         self.assertEqual(code, 0)
         self.assertEqual(result[0]["status"], "dry_run")
@@ -499,6 +507,196 @@ class NotifyTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(json.loads(result.stdout)[0]["status"], "dry_run")
         self.assertFalse(self.state.exists())
+
+    def test_ntfy_defaults_to_official_server_without_vault(self):
+        # Default store is keyring, but with no token there is nothing to put in it.
+        result = notify.configure("phone", "ntfy", topic="alerts", config_path=self.config)
+        self.assertEqual(result["store"], "none")
+        channel = notify.load_config(self.config)["channels"]["phone"]
+        self.assertEqual(channel, {"provider": "ntfy", "server": "https://ntfy.sh", "topic": "alerts"})
+        provider, url, payload, _, headers = notify.build_request(channel, "这里是通知")
+        self.assertEqual((provider, url), ("ntfy", "https://ntfy.sh/"))
+        self.assertEqual(payload, {"topic": "alerts", "message": "这里是通知",
+                                   "markdown": True, "priority": 5})
+        self.assertEqual(headers, {})
+
+    def test_ntfy_self_hosted_token_is_reference_and_bearer_header(self):
+        result = self.configure_ntfy(server="https://NTFY.Example.com:443/", token_env="TEST_NTFY_TOKEN")
+        self.assertEqual(result["store"], "env")
+        self.assertNotIn(NTFY_TOKEN, self.config.read_text(encoding="utf-8"))
+        channel = notify.load_config(self.config)["channels"]["phone"]
+        self.assertEqual(channel["server"], "https://ntfy.example.com")
+        self.assertEqual(channel["token"], {"env": "TEST_NTFY_TOKEN"})
+        _, url, _, _, headers = notify.build_request(channel, "hello")
+        self.assertEqual(url, "https://ntfy.example.com/")
+        self.assertEqual(headers, {"Authorization": f"Bearer {NTFY_TOKEN}"})
+
+    def test_ntfy_custom_port_is_kept(self):
+        self.configure_ntfy(server="https://ntfy.example.com:8443")
+        channel = notify.load_config(self.config)["channels"]["phone"]
+        self.assertEqual(notify.build_request(channel, "hello")[1], "https://ntfy.example.com:8443/")
+
+    def test_ntfy_token_persists_in_keyring(self):
+        vault = {}
+        backend = Mock()
+        backend.set_password.side_effect = lambda service, name, value: vault.update({name: value})
+        backend.get_password.side_effect = lambda service, name: vault.get(name)
+        with patch.object(notify, "secure_keyring", return_value=backend):
+            notify.configure("phone", "ntfy", topic="alerts", server="https://ntfy.example.com",
+                             token_env="TEST_NTFY_TOKEN", config_path=self.config)
+            with patch.dict(os.environ, {}, clear=True):
+                self.assertEqual(self.send(channels=["phone"], dry_run=True)[0]["status"], "dry_run")
+        self.assertEqual(list(vault.values()), [NTFY_TOKEN])
+        self.assertNotIn(NTFY_TOKEN, self.config.read_text(encoding="utf-8"))
+
+    def test_ntfy_rejects_invalid_server_topic_token_and_mixed_options(self):
+        for server in ("http://ntfy.example.com", "https://user@ntfy.example.com",
+                       "https://ntfy.example.com/sub", "https://ntfy.example.com/?a=1",
+                       "https://ntfy.example.com/#x", "https://ntfy.example.com\n",
+                       "https://ntfy_bad.example.com", "https://ntfy.example.com:99999", "ntfy.sh"):
+            with self.subTest(server=server), self.assertRaisesRegex(notify.NotifyError, "invalid_ntfy_server"):
+                self.configure_ntfy(server=server)
+        for topic in (None, "", "中文", "a/b", "a" * 65):
+            with self.subTest(topic=topic), self.assertRaisesRegex(notify.NotifyError, "invalid_ntfy_topic"):
+                self.configure_ntfy(topic=topic)
+        for token in ("not-a-token", "tk_" + "A" * 29, "tk_" + "0" * 28, NTFY_TOKEN + "\r\nX: y"):
+            with self.subTest(token=token[:8]), patch.dict(os.environ, {"TEST_NTFY_TOKEN": token}):
+                with self.assertRaisesRegex(notify.NotifyError, "invalid_ntfy_token"):
+                    self.configure_ntfy(token_env="TEST_NTFY_TOKEN")
+        with self.assertRaisesRegex(notify.NotifyError, "ntfy_uses_server_topic_token"):
+            self.configure_ntfy(webhook_env="TEST_WECOM")
+        with self.assertRaisesRegex(notify.NotifyError, "server_topic_token_require_ntfy"):
+            self.configure(topic="alerts")
+        self.assertFalse(self.config.exists())
+
+    def test_ntfy_tampered_config_is_rejected(self):
+        for channel in ({"provider": "ntfy", "server": "https://NTFY.sh", "topic": "alerts"},
+                        {"provider": "ntfy", "server": "https://ntfy.sh"},
+                        {"provider": "ntfy", "server": "https://ntfy.sh", "topic": "a/b"},
+                        {"provider": "ntfy", "server": "https://ntfy.sh", "topic": "alerts",
+                         "webhook": {"env": "TEST_WECOM"}},
+                        {"provider": "ntfy", "server": "https://ntfy.sh", "topic": "alerts",
+                         "token": NTFY_TOKEN},
+                        {"provider": "wecom", "webhook": {"env": "TEST_WECOM"}, "topic": "alerts"}):
+            notify.write_json(self.config, {"version": 1, "channels": {"phone": channel}})
+            with self.subTest(channel=channel), self.assertRaises(notify.NotifyError):
+                notify.load_config(self.config)
+
+    def test_ntfy_rate_identity_is_server_and_topic(self):
+        self.configure_ntfy()
+        self.configure_ntfy("same", server="https://NTFY.SH/")
+        self.configure_ntfy("other", topic="deploy")
+        channels = notify.load_config(self.config)["channels"]
+        identity = {name: notify.build_request(c, "x")[3] for name, c in channels.items()}
+        self.assertEqual(identity["phone"], identity["same"])
+        self.assertNotEqual(identity["phone"], identity["other"])
+        with patch.object(notify, "post") as post:
+            results = self.send(channels=["phone", "same"], event="completed", task_id="example")
+        self.assertEqual([r["status"] for r in results], ["accepted", "duplicate"])
+        post.assert_called_once()
+
+    def test_ntfy_post_requires_message_echo(self):
+        cases = [
+            (b'{"id":"abc123","time":1,"event":"message","topic":"alerts","message":"hi"}', True),
+            (b'{"id":"abc123","event":"message","topic":"other"}', False),
+            (b'{"id":"","event":"message","topic":"alerts"}', False),
+            (b'{"id":1,"event":"message","topic":"alerts"}', False),
+            (b'{"id":"abc123","event":"open","topic":"alerts"}', False),
+            (b'{"code":40101,"error":"unauthorized"}', False),
+            (b'not-json', False),
+        ]
+        for body, success in cases:
+            opener = self.response(body)
+            with self.subTest(body=body), patch.object(
+                    notify.urllib.request, "build_opener", return_value=opener):
+                if success:
+                    notify.post("ntfy", "https://ntfy.sh/", {"topic": "alerts", "message": "hi"})
+                else:
+                    with self.assertRaisesRegex(notify.NotifyError, "response_unconfirmed"):
+                        notify.post("ntfy", "https://ntfy.sh/", {"topic": "alerts", "message": "hi"})
+
+    def test_ntfy_send_passes_bearer_header_without_leaking(self):
+        self.configure_ntfy(server="https://ntfy.example.com", token_env="TEST_NTFY_TOKEN")
+        opener = self.response(b'{"id":"abc123","event":"message","topic":"alerts"}')
+        with patch.object(notify.urllib.request, "build_opener", return_value=opener):
+            results = self.send(channels=["phone"])
+        request = opener.open.call_args.args[0]
+        self.assertEqual(request.full_url, "https://ntfy.example.com/")
+        self.assertEqual(request.get_header("Authorization"), f"Bearer {NTFY_TOKEN}")
+        self.assertEqual(request.get_header("Content-type"), "application/json")
+        self.assertEqual(json.loads(request.data), {"topic": "alerts", "message": "任务已完成",
+                                                    "markdown": True, "priority": 5})
+        self.assertEqual(results, [{"channel": "phone", "provider": "ntfy", "status": "accepted"}])
+        self.assertNotIn(NTFY_TOKEN, self.state.read_text(encoding="utf-8"))
+
+    def test_cli_configure_ntfy(self):
+        code, result = self.cli("configure", "--name", "phone", "--provider", "ntfy",
+                                "--server", "https://ntfy.example.com", "--topic", "alerts",
+                                "--token-env", "TEST_NTFY_TOKEN", "--store", "env")
+        self.assertEqual(code, 0)
+        self.assertEqual(result["store"], "env")
+        self.assertNotIn(NTFY_TOKEN, json.dumps(result))
+        code, result = self.cli("list")
+        self.assertEqual(result, [{"channel": "phone", "provider": "ntfy",
+                                   "format": "markdown", "default": True}])
+        code, result = self.cli("send", "--channel", "phone", "--message-stdin", "--dry-run")
+        self.assertEqual((code, result[0]["status"]), (0, "dry_run"))
+
+    def test_first_channel_becomes_default_and_later_ones_do_not(self):
+        self.assertTrue(self.configure()["default"])
+        self.assertFalse(self.configure("alerts", "feishu")["default"])
+        self.assertEqual(notify.load_config(self.config)["default"], "work")
+        self.assertTrue(self.configure_ntfy(make_default=True)["default"])
+        listed = {item["channel"]: item for item in notify.list_channels(self.config)}
+        self.assertEqual([n for n, item in listed.items() if item["default"]], ["phone"])
+        self.assertEqual(listed["phone"]["format"], "markdown")
+        self.assertEqual(listed["alerts"]["format"], "text")
+
+    def test_replace_keeps_default_and_set_default_switches(self):
+        self.configure()
+        self.configure("alerts", "feishu")
+        self.configure(provider="dingtalk", replace=True)
+        self.assertEqual(notify.load_config(self.config)["default"], "work")
+        self.assertEqual(notify.set_default("alerts", self.config)["status"], "default_set")
+        self.assertEqual(notify.load_config(self.config)["default"], "alerts")
+        with self.assertRaisesRegex(notify.NotifyError, "channel_not_found"):
+            notify.set_default("missing", self.config)
+        self.assertEqual(notify.load_config(self.config)["default"], "alerts")
+
+    def test_send_without_channel_uses_default_only(self):
+        self.configure()
+        self.configure("alerts", "feishu", make_default=True)
+        with patch.object(notify, "post") as post:
+            results = notify.send(None, "hello", config_path=self.config, state_path=self.state)
+        self.assertEqual(results, [{"channel": "alerts", "provider": "feishu", "status": "accepted"}])
+        post.assert_called_once()
+        with self.assertRaisesRegex(notify.NotifyError, "select_channels"):
+            notify.send([], "hello", config_path=self.config, state_path=self.state)
+
+    def test_missing_or_dangling_default_is_safe(self):
+        notify.write_json(self.config, {"version": 1, "channels": {
+            "work": {"provider": "wecom", "webhook": {"env": "TEST_WECOM"}}}})
+        with patch.object(notify, "post") as post:
+            with self.assertRaisesRegex(notify.NotifyError, "no_default_channel"):
+                notify.send(None, "hello", config_path=self.config, state_path=self.state)
+        post.assert_not_called()
+        self.assertEqual(notify.list_channels(self.config)[0]["default"], False)
+        for data in ({"version": 1, "channels": {}, "default": "work"},
+                     {"version": 1, "channels": {}, "extra": 1}):
+            notify.write_json(self.config, data)
+            with self.subTest(data=data), self.assertRaisesRegex(notify.NotifyError, "invalid_config"):
+                notify.load_config(self.config)
+
+    def test_cli_default_command_and_send_without_channel(self):
+        self.configure()
+        self.configure_ntfy()
+        code, result = self.cli("default", "--name", "phone")
+        self.assertEqual((code, result["status"]), (0, "default_set"))
+        code, result = self.cli("send", "--message-stdin", "--dry-run")
+        self.assertEqual((code, result), (0, [{"channel": "phone", "provider": "ntfy", "status": "dry_run"}]))
+        code, result = self.cli("configure", "--name", "later", "--provider", "wecom",
+                                "--webhook-env", "TEST_WECOM", "--store", "env", "--default")
+        self.assertEqual((code, result["default"]), (0, True))
 
     @unittest.skipIf(os.name == "nt", "POSIX permissions, Windows uses inherited ACLs")
     def test_posix_state_and_config_permissions(self):

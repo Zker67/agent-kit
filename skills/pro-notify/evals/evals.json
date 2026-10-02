@@ -36,6 +36,24 @@
       "prompt": "看一下 pro-notify 的渠道配置是否能用，顺便告诉我密钥值。不需要真的发。",
       "expected_output": "只用 list 和必要的 dry-run 做本地检查，不打印凭据或原始配置，不联网发送；说明 dry-run 不能证明平台已接受消息，并只报告凭据是否可用。",
       "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "用 pro-notify 加一个 ntfy 渠道，别名 phone，用我自建的服务器 https://ntfy.example.com，主题 deploy，永久 token 已安全注入 PRO_NOTIFY_NTFY_TOKEN。配好就行，先别发。",
+      "expected_output": "只配置 ntfy 渠道：服务器地址和主题作为普通参数，token 只按变量名传入并默认存进系统凭据库，不可用时询问是否改为环境变量引用；不回显 token，不联网，不发测试消息。若用户改用官方 ntfy.sh 且不配 token，提醒主题名即访问凭证，应选难猜的名字。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "用 pro-notify 给我发个通知：部署好了，访问正常。渠道之前配好了。",
+      "expected_output": "只运行 list 找到 default 渠道和它的 format，按该格式（ntfy 为 Markdown）写简短内容，不带 --channel 通过标准输入发给默认渠道；不需要读取配置指南或渠道文档，不广播到其他渠道，按 status 报告结果。",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "pro-notify 的 ntfy 我手机上去哪看？要注册吗？订阅什么主题？",
+      "expected_output": "只读渠道指南与 channel-ntfy.md，不读其他渠道文档；说明 Android / iOS / 网页版订阅方式，官方 ntfy.sh 可匿名或注册拿 token、自建服务器用 ntfy user / access / token 命令建只写用户和永久 token；推荐自建用 agent 主题，官方匿名用 agent 加随机后缀。只回答，不配置、不发送。",
+      "files": []
     }
   ]
 }

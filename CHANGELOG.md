@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.0 - 2026-10-02
+
+- `pro-notify` 新增 `ntfy` 渠道：同时支持官方 `https://ntfy.sh` 和自建服务器。`configure --provider ntfy` 用 `--server`（不填即官方）、`--topic` 指定地址和主题，用 `--token-env` 传入可选的永久 access token；token 默认存入系统凭据库，也可以用 `--store env` 只保存变量名。
+- ntfy 只有一种消息：JSON 发布到服务器根路径，固定 Markdown 渲染、最高优先级 `5`（urgent），不带标题、标签、按钮；token 放在 `Authorization: Bearer` 请求头；返回的消息对象与目标主题一致才记为成功。限流与去重按“服务器 + 主题”识别目标。服务器只接受 HTTPS，主题和 token 按 ntfy 规则校验。
+- `configure` 的 `--webhook-env` 改为仅 Webhook 类渠道必填；无凭据的渠道输出 `store: none`，不需要系统凭据库。补充对应的离线测试、evals 与配置说明。
+- `pro-notify` 新增默认渠道：第一个配置的渠道自动成为默认，`configure --default` 或 `default --name` 可切换；`send` 不带 `--channel` 只发默认渠道，没有默认时报 `no_default_channel`。`list` 输出增加 `format`（`text` / `markdown`）与 `default`。
+- `pro-notify` 文档按需分层：`SKILL.md` 只保留授权边界和“`list` → 按格式写 → 发默认渠道”的快捷发送路径；CLI 用法、凭据、限流去重、错误码移入配置指南 `references/configuration.md`；渠道指南 `references/channels.md` 索引 `channel-ntfy.md`、`channel-feishu.md`、`channel-dingtalk.md`、`channel-wecom.md`，各自说明去哪里创建 / 订阅、怎么拿凭据、配置参数、格式与专属错误。ntfy 文档推荐主题 `agent`。
+
 ## 0.15.1 - 2026-09-28
 
 - Cline 全局规则按 Codex 基线的结构与密度重写：补充作用域与优先级、计划落盘条件、消息发送与重要数据删除授权、阻断时先推进已授权部分、视觉效果由用户验收；删除 `fast-context` 调参与联网命令模板等展开说明，只保留 auto-approve、`browser_action`、`skills` 等 Cline 专属差异。README 中 CLI 版本更新为 3.0.65。

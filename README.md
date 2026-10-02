@@ -192,7 +192,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
-| `pro-notify` | 用户主动启用的飞书 / Lark、钉钉、企业微信群机器人纯文本通知；CLI / Python 复用本机凭据，支持多渠道、事件去重和限流。 |
+| `pro-notify` | 用户主动启用的飞书 / Lark、钉钉、企业微信群机器人纯文本通知，以及 ntfy（官方或自建）Markdown 强提醒；CLI / Python 复用本机凭据，支持默认渠道、多渠道、事件去重和限流。 |
 | `pro-pick` | 为需要人拍板的接入点（图、音、视频、布局、文案）陈列候选到离线交互 HTML，人勾选后返回 JSON 再接入。 |
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
