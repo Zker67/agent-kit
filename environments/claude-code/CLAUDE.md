@@ -39,7 +39,10 @@
 ## Tool Routing
 Pick by intent; do not fall back to a generic tool when a specialized one is listed.
 
-- **Web search (联网搜索)** -> `smart-search` CLI (`search` / `exa-search` / `fetch` / `deep` ...). Do not use the host's built-in web search or fetch tools when the CLI is available.
+- **Web search (联网搜索)** -> `smart-search` CLI. Do not use the host's built-in web search or fetch tools when the CLI is available.
+  - Known URL: start with `smart-search fetch "<url>" --format json`.
+  - Other web lookups: start with `smart-search exa-search "<query>" --num-results 5 --format json`.
+  - Escalate to `smart-search search "<query>" --format json` only when evidence is insufficient, sources conflict, multiple sources must be synthesized, or the user explicitly asks for full research.
 - **Library / SDK / API docs (专业文档检索)** -> `context7` MCP (`resolve-library-id` -> `query-docs`); on MCP failure fall back to the CLI's Context7 docs subcommand.
 - **Local file & code search (本地文件 / 代码搜索)** -> `fast-context` MCP first for context understanding, exploratory lookup, natural-language location, references, and implementations. Grep/Glob only for known exact strings, paths, or filename patterns.
 - MCP tools are often deferred or still connecting at the start of a session. Load their schema with ToolSearch and then call them; that startup friction is not a reason to switch to Grep/Glob.

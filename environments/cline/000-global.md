@@ -30,7 +30,8 @@
 
 - 任务匹配已安装 skill 时，先用 `skills` 工具加载并说明用途。
 - 探索性代码定位优先使用 `fast-context` MCP 的 `fast_context_search`，限定项目根目录；已知路径直接读取，精确匹配使用 `rg`。
-- 技术文档优先使用 Context7 MCP；其他联网检索使用 `smart-search` CLI（`fetch` / `exa-search` / `search`）。
+- 技术文档优先使用 Context7 MCP；其他联网检索使用 `smart-search` CLI。
+- 已知 URL 时，先用 `smart-search fetch "<url>" --format json`；其他联网检索，先用 `smart-search exa-search "<query>" --num-results 5 --format json`；只有在证据不足、来源冲突、需要综合多个来源，或用户明确要求完整研究时，才升级到 `smart-search search "<query>" --format json`。
 - 只使用当前会话真实暴露的工具，缺失时说明并采用等价方式。
 
 {{PLATFORM}}

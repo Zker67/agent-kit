@@ -57,7 +57,7 @@
 - 联网检索统一通过 `bash` 调用 `smart-search`：
   - 默认先执行轻量来源搜索：`smart-search exa-search "<query>" --num-results 5 --format json`。
   - 已知 URL 时优先执行：`smart-search fetch "<url>" --format json`。
-  - 涉及时效性、广泛探索、多源综合或来源冲突时，使用：`smart-search search "<query>" --validation balanced --extra-sources 1 --format json`。
+  - 只有在证据不足、来源冲突、需要综合多个来源，或用户明确要求完整研究时，才升级到：`smart-search search "<query>" --validation balanced --extra-sources 1 --format json`。
   - 关键结论必须以抓取到的原始页面内容为依据；搜索摘要只作为发现线索。
   - 轻量结果足够时直接回答；仅在用户明确要求深入研究，或证据不足、冲突明显时升级搜索深度。
   - 保留关键命令和来源 URL，不暴露 API key、token 或本地搜索配置中的敏感字段。

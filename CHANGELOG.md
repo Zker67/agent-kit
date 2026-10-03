@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.16.1 - 2026-10-04
+
+- 所有宿主的全局规则统一写入联网检索顺序：已知 URL 先用 `smart-search fetch "<url>" --format json`，其他联网检索先用 `smart-search exa-search "<query>" --num-results 5 --format json`，只有在证据不足、来源冲突、需要综合多个来源或用户明确要求完整研究时，才升级到 `smart-search search "<query>" --format json`。
+- Codex、Claude Code、Gemini、Cline、Windsurf 补齐该规则；Grok 改为先用 `smart-search`，CLI 不可用时再用内置联网工具；Pi 的升级条件与上述规则对齐。
+
 ## 0.16.0 - 2026-10-02
 
 - `pro-notify` 新增 `ntfy` 渠道：同时支持官方 `https://ntfy.sh` 和自建服务器。`configure --provider ntfy` 用 `--server`（不填即官方）、`--topic` 指定地址和主题，用 `--token-env` 传入可选的永久 access token；token 默认存入系统凭据库，也可以用 `--store env` 只保存变量名。

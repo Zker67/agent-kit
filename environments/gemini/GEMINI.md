@@ -19,7 +19,8 @@
 
 ## 4. 工具与环境路由
 - **代码与文件检索**：优先使用 `fast-context` 或 `rg`；使用 Skill 时只读取最小必要参考并注明所用 Skill。
-- **网络与媒体生成**：联网搜索与核验优先使用专业搜索 CLI；图像与视频生成走对应的 Pro 工具。
+- **网络与媒体生成**：联网搜索与核验优先使用 `smart-search` CLI；图像与视频生成走对应的 Pro 工具。
+- **联网检索顺序**：已知 URL 时，先用 `smart-search fetch "<url>" --format json`；其他联网检索，先用 `smart-search exa-search "<query>" --num-results 5 --format json`；只有在证据不足、来源冲突、需要综合多个来源，或用户明确要求完整研究时，才升级到 `smart-search search "<query>" --format json`。
 {{PLATFORM}}
 
 ## 5. 安全边界
