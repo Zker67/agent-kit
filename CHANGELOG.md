@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- 新增 `pro-stack`：选型流程与随附作者技术偏好分开维护，直接结合项目需求提供建议；已确认架构与日常开发不重复选型。
+- Bash / PowerShell skill 安装脚本提示随附偏好的来源；自定义由使用者在选型流程之外维护。README 与 `pro-newproj` 同步入口和职责边界，skill 数量更新为 15。
+- `pro-stack` 的 README 串联选型流程、技术偏好与行为用例；references 和 evals 分别提供下级索引。
+
 ## 0.16.1 - 2026-10-04
 
 - 所有宿主的全局规则统一写入联网检索顺序：已知 URL 先用 `smart-search fetch "<url>" --format json`，其他联网检索先用 `smart-search exa-search "<query>" --num-results 5 --format json`，只有在证据不足、来源冲突、需要综合多个来源或用户明确要求完整研究时，才升级到 `smart-search search "<query>" --format json`。

@@ -87,4 +87,7 @@ for skill_dir in "$source_dir"/*; do
     cp -R "$skill_dir" "$target_dir/"
   fi
   printf '%sinstall %s -> %s\n' "$prefix" "$skill_name" "$destination"
+  if [ "$skill_name" = "pro-stack" ]; then
+    printf '%spro-stack 使用随附的作者技术偏好（references/preferences.md）。你是否有自己的偏好？如需自定义，请单独修改该文件；选型流程直接使用文件内容。\n' "$prefix"
+  fi
 done

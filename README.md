@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `14 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `15 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-14-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-15-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -39,6 +39,7 @@
 | **Codex 默认路径兼容** | 省略目标参数时，脚本优先使用 `$CODEX_HOME/skills`，再回落到用户目录下的 `.codex/skills`。 |
 | **Coding environment 指南** | [`environments/`](./environments/) 按 Codex、Cline、Cursor、OpenCode、Pi、Claude Code、Gemini、Grok 和 Windsurf 分别说明全局 instructions、运行时配置、skills、工具和验证方式。 |
 | **新项目初始化** | [`pro-newproj`](./skills/pro-newproj/) 自带完整的 `AGENTS.md`、`.agents/rules/`、`docs/`、`references/` 和 `plans/` 文档骨架。 |
+| **按偏好进行技术选型** | [`pro-stack`](./skills/pro-stack/) 将选型流程与技术偏好分开维护，直接依据随附偏好和项目需求提出建议。 |
 | **外部工具前置说明** | [`environments/`](./environments/) 和部分 skill 会优先路由到 MCP、专业搜索 CLI、浏览器工具或 subagents；README 给出宿主侧准备清单。 |
 
 ---
@@ -95,6 +96,18 @@ PowerShell：
 
 每个 skill 在复制前会先删除目标同名目录，因此放在 `skills/<name>/` 内的本地改动会在重装时丢失；需要保留的内容请放在该目录之外。
 
+### pro-stack 的个人偏好
+
+[`pro-stack`](./skills/pro-stack/SKILL.md) 保存通用选型流程，[`references/preferences.md`](./skills/pro-stack/references/preferences.md) 保存随附的作者个人技术偏好。两份内容独立维护；偏好不是所有项目的强制技术栈。
+
+安装脚本会提示偏好来源，并提醒有自己偏好的使用者单独修改偏好文件。自定义属于 Skill 之外的维护工作；`pro-stack` 使用时直接读取偏好进行技术选型，不执行首次使用问卷或偏好配置流程。
+
+重装会覆盖安装目录中的修改，自定义前请在目录之外保留副本。安装脚本只展示提醒，不交互改写偏好，批量安装仍可直接运行。
+
+需要全局入口时，可按需把下面的提醒合并到宿主已有 instructions；安装 Skill 不会自动修改宿主配置：
+
+> 新项目需要技术选型、比较框架或评估重大架构调整时，使用 `pro-stack`，根据项目需求和随附技术偏好提出建议。遵循项目已确认架构；日常开发不重复选型，执行范围以当前授权为准。
+
 ### 验证安装
 
 Git Bash / macOS / Linux：
@@ -121,7 +134,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | **2. 安装 skills** | 支持 skill 目录的 agent 用安装脚本复制 `skills/*`；其他 agent 可以把对应 `SKILL.md` 作为规则或 workflow 参考。 |
 | **3. 安装全局 instructions** | 只复制当前环境目录中的规则文件，并先备份宿主已有配置。模型、权限、MCP 和凭据按指南合并到宿主自己的配置文件。 |
 | **4. 补齐外部工具** | 按宿主能力注册 `context7`、`fast-context`、专业搜索 CLI、浏览器 MCP 或 subagents，并让提示词中的工具名与本机配置一致。 |
-| **5. 创建项目骨架** | 调用 [`pro-newproj`](./skills/pro-newproj/)；skill 从自身 `assets/base-project/` 复制完整文档结构，并默认保护已有文件。 |
+| **5. 创建项目骨架** | 需要选型时先用 [`pro-stack`](./skills/pro-stack/) 提出建议；调用 [`pro-newproj`](./skills/pro-newproj/) 从自身 `assets/base-project/` 复制文档结构，并默认保护已有文件。技术栈已确定或只补文档时不重复选型。 |
 | **6. 项目内收口** | 进入具体项目后，以项目根 `AGENTS.md` 为 AI 入口，README 面向人类读者，`docs/` 和 `plans/` 分别承载长期文档和计划索引。 |
 
 ### Coding environment 入口
@@ -197,6 +210,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-plans` | 在项目根 `plans/` 下创建、拆分和维护计划文档。 |
 | `pro-readme` | 生成或重写面向人类读者的 README。 |
 | `pro-rule` | 将稳定偏好整理为 `.agents/rules/`。 |
+| [`pro-stack`](./skills/pro-stack/README.md) | 直接依据随附技术偏好与项目需求，提供技术选型、框架比较与架构建议。 |
 | `pro-struct` | 目录结构整理、组件化和复用性治理。 |
 | `pro-summary` | README、面向 AI 的 AGENTS.md、docs 与 plans 的一致性审查。 |
 
@@ -239,7 +253,7 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/                       # 14 个可安装 skill，每个目录一个 SKILL.md
+├─ skills/                       # 15 个可安装 skill，每个目录一个 SKILL.md
 │  ├─ pro-copy/
 │  ├─ pro-exp/
 │  ├─ pro-explain/
@@ -252,6 +266,7 @@ agent-kit/
 │  ├─ pro-plans/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-rule/
+│  ├─ pro-stack/                 # README 索引选型流程、技术偏好与行为用例
 │  ├─ pro-struct/
 │  └─ pro-summary/                # 文档一致性审查 skill
 ├─ environments/                 # 各 coding agent 的完整环境配置指南
