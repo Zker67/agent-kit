@@ -276,7 +276,7 @@ PY
   done <<< "$files"
 
   if [ "$bad" -eq 0 ]; then
-    pass "evals 结构：全部合规（$json_tool）"
+    pass "evals 结构：全部合规（${json_tool}）"
   else
     fail "evals 结构：$bad 个文件不合规"
   fi
