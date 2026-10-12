@@ -33,8 +33,38 @@
     },
     {
       "id": 6,
-      "prompt": "用 pro-stack 先分析一个 Android 3D 游戏的技术路线，暂不创建项目。",
-      "expected_output": "识别为偏好覆盖不足的游戏场景，按 3D 渲染、设备与输入等需求评估候选，不机械推荐 Expo 或 React；核验关键平台结论，明确偏离偏好的理由，保持只读。",
+      "prompt": "帮我分析一个 Android 和 iOS 记账应用的技术栈，需要离线记录和后续同步，先给建议。",
+      "expected_output": "识别为移动应用选型，结合偏好评估 Expo + React Native 和本地数据方案，核验目标系统与原生模块要求；分别考虑离线与同步，不机械复用 Web UI 组件；保持只读。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "帮我新建一个日志审查 Skill，先比较目录结构和工作流设计，再写 SKILL.md。",
+      "expected_output": "识别为 Skill 创建任务，不触发 pro-stack、不读取其技术偏好；按 Skill 编写流程处理，不添加软件产品技术栈。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "我要初始化一个独立 MCP server，让 AI 查询文档。帮我比较 TypeScript SDK 和 Python SDK，以及项目架构。",
+      "expected_output": "识别为独立 MCP server 开发，即使涉及初始化、SDK 比较和项目架构，也不触发 pro-stack；按 MCP 的工具与协议需求评估，不套入应用偏好。",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "调整 agent 的提示词，并配置一个 MCP 连接，让它可以使用浏览器工具。",
+      "expected_output": "识别为 agent 提示词与连接配置，不因涉及浏览器而视为网页开发，不触发 pro-stack 或进行软件产品选型。",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "做一个 TypeScript 命令行脚本，定期整理本地文件。先考虑工具架构和库怎么选。",
+      "expected_output": "识别为命令行脚本任务，不因语言、库选型或架构关键词而触发 pro-stack，不读取应用技术偏好。",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "我要做一个桌面知识管理应用，包含文档列表、搜索和编辑，未来接入 MCP。先比较整个应用的 UI、数据层和桌面容器方案。",
+      "expected_output": "识别为桌面应用的技术选型，可触发 pro-stack；MCP 是应用集成需求，不因其出现而排除整个产品。只对应用路线提出建议，不把独立 MCP 实现纳入触发范围。",
       "files": []
     }
   ]
