@@ -166,4 +166,5 @@ skills/pro-notify/scripts/notify.py:                args.server, args.topic, arg
 skills/pro-notify/SKILL.md:- 本次任务通知只按实际发生的 `completed`、`failed`、`needs-input` 各发一次，三类事件复用同一个不含个人信息的 `task-id`；`needs-input` 发完仍在当前对话中提问。
 skills/pro-notify/SKILL.md:- 不修改宿主 hooks、全局 instructions 或调度器；不回显 Webhook、签名、token、配置原文或服务端响应。宿主要求走 MCP / Connectors 时遵循该路由，但保持同样边界。
 skills/pro-notify/SKILL.md:   printf '%s\n' '…' | python3 -X utf8 "<skill-dir>/scripts/notify.py" send --message-stdin --event completed --task-id task-001
-skills/pro-stack/references/preferences.md:| 客户端状态 | Zustand | 需要共享状态时评估；局部状态足够时不增加状态库。 |
+skills/pro-stack/references/docs.md:| 客户端状态 | Zustand | [GitHub](https://github.com/pmndrs/zustand) | [zustand.docs.pmnd.rs](https://zustand.docs.pmnd.rs/) | |
+skills/pro-stack/references/preferences.md:| 客户端状态 | Zustand | 需要共享状态时评估；API 极简、无需 Provider、按需订阅，适用于中小到中大型项目。局部状态足够时不增加状态库。 |

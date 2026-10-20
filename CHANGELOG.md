@@ -10,6 +10,7 @@
 - 适配 smart-search CLI 0.1.29：`search` 改为单渠道单轮检索，不再做多源综合，所有宿主全局规则的升级路线由 `smart-search search` 改为 `smart-search research "<query>" --format json`；`fetch` 优先、`exa-search` 默认首选的顺序与升级条件不变。
 - Pi 的升级命令去掉已失效的 `--validation balanced --extra-sources 1`；Codex README 的联网路线同步改为 `research`。
 - 升级命令显式加 `--budget standard`：`research` 默认 `deep` 走 `strict` 校验，未配置 Jev 时无法判定证据充分，结果固定以退出码 4（`evidence_error`）失败；`standard` 走 `balanced` 校验，可正常返回。配置 Jev 后可再评估是否去掉。
+- `pro-stack` 技术偏好补充 Web React 界面配套：shadcn/ui 指定 Nova 风格，新增 Lucide、Motion、react-resizable-panels、dnd-kit，并为 Zustand 补充偏好理由；均按功能需要引入。新增 `references/docs.md` 官方入口索引，记录各项候选的官网与文档入口，从 README、偏好文件和核验步骤逐层链接。
 
 ## 0.16.1 - 2026-10-04
 
