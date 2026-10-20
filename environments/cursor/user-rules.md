@@ -12,7 +12,7 @@
 
 代码探索：优先 MCP fast-context；精确字符串/文件名用 Grep/Glob。
 库文档：优先 MCP context7（resolve-library-id → query-docs）。
-联网：已知 URL 用 smart-search fetch；否则先 exa-search（5 条）；不足或要求深研再升级 research。
+联网：已知 URL 用 smart-search fetch；否则先 exa-search（5 条）；不足或要求深研再升级 research（--budget standard）。
 前端视觉默认用户真机验证；仅在用户要求时代为浏览器操作。
 
 ## Git 与分支

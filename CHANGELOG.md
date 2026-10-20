@@ -9,6 +9,7 @@
 - `pro-stack` 的触发条件按交付物限定，排除 Skill、独立 MCP、agent 配置、提示词、命令行脚本和工具链维护；行为用例覆盖这些排除场景和应用接入 MCP 的边界。
 - 适配 smart-search CLI 0.1.29：`search` 改为单渠道单轮检索，不再做多源综合，所有宿主全局规则的升级路线由 `smart-search search` 改为 `smart-search research "<query>" --format json`；`fetch` 优先、`exa-search` 默认首选的顺序与升级条件不变。
 - Pi 的升级命令去掉已失效的 `--validation balanced --extra-sources 1`；Codex README 的联网路线同步改为 `research`。
+- 升级命令显式加 `--budget standard`：`research` 默认 `deep` 走 `strict` 校验，未配置 Jev 时无法判定证据充分，结果固定以退出码 4（`evidence_error`）失败；`standard` 走 `balanced` 校验，可正常返回。配置 Jev 后可再评估是否去掉。
 
 ## 0.16.1 - 2026-10-04
 
