@@ -57,7 +57,7 @@ Codex 专用 skill 配置参考见 [`skills/README.md`](./skills/README.md)；�
 
 - 文档检索使用 Context7。
 - 语义代码搜索使用 `mcp__fast_context__fast_context_search`。
-- 联网检索使用 `smart-search` 的 `exa-search`、`fetch` 和 `search` 路线。
+- 联网检索使用 `smart-search` 的 `exa-search`、`fetch` 和 `research` 路线。
 - 本地网页验证使用 Codex 内置 Browser；依赖用户已有 Chrome 登录态时使用 Chrome 扩展连接的浏览器。
 - 独立 TOML 定义的 subagent 角色。
 

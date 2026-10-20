@@ -9,7 +9,7 @@
 - Known URL: start with `smart-search fetch "<url>" --format json`.
 - Other web lookups: start with
   `smart-search exa-search "<query>" --num-results 5 --format json`.
-- Escalate to `smart-search search "<query>" --format json` only when
+- Escalate to `smart-search research "<query>" --format json` only when
   evidence is insufficient, sources conflict, multiple sources must be
   synthesized, or the user explicitly asks for full research.
 </web_search>

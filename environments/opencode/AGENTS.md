@@ -23,7 +23,7 @@
 - 任务匹配已安装 skill 时，先使用 OpenCode 的 `skill` 工具读取完成任务所需的最小资料，并说明正在使用的 skill。
 - 本地代码理解、探索性定位、调用链梳理和跨文件检索优先使用 MCP server `fast-context` 的 `fast_context_search`；已知精确字符串或文件名模式使用 Grep / Glob。
 - 库、SDK、API、框架、CLI 或云服务文档优先使用 MCP server `io.github.upstash/context7`：先 `resolve-library-id`，再 `query-docs`。
-- 已知 URL 优先执行 `smart-search fetch "<url>" --format json`；其他联网检索先执行 `smart-search exa-search "<query>" --num-results 5 --format json`，仅在证据不足、相互冲突、需要多源综合或用户明确要求完整研究时升级到 `smart-search search "<query>" --format json`。
+- 已知 URL 优先执行 `smart-search fetch "<url>" --format json`；其他联网检索先执行 `smart-search exa-search "<query>" --num-results 5 --format json`，仅在证据不足、相互冲突、需要多源综合或用户明确要求完整研究时升级到 `smart-search research "<query>" --format json`。
 - 只使用当前会话真实暴露的 skill、MCP 和 CLI；缺少指定入口时，明确说明后再选择最接近的可用路线，不伪造工具调用。
 
 ## 前端验证
