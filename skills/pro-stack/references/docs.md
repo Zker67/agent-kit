@@ -26,9 +26,9 @@
 | 服务端状态 | TanStack Query | [tanstack.com/query](https://tanstack.com/query/latest) | [React Overview](https://tanstack.com/query/latest/docs/framework/react/overview) | |
 | 客户端状态 | Zustand | [GitHub](https://github.com/pmndrs/zustand) | [zustand.docs.pmnd.rs](https://zustand.docs.pmnd.rs/) | |
 | 网页框架 | Next.js | [nextjs.org](https://nextjs.org/) | [Docs](https://nextjs.org/docs) | |
-| 应用与 API | Express | [expressjs.com](https://expressjs.com/) | [5.x API](https://expressjs.com/en/5x/api.html) | |
-| 应用与 API | Tauri | [tauri.app](https://tauri.app/) | [Guides](https://tauri.app/start/) | |
-| 应用与 API | Electron | [electronjs.org](https://www.electronjs.org/) | [Docs](https://www.electronjs.org/docs/latest/) | |
+| 应用与 API 候选 | Express | [expressjs.com](https://expressjs.com/) | [5.x API](https://expressjs.com/en/5x/api.html) | |
+| 应用与 API 候选 | Tauri | [tauri.app](https://tauri.app/) | [Guides](https://tauri.app/start/) | |
+| 应用与 API 候选 | Electron | [electronjs.org](https://www.electronjs.org/) | [Docs](https://www.electronjs.org/docs/latest/) | |
 | 轻量数据 | JSON | [json.org](https://www.json.org/) | [json.org](https://www.json.org/) | |
 | 网页结构化数据 | PostgreSQL | [postgresql.org](https://www.postgresql.org/) | [Documentation](https://www.postgresql.org/docs/) | |
 | 网页结构化数据 | Supabase | [supabase.com](https://supabase.com/) | [Docs](https://supabase.com/docs) | |

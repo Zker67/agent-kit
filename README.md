@@ -98,7 +98,7 @@ PowerShell：
 
 ### pro-stack 的个人偏好
 
-[`pro-stack`](./skills/pro-stack/SKILL.md) 保存通用选型流程，[`references/preferences.md`](./skills/pro-stack/references/preferences.md) 保存随附的作者个人技术偏好。两份内容独立维护；偏好不是所有项目的强制技术栈。
+[`pro-stack`](./skills/pro-stack/SKILL.md) 保存通用选型流程，[`references/preferences.md`](./skills/pro-stack/references/preferences.md) 保存随附的作者个人技术偏好，[`references/docs.md`](./skills/pro-stack/references/docs.md) 按同名领域记录各项候选的官网与文档入口。两份内容独立维护；偏好不是所有项目的强制技术栈。
 
 安装脚本会提示偏好来源，并提醒有自己偏好的使用者单独修改偏好文件。自定义属于 Skill 之外的维护工作；`pro-stack` 使用时直接读取偏好进行技术选型，不执行首次使用问卷或偏好配置流程。
 
@@ -266,7 +266,7 @@ agent-kit/
 │  ├─ pro-plans/
 │  ├─ pro-readme/                 # README 生成 skill，含模板与检查清单
 │  ├─ pro-rule/
-│  ├─ pro-stack/                 # README 索引选型流程、技术偏好与行为用例
+│  ├─ pro-stack/                 # README 索引选型流程、技术偏好、官方文档入口与行为用例
 │  ├─ pro-struct/
 │  └─ pro-summary/                # 文档一致性审查 skill
 ├─ environments/                 # 各 coding agent 的完整环境配置指南
