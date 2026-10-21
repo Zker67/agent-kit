@@ -98,7 +98,7 @@ PowerShell：
 
 ### pro-stack 的个人偏好
 
-[`pro-stack`](./skills/pro-stack/SKILL.md) 保存通用选型流程，[`references/preferences.md`](./skills/pro-stack/references/preferences.md) 保存随附的作者个人技术偏好，[`references/docs.md`](./skills/pro-stack/references/docs.md) 按同名领域记录各项候选的官网与文档入口。两份内容独立维护；偏好不是所有项目的强制技术栈。
+[`pro-stack`](./skills/pro-stack/SKILL.md) 保存通用选型流程，[`references/preferences.md`](./skills/pro-stack/references/preferences.md) 是随附作者个人技术偏好的入口，按路线索引逐级进入各路线文件，每个文件同时记录候选与官网、文档入口。选型流程与偏好独立维护；偏好不是所有项目的强制技术栈。
 
 安装脚本会提示偏好来源，并提醒有自己偏好的使用者单独修改偏好文件。自定义属于 Skill 之外的维护工作；`pro-stack` 使用时直接读取偏好进行技术选型，不执行首次使用问卷或偏好配置流程。
 

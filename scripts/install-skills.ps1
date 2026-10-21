@@ -72,6 +72,6 @@ Get-ChildItem -Path $SourceDir -Directory | ForEach-Object {
     }
     Write-Host ("{0}install {1} -> {2}" -f $Prefix, $_.Name, $Destination)
     if ($_.Name -eq "pro-stack") {
-        Write-Host ("{0}pro-stack 使用随附的作者技术偏好（references/preferences.md）。你是否有自己的偏好？如需自定义，请单独修改该文件；选型流程直接使用文件内容。" -f $Prefix)
+        Write-Host ("{0}pro-stack 使用随附的作者技术偏好（入口 references/preferences.md，按路线索引逐级进入各路线文件）。你是否有自己的偏好？如需自定义，请单独修改对应文件；选型流程直接使用文件内容。" -f $Prefix)
     }
 }

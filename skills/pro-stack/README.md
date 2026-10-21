@@ -17,4 +17,4 @@
 - “用 pro-stack 分析这个新网站的技术栈，先给建议。”
 - “比较两条桌面技术路线，重点看平台支持、性能与维护成本。”
 
-Skill 直接读取随附偏好并结合项目需求提出建议。技术选型流程、偏好内容与官方文档入口分别以 `SKILL.md`、`references/preferences.md` 和 `references/docs.md` 为准。
+Skill 直接读取随附偏好并结合项目需求提出建议。技术选型流程以 `SKILL.md` 为准；偏好内容与官方文档入口按路线分文件维护，从 `references/preferences.md` 的路线索引逐级进入。
