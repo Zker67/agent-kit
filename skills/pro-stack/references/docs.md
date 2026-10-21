@@ -37,6 +37,6 @@
 | 移动端 | Expo | [expo.dev](https://expo.dev/) | [docs.expo.dev](https://docs.expo.dev/) | |
 | 移动端 | React Native | [reactnative.dev](https://reactnative.dev/) | [Introduction](https://reactnative.dev/docs/getting-started) | |
 | 高性能原生桌面 | GPUI | [gpui.rs](https://www.gpui.rs/) | [docs.rs/gpui](https://docs.rs/gpui) | 源码位于 [zed crates/gpui](https://github.com/zed-industries/zed/tree/main/crates/gpui)。 |
-| 高性能原生桌面 | GPUI Kit | 待确认 | 待确认 | 存在多个同名或近名组件项目；按偏好在选型时确认具体项目后补录，不预设入口。 |
+| 高性能原生桌面 | GPUI Kit | [gpui-kit.com](https://gpui-kit.com/) | [Getting Started](https://gpui-kit.com/docs/getting-started) | 源码位于 [longbridge/gpui-kit](https://github.com/longbridge/gpui-kit)；不等同于其他同名或近名项目。 |
 
 [返回技术偏好索引](./README.md)
