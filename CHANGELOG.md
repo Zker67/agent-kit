@@ -11,6 +11,7 @@
 - Pi 的升级命令去掉已失效的 `--validation balanced --extra-sources 1`；Codex README 的联网路线同步改为 `research`。
 - 升级命令显式加 `--budget standard`：`research` 默认 `deep` 走 `strict` 校验，未配置 Jev 时无法判定证据充分，结果固定以退出码 4（`evidence_error`）失败；`standard` 走 `balanced` 校验，可正常返回。配置 Jev 后可再评估是否去掉。
 - `pro-stack` 技术偏好补充 Web React 界面配套：shadcn/ui 指定 Nova 风格，新增 Lucide、Motion、react-resizable-panels、dnd-kit，并为 Zustand 补充偏好理由；均按功能需要引入。新增 `references/docs.md` 官方入口索引，记录各项候选的官网与文档入口，从仓库 README、pro-stack README、偏好文件和核验步骤逐层链接，领域名与偏好表一致。GPUI Kit 明确为 longbridge/gpui-kit 并补录入口。
+- `pro-stack` 技术偏好按 Web 与 React、客户端、后端、数据分组：新增 Flutter + Dart（桌面与移动端共同交付）、Astro（内容网站）和 IndexedDB（浏览器本地结构化数据），新增“客户端路线分工”按复用目标比较 Flutter、Tauri / Electron、Expo 与 GPUI；GPUI 限定桌面为主要平台，Tauri 补充移动端支持，构建工具、网页框架、桌面容器、后端与服务端数据的领域名称和条件随之调整，`docs.md` 同步入口。选型流程补充交付平台、关键能力与复用资产问题，并加入独立 API 拆分和多语言客户端评估 OpenAPI 的条件规则。行为用例增至 14 个。
 
 ## 0.16.1 - 2026-10-04
 
