@@ -169,19 +169,19 @@ skills/pro-notify/SKILL.md:   printf '%s\n' '…' | python3 -X utf8 "<skill-dir>
 skills/pro-stack/evals/evals.json:      "prompt": "客户端准备用 Flutter 做桌面和手机版，另外需要一个官网和帮助中心，要被搜索引擎收录。网站部分怎么选？",
 skills/pro-stack/evals/evals.json:      "expected_output": "将客户端与内容网站分开选型：官网和帮助中心优先评估 Astro 等面向内容与搜索可见性的 Web 技术，不默认使用 Flutter Web；客户端维持 Flutter 路线，两者可共用后端服务；保持只读。",
 skills/pro-stack/evals/README.md:| 13 | Flutter 客户端与内容官网分开选型。 |
-skills/pro-stack/references/preferences.md:- 候选按路线分组。Web 与 React 路线中的组件、状态与交互库只用于 React 界面；Flutter 路线的组件与平台能力只用于 Flutter 界面，其状态管理与路由按需求另行选择；GPUI 等其他客户端路线的状态、路由与组件同样另行选择，各路线条目不互相套用。
+skills/pro-stack/references/preferences.md:- 候选按路线分组。Web 与 React 路线中的组件、状态与交互库只用于 React 界面；Flutter 路线的组件与平台能力只用于 Flutter 界面，其状态管理与路由按需求另行选择；MyGo 原生 UI 等其他客户端路线的状态、路由与组件同样另行选择，各路线条目不互相套用。
 skills/pro-stack/SKILL.md:- 先判断是否需要独立 API 服务；应用框架的服务端能力或托管后端平台已满足需求时不提前拆分，独立部署、多客户端共用等需求明确后再拆。
 skills/pro-stack/SKILL.md:- 多种语言的客户端共用同一后端时，评估用 OpenAPI 描述 HTTP 接口并生成各端客户端；单一 TypeScript 全栈项目可以直接共享类型，不额外引入。
 skills/pro-stack/references/web-react.md:| 客户端状态 | Zustand | 需要共享状态时评估；API 极简、无需 Provider、按需订阅，适用于中小到中大型项目。局部状态足够时不增加状态库。 |
-skills/pro-stack/references/web-react.md:| Web 应用框架 | Next.js | 需要 React 全栈、服务端渲染、搜索可见性或服务端业务能力时优先评估。以客户端交互为主、已有独立 API 的后台、工作台和浏览器工具，评估 React + Vite+，按需加路由。Tauri 等桌面 Web 容器使用 SPA 或静态导出的前端，不承接 Next.js 的服务端运行能力。 |
+skills/pro-stack/references/web-react.md:| Web 应用框架 | Next.js | 需要 React 全栈、服务端渲染、搜索可见性或服务端业务能力时优先评估。以客户端交互为主、已有独立 API 的后台、工作台和浏览器工具，评估 React + Vite+，按需加路由。MyGo 等桌面 Web 容器使用 SPA 或静态导出的前端，不承接 Next.js 的服务端运行能力。 |
 skills/pro-stack/references/web-react.md:| 客户端状态 | Zustand | [GitHub](https://github.com/pmndrs/zustand) | [zustand.docs.pmnd.rs](https://zustand.docs.pmnd.rs/) | |
 skills/pro-stack/references/client.md:# 客户端路线
 skills/pro-stack/references/client.md:桌面与移动客户端的路线选择。确定路线后，子路线的组件与平台能力见下方子路线索引。
-skills/pro-stack/references/client.md:| Web 技术桌面客户端 | Tauri / Electron | 沿用 Web 界面做桌面应用时比较，不预设固定优先级。重视分发体积、愿意处理 Rust 与系统 WebView 差异时优先评估 Tauri；依赖 Node.js 能力、特定 Chromium 行为或已有 Electron 生态集成时优先评估 Electron。Tauri 2 也支持 Android 与 iOS，复用 Web 界面同时覆盖手机时同样参与比较。资源占用与响应速度按应用负载评估，不凭框架名称判断。 |
+skills/pro-stack/references/client.md:| Web 技术桌面客户端 | MyGo / Electron | 沿用 Web 界面做桌面应用时比较，不预设固定优先级。重视分发体积与资源占用、愿意用 Go 实现本地逻辑并处理系统 WebView 差异时优先评估 MyGo（Web 页面窗口，前端经生成的 TypeScript 客户端调用 Go）；依赖 Node.js 能力、特定 Chromium 行为或已有 Electron 生态集成时优先评估 Electron。两者只覆盖 macOS、Windows、Linux 桌面，需要同时覆盖手机时另行比较 Flutter 或 Expo + React Native。资源占用与响应速度按应用负载评估，不凭框架名称判断。 |
 skills/pro-stack/references/client.md:| 跨平台客户端 | Flutter + Dart | 桌面与移动端都重要、希望复用大部分 UI 与业务逻辑时优先评估；Web 不是主要交付渠道，或 Web 也是应用型界面时尤其适合。官网、博客、帮助中心等内容型网站单独选择 Web 技术。先按目标平台核对关键插件（如托盘、全局快捷键、后台任务、蓝牙、音视频、富文本），桌面的键鼠、窗口尺寸与手机触控分别设计。会引入 Dart 与另一套组件生态，现有 React 组件不能直接沿用。 |
 skills/pro-stack/references/client.md:## 客户端路线分工
 skills/pro-stack/references/client.md:选择客户端路线，主要是在选择复用什么：
-skills/pro-stack/references/client.md:| Web 技术桌面客户端 | Tauri | [tauri.app](https://tauri.app/) | [Guides](https://tauri.app/start/) | |
+skills/pro-stack/references/client.md:| Web 技术桌面客户端 / 高性能原生桌面 | MyGo | [mygo.egoist.dev](https://mygo.egoist.dev/) | [Getting started](https://mygo.egoist.dev/docs/getting-started) | 源码位于 [egoist/mygo](https://github.com/egoist/mygo)；原生 UI 见 [Native UI](https://mygo.egoist.dev/docs/ui)。 |
 skills/pro-stack/references/client.md:| Web 技术桌面客户端 | Electron | [electronjs.org](https://www.electronjs.org/) | [Docs](https://www.electronjs.org/docs/latest/) | |
 skills/pro-stack/references/client.md:| 跨平台客户端 | Flutter | [flutter.dev](https://flutter.dev/) | [docs.flutter.dev](https://docs.flutter.dev/) | 桌面见 [Desktop support](https://docs.flutter.dev/platform-integration/desktop)；Web 适用范围见 [Web FAQ](https://docs.flutter.dev/platform-integration/web/faq)；多端交互见 [Adaptive and responsive design](https://docs.flutter.dev/ui/adaptive-responsive)。 |
 skills/pro-stack/references/client.md:| 跨平台客户端 | Dart | [dart.dev](https://dart.dev/) | [Docs](https://dart.dev/docs) | |

@@ -14,6 +14,7 @@
 - `pro-stack` 技术偏好按 Web 与 React、客户端、后端、数据分组：新增 Flutter + Dart（桌面与移动端共同交付）、Astro（内容网站）和 IndexedDB（浏览器本地结构化数据），新增“客户端路线分工”按复用目标比较 Flutter、Tauri / Electron、Expo 与 GPUI；GPUI 限定桌面为主要平台，Tauri 补充移动端支持，构建工具、网页框架、桌面容器、后端与服务端数据的领域名称和条件随之调整，`docs.md` 同步入口。选型流程补充交付平台、关键能力与复用资产问题，并加入独立 API 拆分和多语言客户端评估 OpenAPI 的条件规则。行为用例增至 14 个。
 - `pro-stack` 技术偏好新增“Flutter 路线”：UI 底座以 Forui 优先试用，Material 3 与 shadcn_flutter 作为备选；按需补充 skeletonizer、motor、smooth_sheets、fl_chart、flutter_markdown_plus、reactive_forms、material_new_shapes、data_table_2 / two_dimensional_scrollables，桌面能力使用内置 Shortcuts / Actions / Focus 与 file_selector、hotkey_manager、super_drag_and_drop、window_manager（注明其正迁移到 nativeapi），组件目录用 Widgetbook；平台插件按需引入时放在独立 package。
 - `pro-stack` 技术偏好改为逐级索引：`references/preferences.md` 只保留使用原则与路线索引，候选按路线拆到 `web-react.md`、`client.md`、`backend.md`、`data.md`，Flutter 组件作为客户端子路线放在 `client-flutter.md`，由 `client.md` 索引；每个路线文件同时记录候选与官方入口，`docs.md` 拆入各文件后移除。选型流程改为先读入口、再按涉及的路线读取对应文件；README 与安装脚本提示同步更新。
+- `pro-stack` 客户端路线移除 Tauri 与 GPUI + GPUI Kit，改用 MyGo（egoist/mygo）：Web 技术桌面客户端比较 MyGo 与 Electron，高性能原生桌面改为 MyGo 原生 UI，并注明 MyGo 仍为 0.x、不支持移动端；同步路线分工、明确偏好、官方入口、Web 与 React 路线说明和行为用例 1、12、14。
 
 ## 0.16.1 - 2026-10-04
 
