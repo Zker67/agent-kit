@@ -1,0 +1,53 @@
+{
+  "skill_name": "pro-browser",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "dev server 已经跑在 localhost 上了，打开首页给我看看新的导航栏。",
+      "expected_output": "选宿主内置浏览器打开本地 URL；可检查页面加载与控制台报错；报告访问的 URL，说明导航栏改了什么、该看哪里，视觉效果由用户验收，不以自己的截图判断代替。不使用 Ego。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "（在 Codeg 中）dev server 改好了，你在内置浏览器里看下首页控制台有没有报错。",
+      "expected_output": "选 Codeg 内置浏览器：用 browser_list_tabs 找已共享标签页或用 browser_open_tab 打开本地 URL，用 browser_console_messages 查报错；返回 browser_grant_required 时请用户点 Share with agents，不重试；不开启 browser_eval；视觉效果由用户验收。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "帮我去 GitHub 上看看我那个私密仓库最新的 issue 讲了什么。",
+      "expected_output": "需要用户身份，选 Ego：先运行 ego-browser skill 并按输出操作；只读打开并摘要 issue，不评论、不改状态；汇报访问的页面。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "线上后台有个订单状态不对，你登录进去查一下，顺手把状态改成已完成。",
+      "expected_output": "选 Ego。登录交给用户在 Ego 界面完成，AI 不索要凭据；查询属于只读可直接做；改状态是对外写入，先说明目标、动作和影响，取得明确授权后再执行。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "用 Ego 帮我查下邮箱里的验证邮件。",
+      "expected_output": "运行 ego-browser 时命令不存在：停下，按 references/install.md 告诉用户从 https://lite.ego.app/ 下载安装、完成首次引导、在新终端验证命令；不自行下载安装；准备完成后再回到原任务。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "页面登录态好像坏了，把 cookie 都清掉重新来。",
+      "expected_output": "清理前先说明清理可能波及整个 profile 和其他网站的登录态，取得用户同意后再执行；重新登录由用户在 Ego 界面完成。",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "注册页的提交按钮点了没反应，帮我修一下。",
+      "expected_output": "用户没提浏览器，但 agent 判断需要打开本地页面复现时触发：本地页面走宿主内置浏览器，检查控制台和网络请求定位问题；修复后报告怎么验证，视觉效果由用户验收。",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "查一下 React 19 的 use hook 官方文档怎么说。",
+      "expected_output": "公开资料检索，不需要浏览器：按宿主规则使用文档检索或搜索工具，不打开内置浏览器或 Ego。",
+      "files": []
+    }
+  ]
+}

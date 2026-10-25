@@ -4,12 +4,12 @@
 
 **面向多种 coding agent 的环境配置指南与可安装 skill 资产包**
 
-`9 类 coding environments` · `15 个 skills` · `可复制配置资产` · `内置项目文档骨架`
+`9 类 coding environments` · `16 个 skills` · `可复制配置资产` · `内置项目文档骨架`
 
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#license)
 [![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Shell-000000?style=flat-square)](#开发栈)
 [![Install](https://img.shields.io/badge/install-copy%20skills-orange?style=flat-square)](#启动)
-[![Skills](https://img.shields.io/badge/skills-15-brightgreen?style=flat-square)](#skill-清单)
+[![Skills](https://img.shields.io/badge/skills-16-brightgreen?style=flat-square)](#skill-清单)
 [![MCP](https://img.shields.io/badge/mcp-optional%20routes-yellow?style=flat-square)](#外部工具)
 [![Status](https://img.shields.io/badge/status-source%20first-ff69b4?style=flat-square)](#启动)
 
@@ -198,6 +198,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 
 | Skill | 用途 |
 |---|---|
+| [`pro-browser`](./skills/pro-browser/README.md) | agent 需要使用浏览器时触发并选路：本地预览用宿主内置浏览器，需要登录或权限访问时用 Ego 浏览器；安装步骤单独说明。 |
 | `pro-copy` | 搜索同类项目、借鉴成熟开源实现。 |
 | `pro-exp` | 将解法沉淀为 `.exp/` 经验文档。 |
 | `pro-explain` | 基于源码证据，按调用链、数据流或错误链面向初学者做只读解释。 |
@@ -253,7 +254,8 @@ agent-kit/
 ├─ LICENSE
 ├─ assets/
 │  └─ hero.webp                   # README hero image
-├─ skills/                       # 15 个可安装 skill，每个目录一个 SKILL.md
+├─ skills/                       # 16 个可安装 skill，每个目录一个 SKILL.md
+│  ├─ pro-browser/                # 浏览器选路，含内置浏览器与 Ego 的安装准备
 │  ├─ pro-copy/
 │  ├─ pro-exp/
 │  ├─ pro-explain/

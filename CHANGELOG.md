@@ -15,6 +15,7 @@
 - `pro-stack` 技术偏好新增“Flutter 路线”：UI 底座以 Forui 优先试用，Material 3 与 shadcn_flutter 作为备选；按需补充 skeletonizer、motor、smooth_sheets、fl_chart、flutter_markdown_plus、reactive_forms、material_new_shapes、data_table_2 / two_dimensional_scrollables，桌面能力使用内置 Shortcuts / Actions / Focus 与 file_selector、hotkey_manager、super_drag_and_drop、window_manager（注明其正迁移到 nativeapi），组件目录用 Widgetbook；平台插件按需引入时放在独立 package。
 - `pro-stack` 技术偏好改为逐级索引：`references/preferences.md` 只保留使用原则与路线索引，候选按路线拆到 `web-react.md`、`client.md`、`backend.md`、`data.md`，Flutter 组件作为客户端子路线放在 `client-flutter.md`，由 `client.md` 索引；每个路线文件同时记录候选与官方入口，`docs.md` 拆入各文件后移除。选型流程改为先读入口、再按涉及的路线读取对应文件；README 与安装脚本提示同步更新。
 - `pro-stack` 客户端路线移除 Tauri 与 GPUI + GPUI Kit，改用 MyGo（egoist/mygo）：Web 技术桌面客户端比较 MyGo 与 Electron，高性能原生桌面改为 MyGo 原生 UI，并注明 MyGo 仍为 0.x、不支持移动端；同步路线分工、明确偏好、官方入口、Web 与 React 路线说明和行为用例 1、12、14。
+- 新增 `pro-browser`：agent 需要使用浏览器时触发并选路，开发中的本地预览优先使用宿主应用内置的浏览器（含 Codeg 内置浏览器的标签页共享与操作授权），需要登录账号或有访问权限的浏览与线上排查使用 Ego 浏览器（ego lite，按 `ego-browser skill` 输出操作）；Ego 的只读操作可直接执行，对外写入、登录与清理浏览器状态须经用户授权或由用户完成。安装与启用属于 Skill 之外的准备工作，见 `references/install.md`；附带 evals。skill 数量从 15 更新为 16。
 
 ## 0.16.1 - 2026-10-04
 
