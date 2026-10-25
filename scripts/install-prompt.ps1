@@ -85,6 +85,8 @@ if ($MarkerCount -eq 1) {
         $Content = $Content.Replace("$Marker`n", $FragmentText)
     }
 }
+# core.autocrlf=true 的检出会混入 CRLF；与 install-prompt.sh 的装配结果一致，统一为 LF。
+$Content = $Content.Replace("`r`n", "`n")
 
 if ($Print) {
     [Console]::OutputEncoding = $Utf8
