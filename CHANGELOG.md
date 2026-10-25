@@ -17,6 +17,7 @@
 - `pro-stack` 客户端路线移除 Tauri 与 GPUI + GPUI Kit，改用 MyGo（egoist/mygo）：Web 技术桌面客户端比较 MyGo 与 Electron，高性能原生桌面改为 MyGo 原生 UI，并注明 MyGo 仍为 0.x、不支持移动端；同步路线分工、明确偏好、官方入口、Web 与 React 路线说明和行为用例 1、12、14。
 - 新增 `pro-browser`：agent 需要使用浏览器时触发并选路，开发中的本地预览优先使用宿主应用内置的浏览器（含 Codeg 内置浏览器的标签页共享与操作授权），需要登录账号或有访问权限的浏览与线上排查使用 Ego 浏览器（ego lite，按 `ego-browser skill` 输出操作）；Ego 的只读操作可直接执行，对外写入、登录与清理浏览器状态须经用户授权或由用户完成。安装与启用属于 Skill 之外的准备工作，见 `references/install.md`；附带 evals。skill 数量从 15 更新为 16。
 - `install-prompt.ps1` 装配结果统一为 LF：Windows 默认 `core.autocrlf=true` 的检出会让平台片段带上 CRLF，此前 PowerShell 版原样保留，与 Bash 版结果不一致，导致验证脚本的平台装配检查失败；通过 PowerShell 安装的全局 instructions 换行随之改为 LF。
+- 新增 `pro-mobile`：agent 需要操作手机、模拟器或移动 App 时触发并选路。会话已有 `mobile_*` 工具时直接使用 mobile-mcp；未配置时推荐在当前手机项目做项目级安装，mobile-mcp 与其配套的 `mobile-automation` skill 取仓库最新版本且两者同版本，关闭匿名数据上报，不做全局安装；用户不想装时走 `adb` / `xcrun simctl` 命令路线。USB 调试与无线调试按同一条真机路线处理，连接方法见 `references/connect.md`。references 记录已核实的 Claude Code、Codex、Cursor、Gemini CLI、OpenCode 项目级 MCP 配置与 skill 目录、工具速查和常用命令；边界覆盖多设备选择、真机破坏性操作、对外写入、云端计费设备与隐私；附带 evals。skill 数量从 16 更新为 17。
 
 ## 0.16.1 - 2026-10-04
 
