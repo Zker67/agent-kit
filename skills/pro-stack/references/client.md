@@ -6,8 +6,8 @@
 
 | 领域 | 作者偏好 | 适用条件与例外 |
 |---|---|---|
-| Web 技术桌面客户端 | MyGo / Electron | 沿用 Web 界面做桌面应用时比较，不预设固定优先级。重视分发体积与资源占用、愿意用 Go 实现本地逻辑并处理系统 WebView 差异时优先评估 MyGo（Web 页面窗口，前端经生成的 TypeScript 客户端调用 Go）；依赖 Node.js 能力、特定 Chromium 行为或已有 Electron 生态集成时优先评估 Electron。两者只覆盖 macOS、Windows、Linux 桌面，需要同时覆盖手机时另行比较 Flutter 或 Expo + React Native。资源占用与响应速度按应用负载评估，不凭框架名称判断。 |
-| 高性能原生桌面 | MyGo 原生 UI | 桌面是主要产品平台且满足下节条件时优先评估；指 egoist/mygo 的 `ui` 包，用 Go 编写、由 MyGo 在 GPU 上绘制，不启动 WebView。同一应用可混用原生 UI 窗口与 Web 页面窗口，复杂文档或需复用 Web 代码的部分可留在 Web 页面。项目仍处于 0.x，版本与 API 在选型时确认；不支持移动端。 |
+| Web 技术桌面客户端 | MyGo / Electron | 沿用 Web 界面做桌面应用时比较，不预设固定优先级。重视分发体积与资源占用、愿意用 Go 实现本地逻辑并处理系统 WebView 差异时优先评估 MyGo（指 egoist/mygo，不等同于其他同名或近名项目；Web 页面窗口，前端经生成的 TypeScript 客户端调用 Go）；依赖 Node.js 能力、特定 Chromium 行为或已有 Electron 生态集成时优先评估 Electron。两者官方只面向 macOS、Windows、Linux 桌面，需要同时覆盖手机时另行比较 Flutter 或 Expo + React Native。资源占用与响应速度按应用负载评估，不凭框架名称判断。 |
+| 高性能原生桌面 | MyGo 原生 UI | 桌面是主要产品平台且满足下节条件时优先评估；指 egoist/mygo 的 `ui` 包，用 Go 编写、由 MyGo 在 GPU 上绘制，不启动 WebView。同一应用可混用原生 UI 窗口与 Web 页面窗口，复杂文档或需复用 Web 代码的部分可留在 Web 页面。项目仍处于 0.x，版本与 API 在选型时确认；官方只面向 macOS、Windows、Linux 桌面，不作为移动应用方案。 |
 | 移动端 | Expo + React Native | 以移动端为主、希望沿用 React / TypeScript 经验时的偏好路线；单独评估目标系统、原生模块、发布与 UI 组件需求。需要桌面覆盖时，不默认 Expo 项目已具备完整桌面能力，按目标平台单独核对，并与 Flutter 比较。 |
 | 跨平台客户端 | Flutter + Dart | 桌面与移动端都重要、希望复用大部分 UI 与业务逻辑时优先评估；Web 不是主要交付渠道，或 Web 也是应用型界面时尤其适合。官网、博客、帮助中心等内容型网站单独选择 Web 技术。先按目标平台核对关键插件（如托盘、全局快捷键、后台任务、蓝牙、音视频、富文本），桌面的键鼠、窗口尺寸与手机触控分别设计。会引入 Dart 与另一套组件生态，现有 React 组件不能直接沿用。 |
 
@@ -53,7 +53,8 @@
 
 | 领域 | 技术 | 官网 | 文档入口 | 备注 |
 |---|---|---|---|---|
-| Web 技术桌面客户端 / 高性能原生桌面 | MyGo | [mygo.egoist.dev](https://mygo.egoist.dev/) | [Getting started](https://mygo.egoist.dev/docs/getting-started) | 源码位于 [egoist/mygo](https://github.com/egoist/mygo)；原生 UI 见 [Native UI](https://mygo.egoist.dev/docs/ui)。 |
+| Web 技术桌面客户端 | MyGo | [mygo.egoist.dev](https://mygo.egoist.dev/) | [Docs](https://mygo.egoist.dev/docs) | 源码位于 [egoist/mygo](https://github.com/egoist/mygo)，不等同于其他同名或近名项目；版本见 [Releases](https://github.com/egoist/mygo/releases)。上手见 [Getting started](https://mygo.egoist.dev/docs/getting-started)；前端调用 Go 见 [Calling Go from the frontend](https://mygo.egoist.dev/docs/bindings)；打包、签名与安装包见 [Building and distributing](https://mygo.egoist.dev/docs/distribution)。 |
+| 高性能原生桌面 | MyGo 原生 UI | [mygo.egoist.dev](https://mygo.egoist.dev/) | [Native UI](https://mygo.egoist.dev/docs/ui) | 与 Web 页面窗口共用上一行的源码、版本、上手与打包入口。 |
 | Web 技术桌面客户端 | Electron | [electronjs.org](https://www.electronjs.org/) | [Docs](https://www.electronjs.org/docs/latest/) | |
 | 移动端 | Expo | [expo.dev](https://expo.dev/) | [docs.expo.dev](https://docs.expo.dev/) | |
 | 移动端 | React Native | [reactnative.dev](https://reactnative.dev/) | [Introduction](https://reactnative.dev/docs/getting-started) | |
