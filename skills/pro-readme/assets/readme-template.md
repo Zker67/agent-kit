@@ -30,11 +30,13 @@ Placeholder convention: `{{like-this}}` for single-line slots, `<!-- LIST: thing
 
 ---
 
+[OPTIONAL — only when the user wants an image; prefer a real screenshot]
+
 <p align="center">
-  <img src="./assets/hero.webp" alt="{{descriptive alt — 描述 hero 的视觉内容与仓库价值，不要只写仓库名}}" width="80%">
+  <img src="./assets/hero.webp" alt="{{descriptive alt — 描述画面内容与仓库用途，不要只写仓库名}}" width="80%">
 </p>
 
-> {{One-line value-prop: "把『{{某件事}}』这件事——{{核心做法 1}} + {{核心做法 2}} + {{核心做法 3}}——做到{{某种状态}}。"}}
+> {{One or two plain sentences: 以前遇到什么麻烦，这个仓库现在怎么解决。例："以前每次部署都要手动登服务器拉镜像。现在推送后 CI 自动构建，Portainer 自动更新。"}}
 
 ---
 
@@ -42,7 +44,7 @@ Placeholder convention: `{{like-this}}` for single-line slots, `<!-- LIST: thing
 
 | 能力 | 实现 |
 |---|---|
-| **{{capability-1}}** | {{concrete implementation, mention real file/feature names}} |
+| **{{capability-1}}** | {{concrete implementation in plain words, linked to the file/doc that implements it, e.g. "[按天汇总](src/report.ts)：每天 9 点生成"}} |
 | **{{capability-2}}** | {{...}} |
 | **{{capability-3}}** | {{...}} |
 | **{{capability-4}}** | {{...}} |
@@ -51,6 +53,8 @@ Placeholder convention: `{{like-this}}` for single-line slots, `<!-- LIST: thing
 ---
 
 ## 启动
+
+[VARIANT — repo is not a service (library / CLI / skill / docs)? Say so in one line, then replace the port table, Docker and health check below with `### 安装`, `### 更新`, `### 本地修改`, each with a real command block. Badge slot 3 changes to match, see `badge-conventions.md`.]
 
 ### 端口约定
 
@@ -258,12 +262,42 @@ Pick 4 user-facing verbs or features:
 - Good: `Midjourney` · `DALL·E` · `FLUX` (engine names)
 - Bad: `Featuring autocomplete and real-time updates` (sentence)
 - Bad: `feature1, feature2, feature3` (commas instead of `·`)
+- Bad: `赋能协作` · `一站式中枢` (marketing words, see Plain language)
 
-### Value-prop blockquote pattern
+### One-line intro
 
-The single blockquote under the hero image always reads: "把『某件用户能想象的具体小事』这件事——{{核心做法的 dash-list}}——做{{到某种压缩状态，如 "一次输入、一屏看全" / "一次部署、每天自动跑" / "30 秒一轮的辅助流"}}。"
+The blockquote after the AGENTS.md hint (under the image, if there is one) says in one or two plain sentences what used to be a hassle and what the repo does about it. Say it the way you would explain it to a teammate.
 
-This is the elevator pitch in one sentence. If you can't fit it, the project is probably trying to do too much for one repo.
+- Good: "以前每开一个新会话，都要重新跟 AI 交代一遍团队习惯。现在把这些习惯整理成带编号的规则，输入 `/xxx` 就能读到。"
+- Good: "输入 AppID，评测、在线人数和地区分布在一页里看全，不用来回切网站。"
+- Bad: "把『{{某件事}}』这件事——{{做法 1}} + {{做法 2}}——做到{{某种状态}}。" (slogan formula)
+- Bad: "不是又一个监控面板，而是你的数据中枢。" (`不是…而是` contrast)
+
+If you can't say it in two sentences, the repo is probably doing too much.
+
+### Plain language
+
+The whole README is read by people skimming for one fact. Write every slogan, intro, table cell and note in plain words:
+
+| Do | Don't |
+|---|---|
+| 短句，先说结论 | 长句里套几层修饰 |
+| 日常说法：`界面怎么做`、`冲突时听谁的` | 术语腔、英文小标题：`UX Governance`、`Field Note` |
+| 直接写做了什么：「推送后自动部署」 | 口号句式：「把…这件事做到…」「不是…而是…」「A ≠ B」 |
+| 一句话一个意思 | 用一串 `——` 把几件事串在一起 |
+| 写具体的东西：文件名、命令、数字 | `赋能`、`一站式`、`全方位`、`极致`、`无缝` |
+
+Before finishing, search the README for `而是`, `≠`, `——` and the marketing words above, and rewrite any hit.
+
+### Links
+
+The README is an entry point; every in-repo thing it names should be one click away.
+
+- Link files, folders, docs and rules with relative paths: `[部署说明](docs/deploy.md)`, `[verify.sh](scripts/verify.sh)`.
+- In 核心能力, put the link in the 实现 cell, pointing at the file or doc that implements that capability. Several links in one cell are fine.
+- Deep-link to a heading when the target doc is long: `[出处简称](references/README.md#出处简称)`.
+- Don't add links inside code blocks or the directory tree; those stay plain text.
+- Every link and `#anchor` must resolve (see the checklist).
 
 ### When to use 使用流程 vs API
 
@@ -306,6 +340,8 @@ Before filling the 启动 commands, decide how the project is actually consumed 
 Never write `npm install <repo-name>` for a repo that was never published. When unsure, prefer the `git clone` form — it's always true for an open-source repo.
 
 ### Hero image: alt text & light/dark variants
+
+The image is optional. Ask first; a real screenshot of the product is better than a generated cover, and repos without a UI usually need none. Without an image, delete the `<p align="center">` block and keep the one-line intro.
 
 **Descriptive alt text.** The hero `alt` should describe what the image *shows* and what the repo *does*, not just repeat the name. Bad: `alt="my-repo"`. Good: `alt="radar dish radiating ripples toward orbiting feed orbs — a real-time content monitor"`.
 

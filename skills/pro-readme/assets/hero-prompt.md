@@ -1,6 +1,8 @@
 # Hero Image Prompt Template
 
-Every repo in the family gets a hero image at `<repo>/assets/hero.webp`. The image's central metaphor varies per repo, but the shared visual language stays constant so all hero images form a recognizable family.
+The hero image is optional. Ask the user first: a real screenshot of the product usually tells readers more, and repos without a UI often need no image. Use this template only when the user explicitly asks for a generated cover.
+
+When a generated cover is used, it goes to `<repo>/assets/hero.webp`. The image's central metaphor varies per repo, but the shared visual language stays constant so all generated covers form a recognizable family.
 
 The examples in this file use a fictional **acme-suite** family for illustration; the prompt template itself is tool-agnostic and works for any project collection.
 

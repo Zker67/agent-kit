@@ -19,6 +19,8 @@ Six is the recognition signal. Four feels skimpy; eight wraps badly on narrow sc
 
 The pink slot (#6) is the visual anchor of the matrix — the magenta-pink badge mirrors the magenta-pink glow in the hero image. Don't move pink to a different slot.
 
+**Repos that are not services** (library, CLI, skill, docs) have no port. Keep slot 3 orange and pointing at `#启动`, but show how the repo is installed instead: `install-npm`, `install-pip`, `install-git%20clone`, or the tool that distributes it. Don't invent a port.
+
 ---
 
 ## Shields.io URL pattern
