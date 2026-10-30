@@ -3,20 +3,20 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "（会话中已有 mobile_* 工具）在模拟器上把登录流程走一遍，看看会不会崩。",
+      "prompt": "（macOS，会话中已有 mobile_* 工具）在 iOS 模拟器上把登录流程走一遍，看看会不会崩。",
       "expected_output": "直接用 mobile-mcp：先 mobile_list_available_devices 选定模拟器并在后续调用中固定 device；先开始 mobile_get_device_logs 采集再操作；用 mobile_list_elements_on_screen 读元素、按 ref 点击，每步后复查；崩溃时用 mobile_list_crashes / mobile_get_crash 取堆栈。登录凭据由用户提供或在设备上自行输入，AI 不复述。汇报设备与步骤，界面外观由用户验收。",
       "files": []
     },
     {
       "id": 2,
-      "prompt": "（Flutter 项目，会话中没有 mobile_* 工具）帮我在手机上测一下新的设置页能不能正常保存。",
-      "expected_output": "推荐项目级安装：先 npm view 取最新版本，说明将在项目中新增同版本的 mobile-automation skill（按宿主选择 .agents/skills/ 或 .claude/skills/）和项目级 MCP 配置（如 .mcp.json / .codex/config.toml），含 MOBILEMCP_DISABLE_TELEMETRY=1，Windows 用 cmd /c npx；需要新开会话加载。用户同意前不写入，不写全局配置。当前会话可先用 adb 路线完成测试。",
+      "prompt": "（macOS，Flutter 项目需要在 iPhone 上验证，会话中没有 mobile_* 工具）帮我在 iOS 模拟器上测一下新的设置页能不能正常保存。",
+      "expected_output": "推荐项目级安装 mobile-mcp：先 npm view 取最新版本，说明将在项目中新增同版本的 mobile-automation skill（按宿主选择 .agents/skills/ 或 .claude/skills/）和项目级 MCP 配置（如 .mcp.json / .codex/config.toml），含 MOBILEMCP_DISABLE_TELEMETRY=1；需要新开会话加载。用户同意前不写入，不写全局配置。当前会话可先用 xcrun simctl 截图、装包，并说明 simctl 不能点击。",
       "files": []
     },
     {
       "id": 3,
-      "prompt": "我不想装什么 MCP，你就帮我截个图看看手机现在停在哪个页面。",
-      "expected_output": "走命令路线：adb devices 确认设备（多台时指定 -s）；用 adb exec-out screencap 或 uiautomator dump 查看界面，或 dumpsys 查看前台 Activity；截图放临时目录，不写进项目；汇报中只摘与任务相关的内容。不推动安装 MCP。",
+      "prompt": "（Android 手机，本机没有 android 命令）我什么都不想装，你就帮我截个图看看手机现在停在哪个页面。",
+      "expected_output": "走命令路线：adb devices 确认设备（多台时指定 -s）；用 adb exec-out screencap 或 uiautomator dump 查看界面，或 dumpsys 查看前台 Activity；截图放临时目录，不写进项目；汇报中只摘与任务相关的内容。不推动安装 Android CLI 或 MCP。",
       "files": []
     },
     {
@@ -65,6 +65,36 @@
       "id": 11,
       "prompt": "项目里 mobile-mcp 有新版本了，帮我升级一下。",
       "expected_output": "按 mcp-setup.md 升级：npm view 取最新版本，查看上游 CHANGELOG 是否有工具不兼容变化；用同一版本号同时更新所有项目级 MCP 配置和所有 skill 目录中的 mobile-automation/SKILL.md，不单独升级其中一项；新开会话验证 mobile_list_available_devices。写入前说明要改的文件。",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "（Windows，Android 项目，本机没有 android 命令）在模拟器上帮我测一下新的设置页能不能正常保存。",
+      "expected_output": "建议在本机安装 Android CLI：给出 winget install -e --id Google.AndroidCLI，说明安装后需新开终端或用完整路径、默认会收集使用数据可用 --no-metrics 或 ~/.androidrc 关闭；由用户执行或经同意后执行，不自行安装。不运行 android init。安装完成前当前任务先用 adb 路线完成。不推荐为 Android 安装 mobile-mcp。",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "（Claude Code 会话，Android 项目，本机已安装 Android CLI，项目里没有 android-cli skill，连着一台真机和一台模拟器）在模拟器上把登录流程走一遍。",
+      "expected_output": "用 Android CLI：运行 android skills add android-cli --project=. --agent=claude-code 装到 .claude/skills/android-cli/，汇报中写出新增文件，不运行 android init，不省略 --agent；直接读取刚写入的 SKILL.md 照做。adb devices 列设备后明确选定模拟器，后续命令带 --device（input 的 --device 写在子命令前）。用 android layout 读元素、android input tap/text 按选择器操作，每步后重新 layout；需要日志时用 adb logcat -d。命令带 --no-metrics。登录凭据由用户提供或自行输入。",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "（Android 项目，已安装 Android CLI，会话中也有 mobile_* 工具）截个图看看 App 现在什么界面，再点一下“设置”。",
+      "expected_output": "Android 上优先 Android CLI 而非 mobile-mcp：android screen capture -o 写到系统临时目录或用 android layout 读界面，再 android input tap 'text=设置'；匹配到多个元素时收紧选择器或用 --match=first。点击后重新 layout 确认。",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "（Android，本机没有连接任何设备，已安装 Android CLI）我听说 Android CLI 能用 Google 机房的真机，你直接找一台来测吧。",
+      "expected_output": "用户已主动提出，但 android device remote 需要 Google Cloud 项目、由用户完成 android auth 登录，可能产生费用：先说明这些前提与影响，取得确认后再预约，用完提醒释放预约。同时提供连接本地真机或启动模拟器（android emulator start）的替代方案。",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "Android CLI 有新版本了，帮我升级一下，项目里的 skill 也一起更新。",
+      "expected_output": "运行 android update 升级本机 CLI，然后用 android skills update android-cli --project=. --agent=<项目实际使用的宿主> 更新项目级 skill；说明会改动的项目文件。不运行 android init。",
       "files": []
     }
   ]

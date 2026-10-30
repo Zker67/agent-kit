@@ -1,6 +1,6 @@
 # 连接设备
 
-mobile-mcp 和命令路线都要先让电脑看到设备。USB 调试和无线调试是同一条真机路线：连好后在 `adb devices` 中都表现为一个序列号，USB 是设备序列号，无线是 `<ip>:<port>`，后续用法完全相同。
+Android CLI、mobile-mcp 和命令路线都要先让电脑看到设备。USB 调试和无线调试是同一条真机路线：连好后在 `adb devices` 中都表现为一个序列号，USB 是设备序列号，无线是 `<ip>:<port>`，后续用法完全相同。
 
 开启开发者选项、在手机上点授权、输入配对码这些步骤由用户在手机上完成；AI 说明步骤、运行检查命令。
 
@@ -84,7 +84,7 @@ emulator -list-avds
 emulator -avd <名称>
 ```
 
-也可以在 Android Studio 的 Device Manager 中启动。启动后在 `adb devices` 中显示为 `emulator-5554` 一类序列号。`emulator` 位于 Android SDK 的 `emulator/` 目录，不在 PATH 中时用完整路径或从 Android Studio 启动。
+已安装 Android CLI 时也可以用 `android emulator list` 和 `android emulator start <名称>`，见 [Android CLI](./android-cli.md)。也可以在 Android Studio 的 Device Manager 中启动。启动后在 `adb devices` 中显示为 `emulator-5554` 一类序列号。`emulator` 位于 Android SDK 的 `emulator/` 目录，不在 PATH 中时用完整路径或从 Android Studio 启动。
 
 ## iOS（仅 macOS）
 

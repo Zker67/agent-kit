@@ -1,6 +1,6 @@
-# 命令路线（不装 MCP）
+# 命令路线（降级）
 
-用户不想装 mobile-mcp、宿主没有项目级 MCP 配置，或只需一两条命令时，直接用 `adb`（Android）或 `xcrun simctl`（iOS 模拟器，仅 macOS）。设备连接见 [连接设备](./connect.md)。
+这是降级路线：Android 优先用 [Android CLI](./android-cli.md)，iOS 优先用 mobile-mcp。以下情况直接用 `adb`（Android）或 `xcrun simctl`（iOS 模拟器，仅 macOS）：用户不想安装上述工具；工具还没装好或要等新会话；只需一两条命令；或需要 Android CLI 没有的能力（日志、崩溃缓冲区、`adb reverse`、录屏）。设备连接见 [连接设备](./connect.md)。
 
 ## 通用约定
 

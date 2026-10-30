@@ -2,6 +2,8 @@
 
 mobile-mcp（[mobile-next/mobile-mcp](https://github.com/mobile-next/mobile-mcp)，Apache-2.0）是控制 Android / iOS 真机、模拟器的 MCP server，仓库同时提供配套的使用说明 skill `mobile-automation`。本文件记录把两者一起装到**单个手机项目**里的方法：MCP 配置和 skill 都跟着项目走，可以随仓库提交给协作者，不在用户级或全局配置里常驻。
 
+pro-mobile 只在需要操作 iOS 时推荐安装 mobile-mcp，包括 iOS 项目和要在 iOS 上验证的跨平台项目。只操作 Android 的项目用 [Android CLI](./android-cli.md)。
+
 一次安装包含两部分，版本号必须一致：
 
 1. 项目级 MCP 配置：启动 `@mobilenext/mobile-mcp@<version>`。

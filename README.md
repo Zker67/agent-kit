@@ -205,7 +205,7 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 | `pro-handoff` | 在项目根 `handoff/` 留下按角色分阶段的一次性交接件，让零上下文的下一个角色只看文件接着干。 |
 | `pro-idea` | 生成可分阶段落地的改进建议。 |
 | `pro-memory` | 按需维护 `.ai_memory/` 项目级长期上下文。 |
-| [`pro-mobile`](./skills/pro-mobile/README.md) | agent 需要操作手机、模拟器或移动 App 时触发并选路：已配置时用 mobile-mcp，未配置时推荐在项目级安装同版本的 mobile-mcp 与 `mobile-automation` skill，不想装时用 `adb` 命令；USB 与无线调试的连接方法按需读取。 |
+| [`pro-mobile`](./skills/pro-mobile/README.md) | agent 需要操作手机、模拟器或移动 App 时触发并选路：Android 优先用官方 Android CLI（本机安装，官方 `android-cli` skill 装到项目级），iOS 用 mobile-mcp（未配置时推荐项目级安装同版本的 MCP 与 `mobile-automation` skill），`adb` / `xcrun simctl` 命令作为降级；USB 与无线调试的连接方法按需读取。 |
 | `pro-newproj` | 新建项目或为刚创建的仓库补齐完整文档骨架。 |
 | `pro-notify` | 用户主动启用的飞书 / Lark、钉钉、企业微信群机器人纯文本通知，以及 ntfy（官方或自建）Markdown 强提醒；CLI / Python 复用本机凭据，支持默认渠道、多渠道、事件去重和限流。 |
 | `pro-pick` | 为需要人拍板的接入点（图、音、视频、布局、文案）陈列候选到离线交互 HTML，人勾选后返回 JSON 再接入。 |
@@ -263,7 +263,7 @@ agent-kit/
 │  ├─ pro-handoff/                # 角色间一次性交接件，含 handoff / ticket 模板
 │  ├─ pro-idea/
 │  ├─ pro-memory/
-│  ├─ pro-mobile/                 # 手机选路，含 mobile-mcp 项目级安装、设备连接与 adb 命令
+│  ├─ pro-mobile/                 # 手机选路，含 Android CLI、mobile-mcp 项目级安装、设备连接与 adb 命令
 │  ├─ pro-newproj/                # 新项目文档骨架与安全创建脚本
 │  ├─ pro-notify/                 # 主动通知、凭据引用与多渠道发送脚本
 │  ├─ pro-pick/                   # 候选陈列 HTML 模板与 manifest / result 协议

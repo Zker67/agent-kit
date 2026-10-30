@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `pro-mobile` 的 Android 路线改为优先使用 Google 官方 Android CLI（`android` 命令）：本机没有时建议安装（Windows 用 `winget install -e --id Google.AndroidCLI`），用 `--no-metrics` 或 `~/.androidrc` 关闭默认的数据收集；使用时用 `android skills add android-cli --project=. --agent=<宿主>` 把官方 skill 装到项目级，不运行会全局安装的 `android init`。mobile-mcp 只在需要操作 iOS 时推荐，`adb` / `xcrun simctl` 命令改为降级路线，日志、`adb reverse` 和录屏仍用 adb。新增 `references/android-cli.md`（基于 1.1.16717390 核实：命令速查、宿主与项目级 skill 目录对照、远程真机与 Crashlytics 等边界），删除模拟器加入需同意的操作；evals 增至 16 个。
 - `pro-readme` 文案改为大白话：新增“大白话”和“处处加链接”两条硬规则；标题下那句改成一两句直说“以前的麻烦、现在怎么解决”，去掉「把…这件事——…——做到…」口号句式；模板和检查清单加入大白话对照表、口号与营销词自查、仓库内文件链接和锚点检查、朗读测试。
 - `pro-readme` 的 hero 图改为可选：先问用户，优先用产品真实截图，只有用户明确要求才生成封面；没有图片时删掉图片区块。不是服务的仓库（库、CLI、Skill、文档）把启动一节改成安装 / 更新 / 本地修改，第 3 个徽章改为安装方式，不虚构端口。
 - 新增 `pro-stack`：为桌面软件、移动应用、网站/Web 应用及其配套后端提供技术选型建议；流程与作者技术偏好分开维护，已确认架构与日常开发不重复选型。
