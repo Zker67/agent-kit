@@ -1,6 +1,6 @@
 # Optional Commit Message Draft
 
-When the user asks for a commit message after a README + hero rewrite, draft a structured message in this format. This file defines the message text only; do not run `git add`, `git commit`, `git push`, or any release action from `pro-readme`.
+When the user asks for a commit message after a README rewrite (with or without a hero image), draft a structured message in this format. This file defines the message text only; do not run `git add`, `git commit`, `git push`, or any release action from `pro-readme`.
 
 ---
 
@@ -17,13 +17,14 @@ Rules:
 - Lowercase `docs(readme):` prefix — matches Conventional Commits.
 - Subject under 72 characters total. If over, drop "restructure to" → "align to".
 - No trailing period.
-- Singular form: `+ hero asset`, not `+ hero assets` (always exactly one hero per README refresh).
+- Singular form: `+ hero asset`, not `+ hero assets` (at most one hero per README refresh).
+- Only add `+ hero asset` when this rewrite adds or replaces a hero image. With no hero, end the subject at `standard`: `docs(readme): restructure to <family-standard> standard`.
 
 ---
 
-## Body — 5 bullets
+## Body — 5 bullets (4 without a hero)
 
-The body is **always 5 dashed bullets** in this order. Don't reorder, don't merge, don't expand to 10.
+The body is **5 dashed bullets** in this order when the rewrite adds or replaces a hero, and **4 bullets** when it doesn't (drop bullet 2, keep the rest in order). Don't reorder, don't merge, don't expand to 10.
 
 ```text
 - centered title + slogan + tagline + 6-badge matrix + anchor nav
@@ -42,8 +43,11 @@ This is the family's recognition signal. Same phrasing across drafts makes later
 
 ### Bullet 2 — hero description
 
-One sentence describing the central metaphor and 2–3 supporting elements. Should match what you actually told your text-to-image tool to generate. Examples:
+Only when the rewrite adds or replaces a hero image; otherwise omit this bullet entirely — don't write a placeholder like `no hero`.
 
+For a generated cover: one sentence describing the central metaphor and 2–3 supporting elements, matching what you actually told your text-to-image tool to generate. For a real screenshot: say it is a screenshot and name the 2–3 things it shows. Examples:
+
+- `80% width hero (real screenshot: feed list + daily card preview + filter sidebar)`
 - `80% width hero (envelope → AI orb with neural circuit → reply chat bubble + bot icon hint)`
 - `80% width hero (storefront card with diagnostic scan + 4 floating score gauges + AI improvement particle stream)`
 - `80% width hero (3 translucent panels: content card / editor with term pills / language drawer)`
@@ -82,9 +86,9 @@ List the sibling repos that appear in the 协同关系 table. Examples (using th
 - `add coordination table with acme-30003-radar / acme-30029-storefront / acme-00000-shared-ui`
 - `add coordination table with acme-30007-review / acme-30009-replier / acme-30013-trending / acme-30011-translator`
 
-If the repo is genuinely standalone and 协同关系 is omitted, change this bullet to:
+If the repo is genuinely standalone, 协同关系 keeps its header with a one-line note instead of a table (SKILL.md Hard rule 8). Change this bullet to:
 
-- `note: standalone repo — no coordination table`
+- `note: standalone repo — 协同关系 keeps a one-line note, no coordination table`
 
 ---
 

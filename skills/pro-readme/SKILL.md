@@ -64,12 +64,12 @@ Never put tool working files (image project configs, run folders) inside the tar
 
 Use the full skeleton in **`assets/readme-template.md`** as the structural source of truth. Fill in real content, but keep the structure rigid.
 
-The 11 required sections, in order:
+The 11 sections, in order. All are required with two exceptions: #2 is omitted when the repo has no AI-collab doc (Hard rule 11), and the hero inside #3 is optional (Step 2) — the intro itself stays.
 
 | # | Section | Purpose |
 |---|---|---|
 | 1 | **Centered title block** | `<div align="center">` with `# Title`, **bold slogan**, tagline of code-spans, 6 badges, anchor nav |
-| 2 | **AGENTS.md hint** | One-line blockquote pointing AI readers to AGENTS.md / AGENT.md / CLAUDE.md |
+| 2 | **AGENTS.md hint** | One-line blockquote pointing AI readers to AGENTS.md / AGENT.md / CLAUDE.md; omit if none exists |
 | 3 | **One-line intro (+ optional hero)** | A plain one- or two-sentence blockquote: what used to be a hassle, what this repo does about it. Optional 80%-width image above it |
 | 4 | **核心能力** | Table mapping each capability to its concrete implementation, each linked to the file or doc that implements it |
 | 5 | **启动** | Port table + 本地运行 + Docker + 健康检查（按需）. Repos that are not services (library, CLI, skill, docs) replace the port table with install / update / local-maintenance steps |
@@ -112,7 +112,7 @@ These are the rules that distinguish "family style" from "generic good README". 
 
 7. **Code blocks specify language.** `bash` / `powershell` / `text` / `env` / `ts` / `mermaid` — never bare ` ``` `. `text` is for ASCII directory trees and labeled boxes.
 
-8. **协同关系 is mandatory.** Even if the repo seems standalone, find 2–3 sibling repos it relates to (shared stack, shared data source, upstream/downstream, theme protocol). This signals the repo is part of an ecosystem, not orphaned. If the repo truly has no siblings, keep the section header with a one-line note instead of fabricating ties.
+8. **协同关系 is mandatory.** Even if the repo seems standalone, find 2–4 sibling repos it relates to (shared stack, shared data source, upstream/downstream, theme protocol). This signals the repo is part of an ecosystem, not orphaned. If the repo truly has no siblings, keep the section header with a one-line note instead of fabricating ties.
 
 9. **Bilingual hygiene.** Section headings are Chinese, but `License` stays English. Tech terms (`SSE`, `webhook`, `BBCode`, `IndexedDB`) stay English. Don't translate proper nouns (`Steam` 不译 `蒸汽`).
 

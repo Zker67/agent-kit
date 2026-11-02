@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `pro-readme` 修正四处前后不一：独立仓库的提交信息第 5 条改为“协同关系保留标题和一句说明”，与硬规则 8 一致；提交信息草案只在本次新增或替换 hero 图时写 `+ hero asset` 和第 2 条，没有图时正文为 4 条，真实截图也按 hero 描述；协同关系的兄弟仓库数量统一为 2–4 个；11 节骨架注明第 2 节在没有 AI 协作文档时省略、第 3 节的 hero 可选。
 - `pro-stack` 的 MyGo 条目不再写版本阶段：去掉“仍处于 0.x”，改为版本、API 与成熟度在选型时按 Releases 确认；明确偏好的确认项与行为用例 1 同步。
 - `pro-mobile` 的 Android 路线改为优先使用 Google 官方 Android CLI（`android` 命令）：本机没有时建议安装（Windows 用 `winget install -e --id Google.AndroidCLI`），用 `--no-metrics` 或 `~/.androidrc` 关闭默认的数据收集；使用时用 `android skills add android-cli --project=. --agent=<宿主>` 把官方 skill 装到项目级，不运行会全局安装的 `android init`。mobile-mcp 只在需要操作 iOS 时推荐，`adb` / `xcrun simctl` 命令改为降级路线，日志、`adb reverse` 和录屏仍用 adb。新增 `references/android-cli.md`（基于 1.1.16717390 核实：命令速查、宿主与项目级 skill 目录对照、远程真机与 Crashlytics 等边界），删除模拟器加入需同意的操作；evals 增至 16 个。
 - `pro-readme` 文案改为大白话：新增“大白话”和“处处加链接”两条硬规则；标题下那句改成一两句直说“以前的麻烦、现在怎么解决”，去掉「把…这件事——…——做到…」口号句式；模板和检查清单加入大白话对照表、口号与营销词自查、仓库内文件链接和锚点检查、朗读测试。
