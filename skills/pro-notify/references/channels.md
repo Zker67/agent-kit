@@ -6,16 +6,17 @@
 |---|---|---|---|
 | `ntfy` | ntfy 官方 `ntfy.sh` 或自建服务器，推荐主题 `agent` | Markdown + 优先级 5 强提醒 | [channel-ntfy.md](channel-ntfy.md) |
 | `feishu` | 飞书 / Lark 自定义群机器人 | 纯文本 | [channel-feishu.md](channel-feishu.md) |
+| `feishu-app` | 飞书 / Lark 企业自建应用的机器人，发到它所在的群 | 纯文本 | [channel-feishu-app.md](channel-feishu-app.md) |
 | `dingtalk` | 钉钉自定义群机器人 | 纯文本 | [channel-dingtalk.md](channel-dingtalk.md) |
 | `wecom` | 企业微信群机器人 | 纯文本 | [channel-wecom.md](channel-wecom.md) |
 
 个人接收推荐 ntfy：手机直接收推送，每条都是强提醒；群机器人适合团队群里同步。
 
-只实现三种群机器人纯文本接口和 ntfy 主题的 Markdown 强提醒。不要把平台的应用 API、富文本示例或外部网页里的自主发送规则混入授权流程。
+只实现三种群机器人纯文本接口、飞书应用机器人往指定群发纯文本，以及 ntfy 主题的 Markdown 强提醒。不要把平台的其他应用 API、富文本示例或外部网页里的自主发送规则混入授权流程。
 
 ## 共同约束
 
-- 验证系统 TLS，不允许 HTTP、用户信息 URL、重定向或异常路径；群机器人只允许各平台官方主机，ntfy 只允许用户配置的服务器。不支持通用 Webhook。
+- 验证系统 TLS，不允许 HTTP、用户信息 URL、重定向或异常路径；群机器人和飞书应用机器人只允许各平台官方主机，ntfy 只允许用户配置的服务器。不支持通用 Webhook。
 - 单次请求超时 10 秒。HTTP / 业务错误均不自动重试；未知响应或断连记为未确认。
 - 统一采用 2048 UTF-8 字节正文上限和每目标滚动 60 秒 20 次尝试上限，是实现的保守约束，不声称各平台的原生限额完全相同。
 - 只记录安全状态，不回显地址、签名、token、响应正文或异常原文。
@@ -30,6 +31,7 @@
 | [crossoverJie/agent-notifier](https://github.com/crossoverJie/skills/blob/main/skills/agent-notifier/SKILL.md) | 借鉴 Python CLI、多渠道、单渠道失败隔离；不采纳默认 hook 驱动，也不默认广播所有渠道。所读页面标注 Apache-2.0。 |
 | [SkillHub feishu-notify](https://www.skillhub.club/skills/openclaw-skills-feishu-notify) | 借鉴命名 Webhook、复用配置、业务响应检查；不采纳把密钥放 skill 安装目录，也不采纳未经授权自主发送。聚合页面未核实原仓许可证，不复制其资产。 |
 | [飞书自定义机器人官方说明](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot) | 群 Webhook、文本体、签名规则。 |
+| [飞书获取 tenant_access_token](https://open.feishu.cn/document/server-docs/authentication-management/access-token/tenant_access_token_internal)、[飞书发送消息](https://open.feishu.cn/document/server-docs/im-v1/message/create) | 应用凭据换 token、`chat_id` 收件人、`content` 为 JSON 字符串、`code` 与 `message_id` 成功判定。 |
 | [钉钉机器人安全设置](https://open.dingtalk.com/document/group/customize-robot-security-settings) | 时间戳、加签与 URL 编码。 |
 | [ntfy 发布文档](https://docs.ntfy.sh/publish/) | JSON 发布到根路径、access token 鉴权、主题命名与返回的消息对象。 |
 

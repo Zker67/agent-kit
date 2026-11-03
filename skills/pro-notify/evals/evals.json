@@ -54,6 +54,12 @@
       "prompt": "pro-notify 的 ntfy 我手机上去哪看？要注册吗？订阅什么主题？",
       "expected_output": "只读渠道指南与 channel-ntfy.md，不读其他渠道文档；说明 Android / iOS / 网页版订阅方式，官方 ntfy.sh 可匿名或注册拿 token、自建服务器用 ntfy user / access / token 命令建只写用户和永久 token；推荐自建用 agent 主题，官方匿名用 agent 加随机后缀。只回答，不配置、不发送。",
       "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "用 pro-notify 配一个飞书应用机器人当默认渠道，别名 feishu。App ID 是 cli_a1b2c3d4e5f6g7h8，群 chat_id 是 oc_1234567890abcdef，App Secret 已安全注入 PRO_NOTIFY_FEISHU_APP_SECRET。配好先别发。",
+      "expected_output": "读取渠道指南与 channel-feishu-app.md，用 configure --provider feishu-app 传 --app-id、--chat-id 和 --app-secret-env 变量名并加 --default；App Secret 默认存进系统凭据库，不回显，不改用群 Webhook 渠道；不联网、不发测试消息。提醒机器人需在群里并开通 im:message:send_as_bot，dry-run 不能证明这些已就绪。",
+      "files": []
     }
   ]
 }

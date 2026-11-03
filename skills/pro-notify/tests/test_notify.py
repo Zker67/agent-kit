@@ -31,6 +31,15 @@ URLS = {
     "dingtalk": "https://oapi.dingtalk.com/robot/send?access_token=unit-test-only",
 }
 NTFY_TOKEN = "tk_" + "0" * 29
+APP_ID = "cli_unittestonly0000"
+CHAT_ID = "oc_unittestonly0000"
+APP_SECRET = "unit-test-app-secret-value"
+TENANT_TOKEN = "t-unit-test-tenant-token"
+TOKEN_URL = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
+MESSAGE_URL = "https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=chat_id"
+TOKEN_OK = json.dumps({"code": 0, "msg": "ok", "tenant_access_token": TENANT_TOKEN,
+                       "expire": 7200}).encode()
+MESSAGE_OK = b'{"code":0,"msg":"success","data":{"message_id":"om_unittest"}}'
 
 
 class NotifyTests(unittest.TestCase):
@@ -49,6 +58,7 @@ class NotifyTests(unittest.TestCase):
             "TEST_DINGTALK": URLS["dingtalk"],
             "TEST_SIGN": "unit-test-signing-value",
             "TEST_NTFY_TOKEN": NTFY_TOKEN,
+            "TEST_APP_SECRET": APP_SECRET,
         })
         self.env_patch.start()
         self.addCleanup(self.env_patch.stop)
@@ -71,6 +81,24 @@ class NotifyTests(unittest.TestCase):
     def configure_ntfy(self, name="phone", topic="alerts", **kwargs):
         return notify.configure(name, "ntfy", topic=topic, store="env",
                                 config_path=self.config, **kwargs)
+
+    def configure_app(self, name="bot", **kwargs):
+        options = {"app_id": APP_ID, "app_secret_env": "TEST_APP_SECRET", "chat_id": CHAT_ID,
+                   **kwargs}
+        return notify.configure(name, "feishu-app", store="env", config_path=self.config, **options)
+
+    def responses(self, *bodies):
+        """One opener whose successive open() calls return the given bodies in order."""
+        opener = self.response(b"")
+        replies = []
+        for body in bodies:
+            reply = Mock(status=200)
+            reply.read.return_value = body
+            reply.__enter__ = Mock(return_value=reply)
+            reply.__exit__ = Mock(return_value=False)
+            replies.append(reply)
+        opener.open.side_effect = replies
+        return opener
 
     def send(self, text="任务已完成", channels=None, **kwargs):
         return notify.send(channels or ["work"], text, config_path=self.config,
@@ -697,6 +725,162 @@ class NotifyTests(unittest.TestCase):
         code, result = self.cli("configure", "--name", "later", "--provider", "wecom",
                                 "--webhook-env", "TEST_WECOM", "--store", "env", "--default")
         self.assertEqual((code, result["default"]), (0, True))
+
+    def test_feishu_app_stores_plain_ids_and_secret_reference(self):
+        result = self.configure_app()
+        self.assertEqual((result["provider"], result["store"]), ("feishu-app", "env"))
+        self.assertNotIn(APP_SECRET, self.config.read_text(encoding="utf-8"))
+        channel = notify.load_config(self.config)["channels"]["bot"]
+        self.assertEqual(channel, {"provider": "feishu-app", "app_id": APP_ID, "chat_id": CHAT_ID,
+                                   "domain": "feishu", "app_secret": {"env": "TEST_APP_SECRET"}})
+        self.assertEqual(notify.list_channels(self.config),
+                         [{"channel": "bot", "provider": "feishu-app", "format": "text",
+                           "default": True}])
+
+    def test_feishu_app_secret_persists_in_keyring(self):
+        vault = {}
+        backend = Mock()
+        backend.set_password.side_effect = lambda service, name, value: vault.update({name: value})
+        backend.get_password.side_effect = lambda service, name: vault.get(name)
+        with patch.object(notify, "secure_keyring", return_value=backend):
+            notify.configure("bot", "feishu-app", app_id=APP_ID, app_secret_env="TEST_APP_SECRET",
+                             chat_id=CHAT_ID, config_path=self.config)
+            with patch.dict(os.environ, {}, clear=True):
+                self.assertEqual(self.send(channels=["bot"], dry_run=True)[0]["status"], "dry_run")
+        self.assertEqual(list(vault.values()), [APP_SECRET])
+        self.assertNotIn(APP_SECRET, self.config.read_text(encoding="utf-8"))
+
+    def test_feishu_app_request_shape_and_redacted_auth(self):
+        self.configure_app()
+        channel = notify.load_config(self.config)["channels"]["bot"]
+        provider, url, payload, _, auth = notify.build_request(channel, "这里是通知")
+        self.assertEqual((provider, url), ("feishu-app", MESSAGE_URL))
+        self.assertEqual(payload, {"receive_id": CHAT_ID, "msg_type": "text",
+                                   "content": '{"text": "这里是通知"}'})
+        self.assertEqual((auth.url, auth.app_id, auth.app_secret), (TOKEN_URL, APP_ID, APP_SECRET))
+        self.assertNotIn(APP_SECRET, repr(auth))
+        self.configure_app("intl", domain="lark")
+        channel = notify.load_config(self.config)["channels"]["intl"]
+        _, url, _, _, auth = notify.build_request(channel, "hi")
+        self.assertTrue(url.startswith("https://open.larksuite.com/open-apis/im/v1/messages?"))
+        self.assertTrue(auth.url.startswith("https://open.larksuite.com/open-apis/auth/v3/"))
+
+    def test_feishu_app_rejects_invalid_values_and_mixed_options(self):
+        cases = [({"app_id": "app_123"}, "invalid_app_id"), ({"app_id": None}, "invalid_app_id"),
+                 ({"app_id": APP_ID + "\n"}, "invalid_app_id"),
+                 ({"chat_id": "ou_123"}, "invalid_chat_id"), ({"chat_id": None}, "invalid_chat_id"),
+                 ({"domain": "example"}, "invalid_app_domain"),
+                 ({"webhook_env": "TEST_FEISHU"}, "feishu_app_uses_app_id_secret_chat"),
+                 ({"topic": "alerts"}, "feishu_app_uses_app_id_secret_chat")]
+        for options, error in cases:
+            with self.subTest(options=options), self.assertRaisesRegex(notify.NotifyError, error):
+                self.configure_app(**options)
+        for secret in ("short", "has space inside", APP_SECRET + "\r\nX: y"):
+            with self.subTest(secret=secret[:5]), patch.dict(os.environ, {"TEST_APP_SECRET": secret}):
+                with self.assertRaisesRegex(notify.NotifyError, "invalid_app_secret"):
+                    self.configure_app()
+        with self.assertRaisesRegex(notify.NotifyError, "credential_missing"):
+            self.configure_app(app_secret_env="NONEXISTENT_NOTIFY_TEST")
+        with self.assertRaisesRegex(notify.NotifyError, "app_options_require_feishu_app"):
+            self.configure(provider="feishu", chat_id=CHAT_ID)
+        self.assertFalse(self.config.exists())
+
+    def test_feishu_app_tampered_config_is_rejected(self):
+        base = {"provider": "feishu-app", "app_id": APP_ID, "chat_id": CHAT_ID, "domain": "feishu",
+                "app_secret": {"env": "TEST_APP_SECRET"}}
+        for change in ({"app_secret": APP_SECRET}, {"domain": "example"}, {"chat_id": "x"},
+                       {"webhook": {"env": "TEST_FEISHU"}}):
+            notify.write_json(self.config, {"version": 1, "channels": {"bot": {**base, **change}}})
+            with self.subTest(change=change), self.assertRaises(notify.NotifyError):
+                notify.load_config(self.config)
+        missing = dict(base)
+        missing.pop("app_secret")
+        notify.write_json(self.config, {"version": 1, "channels": {"bot": missing}})
+        with self.assertRaisesRegex(notify.NotifyError, "invalid_channel"):
+            notify.load_config(self.config)
+
+    def test_feishu_app_send_fetches_token_then_posts_with_bearer(self):
+        self.configure_app()
+        opener = self.responses(TOKEN_OK, MESSAGE_OK)
+        with patch.object(notify.urllib.request, "build_opener", return_value=opener):
+            results = self.send(channels=["bot"])
+        self.assertEqual(results, [{"channel": "bot", "provider": "feishu-app", "status": "accepted"}])
+        token_request, message_request = [c.args[0] for c in opener.open.call_args_list]
+        self.assertEqual(token_request.full_url, TOKEN_URL)
+        self.assertEqual(json.loads(token_request.data), {"app_id": APP_ID, "app_secret": APP_SECRET})
+        self.assertIsNone(token_request.get_header("Authorization"))
+        self.assertEqual(message_request.full_url, MESSAGE_URL)
+        self.assertEqual(message_request.get_header("Authorization"), f"Bearer {TENANT_TOKEN}")
+        self.assertEqual(json.loads(message_request.data),
+                         {"receive_id": CHAT_ID, "msg_type": "text",
+                          "content": json.dumps({"text": "任务已完成"}, ensure_ascii=False)})
+        state = self.state.read_text(encoding="utf-8")
+        for value in (APP_SECRET, TENANT_TOKEN, CHAT_ID):
+            self.assertNotIn(value, state)
+
+    def test_feishu_app_token_failure_is_failed_and_message_never_sent(self):
+        self.configure_app()
+        http_error = urllib.error.HTTPError(TOKEN_URL, 400, APP_SECRET, {}, None)
+        cases = [
+            ([http_error], "auth_rejected"),
+            ([urllib.error.URLError(APP_SECRET)], "auth_unavailable"),
+            ([b'{"code":10014,"msg":"app secret invalid"}'], "auth_rejected"),
+            ([b'{"code":0}'], "auth_unavailable"),
+            ([b'{"code":"0","tenant_access_token":"t-x"}'], "auth_unavailable"),
+            ([b'{"code":0,"tenant_access_token":"t-x\\r\\nX: y"}'], "auth_unavailable"),
+            ([b"not-json"], "auth_unavailable"),
+        ]
+        for replies, error in cases:
+            opener = self.responses(*[r for r in replies if isinstance(r, bytes)])
+            if not isinstance(replies[0], bytes):
+                opener.open.side_effect = replies
+            with self.subTest(error=error, reply=str(replies[0])[:40]), patch.object(
+                    notify.urllib.request, "build_opener", return_value=opener):
+                result = self.send(channels=["bot"])[0]
+            self.assertEqual((result["status"], result["error"]), ("failed", error))
+            self.assertNotIn(APP_SECRET, json.dumps(result))
+            opener.open.assert_called_once()
+
+    def test_feishu_app_message_requires_code_zero_and_message_id(self):
+        cases = [
+            (MESSAGE_OK, None),
+            (b'{"code":230002,"msg":"bot not in chat"}', "provider_rejected"),
+            (b'{"code":0,"msg":"success"}', "response_unconfirmed"),
+            (b'{"code":0,"data":{"message_id":""}}', "response_unconfirmed"),
+            (b'{"code":"0","data":{"message_id":"om_x"}}', "response_unconfirmed"),
+            (b'not-json', "response_unconfirmed"),
+        ]
+        auth = notify.AppAuth(TOKEN_URL, APP_ID, APP_SECRET)
+        for body, error in cases:
+            opener = self.responses(TOKEN_OK, body)
+            with self.subTest(body=body), patch.object(
+                    notify.urllib.request, "build_opener", return_value=opener):
+                if error is None:
+                    notify.post("feishu-app", MESSAGE_URL, {"receive_id": CHAT_ID}, auth)
+                else:
+                    with self.assertRaisesRegex(notify.NotifyError, error):
+                        notify.post("feishu-app", MESSAGE_URL, {"receive_id": CHAT_ID}, auth)
+
+    def test_feishu_app_rate_identity_is_domain_and_chat(self):
+        self.configure_app()
+        self.configure_app("same")
+        self.configure_app("other", chat_id="oc_anotherchat")
+        self.configure_app("intl", domain="lark")
+        channels = notify.load_config(self.config)["channels"]
+        identity = {name: notify.build_request(c, "x")[3] for name, c in channels.items()}
+        self.assertEqual(identity["bot"], identity["same"])
+        self.assertEqual(len({identity["bot"], identity["other"], identity["intl"]}), 3)
+
+    def test_cli_configure_feishu_app(self):
+        code, result = self.cli("configure", "--name", "bot", "--provider", "feishu-app",
+                                "--app-id", APP_ID, "--app-secret-env", "TEST_APP_SECRET",
+                                "--chat-id", CHAT_ID, "--store", "env", "--default")
+        self.assertEqual((code, result["store"], result["default"]), (0, "env", True))
+        self.assertNotIn(APP_SECRET, json.dumps(result))
+        code, result = self.cli("send", "--message-stdin", "--dry-run")
+        self.assertEqual((code, result), (0, [{"channel": "bot", "provider": "feishu-app",
+                                               "status": "dry_run"}]))
+        self.assertFalse(self.state.exists())
 
     @unittest.skipIf(os.name == "nt", "POSIX permissions, Windows uses inherited ACLs")
     def test_posix_state_and_config_permissions(self):

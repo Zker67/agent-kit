@@ -20,9 +20,10 @@ import uuid
 
 
 HOME = Path.home() / ".config" / "pro-notify"
-PROVIDERS = ("feishu", "dingtalk", "wecom", "ntfy")
+PROVIDERS = ("feishu", "feishu-app", "dingtalk", "wecom", "ntfy")
 # The only message format each provider accepts; ntfy is user-triggered, so always loud Markdown.
-FORMATS = {"feishu": "text", "dingtalk": "text", "wecom": "text", "ntfy": "markdown"}
+FORMATS = {"feishu": "text", "feishu-app": "text", "dingtalk": "text", "wecom": "text",
+           "ntfy": "markdown"}
 EVENTS = ("manual", "completed", "failed", "needs-input")
 SERVICE = "pro-notify"
 DEDUP_SECONDS = 86400
@@ -32,6 +33,15 @@ ENV_NAME = re.compile(r"[a-zA-Z_][a-zA-Z0-9_]*\Z")
 TOPIC = re.compile(r"[a-zA-Z0-9_-]{1,64}\Z")
 NTFY_TOKEN = re.compile(r"tk_[a-z0-9]{29}\Z")
 HOST = re.compile(r"[a-z0-9]([a-z0-9.-]*[a-z0-9])?\Z")
+# Feishu / Lark app bot: open-platform host per domain, plain IDs, secret and token shapes.
+APP_HOSTS = {"feishu": "open.feishu.cn", "lark": "open.larksuite.com"}
+APP_ID = re.compile(r"cli_[a-zA-Z0-9]{1,64}\Z")
+CHAT_ID = re.compile(r"oc_[a-zA-Z0-9]{1,64}\Z")
+APP_SECRET = re.compile(r"[!-~]{8,256}\Z")
+TENANT_TOKEN = re.compile(r"[!-~]{1,1024}\Z")
+# Non-secret fields every channel must carry, and the credential references it may carry.
+REQUIRED = {"ntfy": {"server", "topic"}, "feishu-app": {"app_id", "chat_id", "domain", "app_secret"}}
+SECRETS = {"ntfy": ("token",), "feishu-app": ("app_secret",)}
 
 
 class NotifyError(Exception):
@@ -198,6 +208,30 @@ def validate_token(token):
         raise NotifyError("invalid_ntfy_token")
 
 
+def validate_app(app_id, chat_id, domain):
+    if not isinstance(app_id, str) or not APP_ID.fullmatch(app_id):
+        raise NotifyError("invalid_app_id")
+    if not isinstance(chat_id, str) or not CHAT_ID.fullmatch(chat_id):
+        raise NotifyError("invalid_chat_id")
+    if domain not in APP_HOSTS:
+        raise NotifyError("invalid_app_domain")
+
+
+def validate_app_secret(secret):
+    if not APP_SECRET.fullmatch(secret):
+        raise NotifyError("invalid_app_secret")
+
+
+class AppAuth:
+    """Where and how to obtain a tenant_access_token; repr never shows the secret."""
+
+    def __init__(self, url, app_id, app_secret):
+        self.url, self.app_id, self.app_secret = url, app_id, app_secret
+
+    def __repr__(self):
+        return "AppAuth(<redacted>)"
+
+
 def load_config(path, missing_ok=False):
     data = read_json(path, {"version": 1, "channels": {}} if missing_ok else None)
     if (
@@ -213,15 +247,17 @@ def load_config(path, missing_ok=False):
             or channel.get("provider") not in PROVIDERS
         ):
             raise NotifyError("invalid_channel")
-        ntfy = channel["provider"] == "ntfy"
-        required = {"server", "topic"} if ntfy else {"webhook"}
-        secrets = ("token",) if ntfy else ("webhook", "signing_secret")
+        provider = channel["provider"]
+        required = REQUIRED.get(provider, {"webhook"})
+        secrets = SECRETS.get(provider, ("webhook", "signing_secret"))
         if set(channel) - {"provider", *required, *secrets} or required - set(channel):
             raise NotifyError("invalid_channel")
-        if ntfy:
+        if provider == "ntfy":
             if validate_server(channel["server"]) != channel["server"]:
                 raise NotifyError("invalid_ntfy_server")
             validate_topic(channel["topic"])
+        if provider == "feishu-app":
+            validate_app(channel["app_id"], channel["chat_id"], channel["domain"])
         if channel["provider"] == "wecom" and "signing_secret" in channel:
             raise NotifyError("wecom_does_not_use_signing_secret")
         for field in secrets:
@@ -239,10 +275,12 @@ def load_config(path, missing_ok=False):
 
 def configure(name, provider, webhook_env=None, signing_secret_env=None,
               store="keyring", replace=False, config_path=None,
-              server=None, topic=None, token_env=None, make_default=False):
+              server=None, topic=None, token_env=None, make_default=False,
+              app_id=None, app_secret_env=None, chat_id=None, domain=None):
     """Persist references, optionally copying process env values to the OS vault.
 
     ntfy takes a plain server URL and topic plus an optional access-token env name.
+    feishu-app takes a plain app ID, chat ID and domain plus the app-secret env name.
     The first configured channel, or one configured with make_default, becomes the default.
     """
     path = Path(config_path) if config_path else HOME / "config.json"
@@ -250,7 +288,19 @@ def configure(name, provider, webhook_env=None, signing_secret_env=None,
         raise NotifyError("invalid_channel")
     if store not in ("env", "keyring"):
         raise NotifyError("invalid_store")
-    if provider == "ntfy":
+    app_options = app_id or app_secret_env or chat_id or domain
+    if provider == "feishu-app":
+        if webhook_env or signing_secret_env or server or topic or token_env:
+            raise NotifyError("feishu_app_uses_app_id_secret_chat")
+        domain = domain or "feishu"
+        validate_app(app_id, chat_id, domain)
+        values = {"app_secret": env_value(app_secret_env)}
+        validate_app_secret(values["app_secret"])
+        refs = {"app_id": app_id, "chat_id": chat_id, "domain": domain,
+                "app_secret": {"env": app_secret_env}}
+    elif app_options:
+        raise NotifyError("app_options_require_feishu_app")
+    elif provider == "ntfy":
         if webhook_env or signing_secret_env:
             raise NotifyError("ntfy_uses_server_topic_token")
         refs = {"server": validate_server(server or NTFY_SERVER), "topic": topic}
@@ -335,6 +385,18 @@ def build_request(channel, text, now=None):
         # User-triggered only, so every ntfy message is Markdown at max priority.
         payload = {"topic": channel["topic"], "message": text, "markdown": True, "priority": 5}
         return provider, channel["server"] + "/", payload, endpoint_id, headers
+    if provider == "feishu-app":
+        host = APP_HOSTS[channel["domain"]]
+        secret = resolve(channel["app_secret"])
+        validate_app_secret(secret)
+        endpoint_id = hashlib.sha256(json.dumps([host, channel["chat_id"]]).encode()).hexdigest()
+        payload = {"receive_id": channel["chat_id"], "msg_type": "text",
+                   "content": json.dumps({"text": text}, ensure_ascii=False)}
+        # The token is fetched at send time, so preflight and dry-run stay offline.
+        auth = AppAuth(f"https://{host}/open-apis/auth/v3/tenant_access_token/internal",
+                       channel["app_id"], secret)
+        return (provider, f"https://{host}/open-apis/im/v1/messages?receive_id_type=chat_id",
+                payload, endpoint_id, auth)
     url = resolve(channel["webhook"])
     validate_url(provider, url)
     parts = urllib.parse.urlsplit(url)
@@ -373,28 +435,66 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def post(provider, url, payload, headers=None):
+def open_json(url, payload, headers=None):
+    """POST JSON and return the JSON object reply; urllib errors propagate to the caller."""
     request = urllib.request.Request(
         url, data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
         headers={"Content-Type": "application/json", **(headers or {})}, method="POST"
     )
-    try:
-        opener = urllib.request.build_opener(NoRedirect())
-        with opener.open(request, timeout=10) as response:
-            if not 200 <= response.status < 300:
-                raise NotifyError("http_rejected")
-            raw = response.read(65537)
-            if len(raw) > 65536:
-                raise NotifyError("response_unconfirmed")
-        result = json.loads(raw)
-        if not isinstance(result, dict):
+    opener = urllib.request.build_opener(NoRedirect())
+    with opener.open(request, timeout=10) as response:
+        if not 200 <= response.status < 300:
+            raise NotifyError("http_rejected")
+        raw = response.read(65537)
+        if len(raw) > 65536:
             raise NotifyError("response_unconfirmed")
+    result = json.loads(raw)
+    if not isinstance(result, dict):
+        raise NotifyError("response_unconfirmed")
+    return result
+
+
+def tenant_token(auth):
+    """Exchange app credentials for a token. Any failure here means nothing was sent."""
+    try:
+        result = open_json(auth.url, {"app_id": auth.app_id, "app_secret": auth.app_secret})
+    except urllib.error.HTTPError as exc:
+        exc.close()
+        raise NotifyError("auth_rejected") from None
+    except (NotifyError, urllib.error.URLError, OSError, TimeoutError, ValueError, UnicodeError):
+        raise NotifyError("auth_unavailable") from None
+    code = result.get("code")
+    if type(code) is not int:
+        raise NotifyError("auth_unavailable")
+    if code != 0:
+        raise NotifyError("auth_rejected")
+    token = result.get("tenant_access_token")
+    if not isinstance(token, str) or not TENANT_TOKEN.fullmatch(token):
+        raise NotifyError("auth_unavailable")
+    return token
+
+
+def post(provider, url, payload, headers=None):
+    if provider == "feishu-app":
+        headers = {"Authorization": f"Bearer {tenant_token(headers)}"}
+    try:
+        result = open_json(url, payload, headers)
         if provider == "ntfy":
             # ntfy echoes the stored message; anything else is not a confirmed publish.
             if (
                 result.get("event") != "message" or result.get("topic") != payload["topic"]
                 or not isinstance(result.get("id"), str) or not result["id"]
             ):
+                raise NotifyError("response_unconfirmed")
+            return
+        if provider == "feishu-app":
+            code, data = result.get("code"), result.get("data")
+            if type(code) is not int:
+                raise NotifyError("response_unconfirmed")
+            if code != 0:
+                raise NotifyError("provider_rejected")
+            if (not isinstance(data, dict) or not isinstance(data.get("message_id"), str)
+                    or not data["message_id"]):
                 raise NotifyError("response_unconfirmed")
             return
         field = "code" if provider == "feishu" else "errcode"
@@ -541,6 +641,10 @@ def main(argv=None):
     setup.add_argument("--server", help=f"ntfy only, default {NTFY_SERVER}")
     setup.add_argument("--topic", help="ntfy only")
     setup.add_argument("--token-env", help="ntfy only, optional access token")
+    setup.add_argument("--app-id", help="feishu-app only, cli_...")
+    setup.add_argument("--app-secret-env", help="feishu-app only, env name holding the app secret")
+    setup.add_argument("--chat-id", help="feishu-app only, oc_... group chat the bot is in")
+    setup.add_argument("--domain", choices=tuple(APP_HOSTS), help="feishu-app only, default feishu")
     setup.add_argument("--store", choices=("keyring", "env"), default="keyring")
     setup.add_argument("--replace", action="store_true")
     setup.add_argument("--default", action="store_true", help="Make this the default channel")
@@ -562,6 +666,7 @@ def main(argv=None):
                 args.name, args.provider, args.webhook_env, args.signing_secret_env,
                 args.store, args.replace, args.config,
                 args.server, args.topic, args.token_env, args.default,
+                args.app_id, args.app_secret_env, args.chat_id, args.domain,
             )
         elif args.command == "list":
             output = list_channels(args.config)

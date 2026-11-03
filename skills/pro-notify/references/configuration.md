@@ -16,7 +16,7 @@
 | 命令 | 作用 | 输出 |
 |---|---|---|
 | `list` | 列出别名 | 每项 `channel`、`provider`、`format`（`text` / `markdown`）、`default`；不含凭据，不验证凭据 |
-| `configure --name <别名> --provider <ntfy\|feishu\|dingtalk\|wecom> …` | 新增渠道；渠道参数见各渠道文档 | `channel`、`provider`、`status`、`store`、`default` |
+| `configure --name <别名> --provider <ntfy\|feishu\|feishu-app\|dingtalk\|wecom> …` | 新增渠道；渠道参数见各渠道文档 | `channel`、`provider`、`status`、`store`、`default` |
 | `configure … --default` | 新增并设为默认渠道 | 同上，`default: true` |
 | `configure … --replace` | 用户授权后覆盖同名别名，其他渠道保留 | 同上 |
 | `default --name <别名>` | 切换默认渠道 | `status: default_set` |
@@ -90,7 +90,7 @@ finally:
 
 ## 通用配置规则
 
-- `configure` 不联网、不测试发送，不创建群机器人、ntfy 用户或 token，不生成平台密钥。
+- `configure` 不联网、不测试发送，不创建群机器人、飞书应用、ntfy 用户或 token，不生成平台密钥。
 - 默认 `--store keyring` 把变量值导入系统凭据库，后续发送不需要原变量；`--store env` 只保存变量名，后续每次运行都必须注入。输出的 `store` 为 `none` 表示该渠道没有任何凭据（例如不带 token 的 ntfy），无需凭据库。
 - 别名只允许字母、数字、下划线、连字符，最长 64 字符。
 - 已有别名默认拒绝覆盖；用户授权修改后加 `--replace`。
@@ -135,7 +135,7 @@ $OutputEncoding = [System.Text.UTF8Encoding]::new()
 
 ## 限流、去重与状态
 
-- 每个目标（群机器人，或 ntfy 的同一服务器 + 主题）滚动 60 秒最多 **20 次请求尝试**，失败也计数；多进程用文件锁预留额度，指向同一目标的多个别名共享额度。
+- 每个目标（群机器人、飞书应用机器人的同一域名 + 群，或 ntfy 的同一服务器 + 主题）滚动 60 秒最多 **20 次请求尝试**，失败也计数；多进程用文件锁预留额度，指向同一目标的多个别名共享额度。
 - 同一任务、同一目标、同一事件 24 小时内最多尝试一次；`manual` 不去重。
 - 状态在 `~/.config/pro-notify/state.json`，只含目标 / 事件摘要、时间和状态，不含正文或真实地址；跨工作目录和配置文件共用。只管同一机器、同一用户、使用该脚本的请求，不能约束其他工具、其他机器或平台自身限额。
 - `state_locked` 表示锁被占用。确认没有运行中的配置 / 发送进程后，再由用户决定是否清理对应 `.lock`；不要自动删锁，也不要删状态来绕过去重。

@@ -81,7 +81,6 @@ README.md:真实 server URL、env、token 和本机绝对路径放在个人宿�
 skills/pro-notify/evals/evals.json:      "prompt": "用 pro-notify 加一个 ntfy 渠道，别名 phone，用我自建的服务器 https://ntfy.example.com，主题 deploy，永久 token 已安全注入 PRO_NOTIFY_NTFY_TOKEN。配好就行，先别发。",
 skills/pro-notify/evals/evals.json:      "expected_output": "只配置 ntfy 渠道：服务器地址和主题作为普通参数，token 只按变量名传入并默认存进系统凭据库，不可用时询问是否改为环境变量引用；不回显 token，不联网，不发测试消息。若用户改用官方 ntfy.sh 且不配 token，提醒主题名即访问凭证，应选难猜的名字。",
 skills/pro-notify/references/channels.md:| [ntfy 发布文档](https://docs.ntfy.sh/publish/) | JSON 发布到根路径、access token 鉴权、主题命名与返回的消息对象。 |
-skills/pro-notify/references/configuration.md:- `configure` 不联网、不测试发送，不创建群机器人、ntfy 用户或 token，不生成平台密钥。
 skills/pro-notify/references/configuration.md:      "token": {"env": "PRO_NOTIFY_NTFY_TOKEN"}
 skills/pro-notify/tests/test_notify.py:        # Default store is keyring, but with no token there is nothing to put in it.
 skills/pro-notify/tests/test_notify.py:    def test_ntfy_self_hosted_token_is_reference_and_bearer_header(self):
@@ -99,10 +98,38 @@ skills/pro-notify/tests/test_notify.py:        with self.assertRaisesRegex(notif
 skills/pro-notify/tests/test_notify.py:                         "token": NTFY_TOKEN},
 skills/pro-notify/tests/test_notify.py:        self.configure_ntfy(server="https://ntfy.example.com", token_env="TEST_NTFY_TOKEN")
 skills/pro-notify/tests/test_notify.py:                                "--token-env", "TEST_NTFY_TOKEN", "--store", "env")
+skills/pro-notify/tests/test_notify.py:APP_SECRET = "unit-test-app-secret-value"
+skills/pro-notify/tests/test_notify.py:TENANT_TOKEN = "t-unit-test-tenant-token"
+skills/pro-notify/tests/test_notify.py:TOKEN_URL = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
+skills/pro-notify/tests/test_notify.py:TOKEN_OK = json.dumps({"code": 0, "msg": "ok", "tenant_access_token": TENANT_TOKEN,
+skills/pro-notify/tests/test_notify.py:        options = {"app_id": APP_ID, "app_secret_env": "TEST_APP_SECRET", "chat_id": CHAT_ID,
+skills/pro-notify/tests/test_notify.py:    def test_feishu_app_stores_plain_ids_and_secret_reference(self):
+skills/pro-notify/tests/test_notify.py:                                   "domain": "feishu", "app_secret": {"env": "TEST_APP_SECRET"}})
+skills/pro-notify/tests/test_notify.py:    def test_feishu_app_secret_persists_in_keyring(self):
+skills/pro-notify/tests/test_notify.py:            notify.configure("bot", "feishu-app", app_id=APP_ID, app_secret_env="TEST_APP_SECRET",
+skills/pro-notify/tests/test_notify.py:        self.assertEqual((auth.url, auth.app_id, auth.app_secret), (TOKEN_URL, APP_ID, APP_SECRET))
+skills/pro-notify/tests/test_notify.py:                 ({"webhook_env": "TEST_FEISHU"}, "feishu_app_uses_app_id_secret_chat"),
+skills/pro-notify/tests/test_notify.py:                 ({"topic": "alerts"}, "feishu_app_uses_app_id_secret_chat")]
+skills/pro-notify/tests/test_notify.py:        for secret in ("short", "has space inside", APP_SECRET + "\r\nX: y"):
+skills/pro-notify/tests/test_notify.py:            with self.subTest(secret=secret[:5]), patch.dict(os.environ, {"TEST_APP_SECRET": secret}):
+skills/pro-notify/tests/test_notify.py:                with self.assertRaisesRegex(notify.NotifyError, "invalid_app_secret"):
+skills/pro-notify/tests/test_notify.py:            self.configure_app(app_secret_env="NONEXISTENT_NOTIFY_TEST")
+skills/pro-notify/tests/test_notify.py:                "app_secret": {"env": "TEST_APP_SECRET"}}
+skills/pro-notify/tests/test_notify.py:        for change in ({"app_secret": APP_SECRET}, {"domain": "example"}, {"chat_id": "x"},
+skills/pro-notify/tests/test_notify.py:        missing.pop("app_secret")
+skills/pro-notify/tests/test_notify.py:    def test_feishu_app_send_fetches_token_then_posts_with_bearer(self):
+skills/pro-notify/tests/test_notify.py:        token_request, message_request = [c.args[0] for c in opener.open.call_args_list]
+skills/pro-notify/tests/test_notify.py:        self.assertEqual(token_request.full_url, TOKEN_URL)
+skills/pro-notify/tests/test_notify.py:        self.assertEqual(json.loads(token_request.data), {"app_id": APP_ID, "app_secret": APP_SECRET})
+skills/pro-notify/tests/test_notify.py:        self.assertIsNone(token_request.get_header("Authorization"))
+skills/pro-notify/tests/test_notify.py:    def test_feishu_app_token_failure_is_failed_and_message_never_sent(self):
+skills/pro-notify/tests/test_notify.py:            ([b'{"code":10014,"msg":"app secret invalid"}'], "auth_rejected"),
+skills/pro-notify/tests/test_notify.py:            ([b'{"code":"0","tenant_access_token":"t-x"}'], "auth_unavailable"),
+skills/pro-notify/tests/test_notify.py:            ([b'{"code":0,"tenant_access_token":"t-x\\r\\nX: y"}'], "auth_unavailable"),
+skills/pro-notify/tests/test_notify.py:                                "--app-id", APP_ID, "--app-secret-env", "TEST_APP_SECRET",
 skills/pro-notify/scripts/notify.py:def validate_token(token):
 skills/pro-notify/scripts/notify.py:    if not NTFY_TOKEN.fullmatch(token):
 skills/pro-notify/scripts/notify.py:        raise NotifyError("invalid_ntfy_token")
-skills/pro-notify/scripts/notify.py:        secrets = ("token",) if ntfy else ("webhook", "signing_secret")
 skills/pro-notify/scripts/notify.py:        if set(channel) - {"provider", *required, *secrets} or required - set(channel):
 skills/pro-notify/scripts/notify.py:        for field in secrets:
 skills/pro-notify/scripts/notify.py:def configure(name, provider, webhook_env=None, signing_secret_env=None,
@@ -125,12 +152,15 @@ skills/pro-notify/scripts/notify.py:            validate_token(token)
 skills/pro-notify/scripts/notify.py:            headers["Authorization"] = f"Bearer {token}"
 skills/pro-notify/scripts/notify.py:    setup.add_argument("--token-env", help="ntfy only, optional access token")
 skills/pro-notify/evals/evals.json:      "expected_output": "只读渠道指南与 channel-ntfy.md，不读其他渠道文档；说明 Android / iOS / 网页版订阅方式，官方 ntfy.sh 可匿名或注册拿 token、自建服务器用 ntfy user / access / token 命令建只写用户和永久 token；推荐自建用 agent 主题，官方匿名用 agent 加随机后缀。只回答，不配置、不发送。",
+skills/pro-notify/evals/evals.json:      "expected_output": "读取渠道指南与 channel-feishu-app.md，用 configure --provider feishu-app 传 --app-id、--chat-id 和 --app-secret-env 变量名并加 --default；App Secret 默认存进系统凭据库，不回显，不改用群 Webhook 渠道；不联网、不发测试消息。提醒机器人需在群里并开通 im:message:send_as_bot，dry-run 不能证明这些已就绪。",
 skills/pro-notify/references/channel-feishu.md:python3 "<skill-dir>/scripts/notify.py" configure --name alerts --provider feishu --webhook-env PRO_NOTIFY_FEISHU_WEBHOOK --signing-secret-env PRO_NOTIFY_FEISHU_SIGN
 skills/pro-notify/references/channel-feishu.md:交互终端里用 `getpass` 录入时，签名密钥用第二个 `getpass` 收集到临时环境变量，并传 `signing_secret_env`。
 skills/pro-notify/references/channel-feishu.md:- HTTPS 主机 `open.feishu.cn` 或 `open.larksuite.com`，路径 `/open-apis/bot/v2/hook/<id>`，不带查询参数；端口只允许 443。
 skills/pro-notify/references/channels.md:- 只记录安全状态，不回显地址、签名、token、响应正文或异常原文。
+skills/pro-notify/references/channels.md:| [飞书获取 tenant_access_token](https://open.feishu.cn/document/server-docs/authentication-management/access-token/tenant_access_token_internal)、[飞书发送消息](https://open.feishu.cn/document/server-docs/im-v1/message/create) | 应用凭据换 token、`chat_id` 收件人、`content` 为 JSON 字符串、`code` 与 `message_id` 成功判定。 |
 skills/pro-notify/references/configuration.md:| `send … --event completed\|failed\|needs-input --task-id <id>` | 本次任务通知，去重 | 同上 |
 skills/pro-notify/references/configuration.md:- 默认 `--store keyring` 把变量值导入系统凭据库，后续发送不需要原变量；`--store env` 只保存变量名，后续每次运行都必须注入。输出的 `store` 为 `none` 表示该渠道没有任何凭据（例如不带 token 的 ntfy），无需凭据库。
+skills/pro-notify/references/configuration.md:- `configure` 不联网、不测试发送，不创建群机器人、飞书应用、ntfy 用户或 token，不生成平台密钥。
 skills/pro-notify/references/channel-ntfy.md:| 客户端 | 获取方式 | 订阅自建服务器 |
 skills/pro-notify/references/channel-ntfy.md:## 二、怎么注册 / 拿 token
 skills/pro-notify/references/channel-ntfy.md:token 是 `tk_` 开头的 32 位永久 access token，只用于发送端（本 skill），手机端用自己的账号登录即可。
@@ -161,8 +191,50 @@ skills/pro-notify/references/channel-dingtalk.md:- HTTPS 主机 `oapi.dingtalk.c
 skills/pro-notify/references/channel-wecom.md:企业微信不使用签名，传 `--signing-secret-env` 会报 `wecom_does_not_use_signing_secret`。
 skills/pro-notify/references/channel-wecom.md:- HTTPS 主机 `qyapi.weixin.qq.com`，路径 `/cgi-bin/webhook/send`，查询参数只有一个非空 `key`；端口只允许 443。
 skills/pro-notify/references/channel-wecom.md:| `wecom_does_not_use_signing_secret` | 去掉签名参数。 |
-skills/pro-notify/scripts/notify.py:              server=None, topic=None, token_env=None, make_default=False):
+skills/pro-notify/references/channel-feishu-app.md:  --app-id cli_xxxxxxxx --chat-id oc_xxxxxxxx --app-secret-env PRO_NOTIFY_FEISHU_APP_SECRET
+skills/pro-notify/references/channel-feishu-app.md:  --app-id cli_xxxxxxxx --chat-id oc_xxxxxxxx --app-secret-env PRO_NOTIFY_FEISHU_APP_SECRET --domain lark
+skills/pro-notify/references/channel-feishu-app.md:交互终端里用 `getpass` 录入时，把 App Secret 收集到临时环境变量，Python 调用传 `app_id`、`chat_id`、`app_secret_env`（可选 `domain`）。不能和 `--webhook-env`、`--signing-secret-env`、`--server`、`--topic`、`--token-env` 混用。
+skills/pro-notify/references/channel-feishu-app.md:  1. `POST /open-apis/auth/v3/tenant_access_token/internal`，请求体 `{"app_id": "…", "app_secret": "…"}`，取得有效期约 2 小时的 `tenant_access_token`。token 只在内存里使用，不写入配置、状态或缓存文件。
+skills/pro-notify/references/channel-feishu-app.md:  2. `POST /open-apis/im/v1/messages?receive_id_type=chat_id`，请求头 `Authorization: Bearer <token>`，请求体：
+skills/pro-notify/references/channel-feishu-app.md:| `invalid_app_secret` | 变量值不像 App Secret（太短、含空白或控制字符）；检查注入的变量。 |
+skills/pro-notify/references/channel-feishu-app.md:| `feishu_app_uses_app_id_secret_chat` / `app_options_require_feishu_app` | 参数混用了；`feishu-app` 只用 App ID、App Secret、chat_id 和域名这几个参数，其他渠道不要传这几个参数。 |
+skills/pro-notify/references/channel-feishu-app.md:| `auth_rejected` | 换取 token 被拒绝：App ID 或 App Secret 不对、Secret 已重置、应用停用。消息**没有**发出，状态记为 `failed`。 |
+skills/pro-notify/references/channel-feishu-app.md:| `auth_unavailable` | 换取 token 时网络不通或响应异常。消息**没有**发出，状态记为 `failed`；稍后由用户决定是否重试。 |
 skills/pro-notify/scripts/notify.py:                args.server, args.topic, args.token_env, args.default,
+skills/pro-notify/scripts/notify.py:# Feishu / Lark app bot: open-platform host per domain, plain IDs, secret and token shapes.
+skills/pro-notify/scripts/notify.py:# Non-secret fields every channel must carry, and the credential references it may carry.
+skills/pro-notify/scripts/notify.py:REQUIRED = {"ntfy": {"server", "topic"}, "feishu-app": {"app_id", "chat_id", "domain", "app_secret"}}
+skills/pro-notify/scripts/notify.py:SECRETS = {"ntfy": ("token",), "feishu-app": ("app_secret",)}
+skills/pro-notify/scripts/notify.py:def validate_app_secret(secret):
+skills/pro-notify/scripts/notify.py:    if not APP_SECRET.fullmatch(secret):
+skills/pro-notify/scripts/notify.py:        raise NotifyError("invalid_app_secret")
+skills/pro-notify/scripts/notify.py:    """Where and how to obtain a tenant_access_token; repr never shows the secret."""
+skills/pro-notify/scripts/notify.py:    def __init__(self, url, app_id, app_secret):
+skills/pro-notify/scripts/notify.py:        self.url, self.app_id, self.app_secret = url, app_id, app_secret
+skills/pro-notify/scripts/notify.py:        secrets = SECRETS.get(provider, ("webhook", "signing_secret"))
+skills/pro-notify/scripts/notify.py:              server=None, topic=None, token_env=None, make_default=False,
+skills/pro-notify/scripts/notify.py:              app_id=None, app_secret_env=None, chat_id=None, domain=None):
+skills/pro-notify/scripts/notify.py:    feishu-app takes a plain app ID, chat ID and domain plus the app-secret env name.
+skills/pro-notify/scripts/notify.py:    app_options = app_id or app_secret_env or chat_id or domain
+skills/pro-notify/scripts/notify.py:        if webhook_env or signing_secret_env or server or topic or token_env:
+skills/pro-notify/scripts/notify.py:            raise NotifyError("feishu_app_uses_app_id_secret_chat")
+skills/pro-notify/scripts/notify.py:        values = {"app_secret": env_value(app_secret_env)}
+skills/pro-notify/scripts/notify.py:        validate_app_secret(values["app_secret"])
+skills/pro-notify/scripts/notify.py:                "app_secret": {"env": app_secret_env}}
+skills/pro-notify/scripts/notify.py:        secret = resolve(channel["app_secret"])
+skills/pro-notify/scripts/notify.py:        validate_app_secret(secret)
+skills/pro-notify/scripts/notify.py:        # The token is fetched at send time, so preflight and dry-run stay offline.
+skills/pro-notify/scripts/notify.py:        auth = AppAuth(f"https://{host}/open-apis/auth/v3/tenant_access_token/internal",
+skills/pro-notify/scripts/notify.py:                       channel["app_id"], secret)
+skills/pro-notify/scripts/notify.py:def tenant_token(auth):
+skills/pro-notify/scripts/notify.py:    """Exchange app credentials for a token. Any failure here means nothing was sent."""
+skills/pro-notify/scripts/notify.py:        result = open_json(auth.url, {"app_id": auth.app_id, "app_secret": auth.app_secret})
+skills/pro-notify/scripts/notify.py:    token = result.get("tenant_access_token")
+skills/pro-notify/scripts/notify.py:    if not isinstance(token, str) or not TENANT_TOKEN.fullmatch(token):
+skills/pro-notify/scripts/notify.py:    return token
+skills/pro-notify/scripts/notify.py:        headers = {"Authorization": f"Bearer {tenant_token(headers)}"}
+skills/pro-notify/scripts/notify.py:    setup.add_argument("--app-secret-env", help="feishu-app only, env name holding the app secret")
+skills/pro-notify/scripts/notify.py:                args.app_id, args.app_secret_env, args.chat_id, args.domain,
 skills/pro-notify/SKILL.md:- 本次任务通知只按实际发生的 `completed`、`failed`、`needs-input` 各发一次，三类事件复用同一个不含个人信息的 `task-id`；`needs-input` 发完仍在当前对话中提问。
 skills/pro-notify/SKILL.md:- 不修改宿主 hooks、全局 instructions 或调度器；不回显 Webhook、签名、token、配置原文或服务端响应。宿主要求走 MCP / Connectors 时遵循该路由，但保持同样边界。
 skills/pro-notify/SKILL.md:   printf '%s\n' '…' | python3 -X utf8 "<skill-dir>/scripts/notify.py" send --message-stdin --event completed --task-id task-001

@@ -1,6 +1,6 @@
 # 飞书 / Lark（provider: `feishu`）
 
-飞书或 Lark 的**自定义群机器人 Webhook**，不是应用机器人。通用的 CLI 用法、默认渠道、凭据存储和通用错误见 [配置指南](configuration.md)。
+飞书或 Lark 的**自定义群机器人 Webhook**，不是应用机器人；企业自建应用的机器人用 [`feishu-app`](channel-feishu-app.md)。通用的 CLI 用法、默认渠道、凭据存储和通用错误见 [配置指南](configuration.md)。
 
 ## 一、在哪里创建
 
