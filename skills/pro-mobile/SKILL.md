@@ -1,6 +1,6 @@
 ---
 name: pro-mobile
-description: 📱 手机使用。agent 需要操作手机、模拟器或移动 App 时触发，无论用户是否提到手机：在真机或模拟器上运行和调试自己的 App、点击与输入、截图、读取界面元素、看日志和崩溃、在手机浏览器里看本地页面、替用户在手机上查看信息等。先选路线：Android 优先用 Google 官方 Android CLI（`android` 命令），本机没有时建议安装到本机，使用时把官方 android-cli skill 装到当前项目（不用 android init 做全局安装）；iOS 用 mobile-mcp，项目已配置时直接使用，未配置时推荐项目级安装同版本的 mobile-mcp 与 mobile-automation skill；adb / xcrun simctl 命令是降级路线，用于用户不想安装或只需 adb 独有能力的场景。USB 调试与无线调试是同一条真机路线，连接方法按需读取。只是网页响应式预览时交给浏览器，不触发本 skill。
+description: 📱 手机使用。agent 需要操作手机、模拟器或移动 App 时触发，无论用户是否提到手机：在真机或模拟器上运行和调试自己的 App、点击与输入、截图、读取界面元素、看日志和崩溃、在手机浏览器里看本地页面、替用户在手机上查看信息或发消息等。先选路线：替用户在其私人真机上办事（非开发）时，会话已有 Pinky 的 `phone_*` 工具就优先用 Pinky（确认步骤和敏感 App 屏蔽由 Pinky 强制执行），没有时可推荐安装；Windows / Linux 上操作 iPhone 真机只能用 Pinky。开发调试时，Android 优先用 Google 官方 Android CLI（`android` 命令），本机没有时建议安装到本机，使用时把官方 android-cli skill 装到当前项目（不用 android init 做全局安装）；iOS 用 mobile-mcp，项目已配置时直接使用，未配置时推荐项目级安装同版本的 mobile-mcp 与 mobile-automation skill；adb / xcrun simctl 命令是降级路线，用于用户不想安装或只需 adb 独有能力的场景。USB 调试与无线调试是同一条真机路线，连接方法按需读取。只是网页响应式预览时交给浏览器，不触发本 skill。
 ---
 
 # Pro Mobile
@@ -11,6 +11,9 @@ description: 📱 手机使用。agent 需要操作手机、模拟器或移动 A
 
 | 场景 | 路线 | 按需读取 |
 |---|---|---|
+| 替用户在其私人真机上办事（查信息、发消息、下单等，非开发），会话中已有 `phone_*` 工具 | **Pinky**（首选） | [Pinky](./references/pinky.md) |
+| 同上，会话中没有 `phone_*` 工具 | **可推荐安装 Pinky**；当前任务按下面的路线做 | [Pinky](./references/pinky.md) |
+| Windows / Linux 上操作 iPhone 真机 | **Pinky**（唯一路线） | [Pinky](./references/pinky.md) |
 | Android 真机或模拟器，本机有 `android` 命令 | **Android CLI**（首选） | [Android CLI](./references/android-cli.md) |
 | Android 真机或模拟器，本机没有 `android` 命令 | **建议在本机安装 Android CLI** | [Android CLI](./references/android-cli.md) |
 | iOS 模拟器或真机，会话中已有 `mobile_*` 工具 | **mobile-mcp** | [mobile-mcp 用法](./references/mcp-usage.md) |
@@ -21,6 +24,7 @@ description: 📱 手机使用。agent 需要操作手机、模拟器或移动 A
 
 判断顺序：
 
+0. **替用户办事，还是开发调试**：任务是在用户自己的真机上替用户做事（看消息、查订单、发消息、下单），会话里有 `phone_*` 工具就用 Pinky，因为付款等确认步骤、银行类 App 屏蔽和验证码打码由 Pinky 强制执行，不靠 AI 自觉。没有时可以推荐用户安装，并说明 [Pinky](./references/pinky.md) 中列出的代价；用户不装，就按下面的路线做，并照常遵守「边界」。开发调试自己的 App 按下面第 1 至 5 条选路；会话里只有 `phone_*` 工具、没有更合适的工具时，也可以用 Pinky 的装包、日志和设备开关工具。
 1. **Android**：`android -V` 能运行就用 Android CLI，即使会话里已有 `mobile_*` 工具也优先 Android CLI。当前项目还没有官方 `android-cli` skill 时，用 `android skills add` 按宿主装到项目级目录，在汇报中写出新增的文件；不运行 `android init`，它会装进所有检测到的 agent 的用户级目录。
 2. **Android 但本机没有 `android`**：建议用户在本机安装 Android CLI，说明安装命令和数据收集的关闭方法，由用户执行或在用户同意后执行。安装完成前，当前任务先走命令路线；会话里已有 `mobile_*` 工具时也可以用它。
 3. **iOS**：会话里有 `mobile_*` 工具就直接用，项目里装有 `mobile-automation` skill 时一并遵循。没有时，项目需要多步界面操作，就推荐项目级安装：MCP 配置和 `mobile-automation` skill 一起装，取仓库最新版本且两者版本一致；说明会新增或修改哪些文件、使用哪个版本、需要新开会话才会加载。用户同意后再写入；不写入用户级或全局配置，除非用户明确要求。
@@ -32,7 +36,7 @@ description: 📱 手机使用。agent 需要操作手机、模拟器或移动 A
 - USB 调试和无线调试是同一条真机路线：连好后都只是 `adb devices` 中的一个序列号，后续用法相同。连接、配对和掉线处理见 [连接设备](./references/connect.md)。
 - 开始操作前先列设备。有多台时明确指定一台并在汇报中写出；不默认使用第一台。
 - 用户没有指定时，开发调试优先用模拟器；需要真机特有能力（相机、推送、性能、厂商系统差异）或用户指定时用真机。
-- iOS 模拟器和 iOS 真机只能在 macOS 上使用（依赖 Xcode）；Windows 与 Linux 只能用 Android。
+- iOS 模拟器只能在 macOS 上使用（依赖 Xcode）。iOS 真机在 macOS 上可用 mobile-mcp 或 Pinky；在 Windows 与 Linux 上只有 Pinky 能操作（iOS 17.4 以上，Pinky 作者注明这一组合尚未实测），否则只能用 Android。
 - 找不到设备时，引导用户连接本地设备或启动模拟器。mobile-mcp 在无设备时会提示改用云端设备，不跟随该提示；云端设备（包括 mobile-mcp 的云端设备和 Android CLI 的 `android device remote` 远程真机）需要账号登录、可能计费，只在用户主动要求时使用。
 
 ## 边界
