@@ -8,11 +8,11 @@
       "authHeader": true,
       "models": [
         {
-          "id": "gpt-5.6-sol",
-          "name": "GPT-5.6 Sol via Custom Responses API",
+          "id": "gpt-6.2-sol",
+          "name": "GPT-6.2 Sol via Custom Responses API",
           "reasoning": true,
           "thinkingLevelMap": {
-            "off": "none",
+            "off": null,
             "minimal": null,
             "low": "low",
             "medium": "medium",

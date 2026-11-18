@@ -4,8 +4,8 @@
 |---|---|
 | model id / alias | `gpt-5.5` / GPT-5.5 |
 | surface | Codex CLI / ChatGPT coding agent |
-| verified_at | 2026-08-25 |
-| status | `supported`; 项目行为待评测 |
+| verified_at | 2026-08-25；入口状态 2026-11-18 |
+| status | `supported`; 2026-10-14 已从 Codex 的 ChatGPT 登录入口退役，API 与 API key 登录的 Codex 不受影响；项目行为待评测 |
 | confidence | 官方定位：高；本项目缺陷归因：待验证 |
 | evidence | 官方 Codex 模型页；尚无本型号 fixture 结果 |
 
@@ -20,4 +20,4 @@
 
 ## 重新核对条件
 
-模型 alias/snapshot、Codex 版本、reasoning effort、工具可用性或上下文策略变化时，与 GPT-5.6 基准使用同一 fixture 重测。
+模型 alias/snapshot、Codex 版本、reasoning effort、工具可用性或上下文策略变化时，与当前主要基准 [GPT-6.2 Sol](./gpt-6.2-sol.md) 使用同一 fixture 重测。

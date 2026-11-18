@@ -3,9 +3,9 @@
 | 项 | 记录 |
 |---|---|
 | model id / alias | `gpt-5.4` / GPT-5.4 |
-| surface | Codex CLI / ChatGPT coding agent；API 另行核对 |
-| verified_at | 2026-08-25 |
-| status | `supported`; ChatGPT 登录入口将于 2026-08-31 退役 |
+| surface | Codex CLI / ChatGPT coding agent；API 与 API key 登录的 Codex 不受退役影响 |
+| verified_at | 2026-08-25；入口状态 2026-11-18 |
+| status | `supported`（API 与 API key 登录）；2026-08-31 已从 Codex 的 ChatGPT 登录入口退役，官方替代为 `gpt-6-sol`，`gpt-5.4-mini` 替代为 `gpt-6-luna` |
 | confidence | 官方入口状态：高；本项目缺陷归因：待验证 |
 | evidence | 官方 Codex 模型页；尚无本型号 fixture 结果 |
 

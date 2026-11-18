@@ -114,7 +114,7 @@ Pi packages 和 extensions 能执行任意本机代码。安装前应检查来�
 - 主代理使用质量优先模型，默认努力程度为 `xhigh`。
 - 子代理默认使用同一模型的 `medium`，控制并行任务成本和延迟。
 - `subagents.defaultModel` 使用完整的 `provider/model:thinking` 字符串；模型后缀是子代理实际努力程度的明确来源。
-- 如果个别角色需要不同档位，优先在 `subagents.agentOverrides.<name>.model` 中写完整后缀，例如 `custom-responses/gpt-5.6-sol:high`。
+- 如果个别角色需要不同档位，优先在 `subagents.agentOverrides.<name>.model` 中写完整后缀，例如 `custom-responses/gpt-6.2-sol:high`。
 - 项目 `.pi/settings.json` 可以覆盖用户级默认值，但不应复制整份全局配置。
 
 [`models.example.json`](./models.example.json) 展示一个通用 Responses API 配置：
@@ -122,7 +122,7 @@ Pi packages 和 extensions 能执行任意本机代码。安装前应检查来�
 - `api` 使用 `openai-responses`。
 - `input` 同时声明 `text` 和 `image`。
 - `reasoning` 开启。
-- `thinkingLevelMap` 将 `minimal` 设为 `null`，只关闭该档位；`low` 到 `max` 仍可使用。
+- `thinkingLevelMap` 将 `off` 和 `minimal` 设为 `null`，只关闭这两档（GPT-6.2 Sol 的 API 拒绝 `none`）；`low` 到 `max` 仍可使用。
 - `contextWindow` 和 `maxTokens` 必须按实际 provider 合约填写，不能只按模型名称猜测。
 - API key 从环境变量读取，不写入 JSON。
 

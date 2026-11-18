@@ -6,7 +6,7 @@
 
 ## 当前档案
 
-- [`Codex / GPT 系列`](./codex-gpt-family/)：Codex surface 下的 GPT-5.6、GPT-5.5 和 GPT-5.4 记录。
+- [`Codex / GPT 系列`](./codex-gpt-family/)：Codex surface 下的 GPT-6.2、GPT-6.1、GPT-6、GPT-5.6、GPT-5.5 和 GPT-5.4 记录。
 
 这里的记录不是自动加载的 prompt，也不是官方能力排名。官方定位、用户观察、运行态事实和配置对策分开记录；没有运行态回读或重复 fixture 的内容保持待验证状态。
 
