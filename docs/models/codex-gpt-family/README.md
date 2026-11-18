@@ -9,7 +9,7 @@
 | Codex surface | Codex CLI / ChatGPT coding agent |
 | 本机 CLI 证据 | `codex-cli 0.149.1` |
 | 运行态评测 | 尚未完成；模型档案不把文件存在当作已加载 |
-| 统一 guard | [`environments/codex/AGENTS.md`](../../../environments/codex/AGENTS.md) 中的写入边界与注释最小化规则 |
+| 统一 guard | [`environments/codex/AGENTS.md`](../../../environments/codex/AGENTS.md) 中的写入边界、注释最小化、最终回复自成一体、收尾自查、代码可读性、测试新增条件和前端界面取舍规则 |
 | 外部 skill | 见 [`environments/codex/skills/README.md`](../../../environments/codex/skills/README.md)；模型档案不重复维护安装状态 |
 
 ## 官方目录

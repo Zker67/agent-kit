@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Codex 全局 `AGENTS.md` 参考 OpenAI GPT-6.2 prompting best practices 补充 GPT 系列输出 guard：最终回复自成一体，不带推理、工具调用和子代理指令中的简写；结束回合前核对请求各部分已完成并验证，授权范围内的下一步直接完成，常规假设在交付中说明；优先复用已有代码并保留调用方依赖的行为；代码以可读为准，不压行、不为简短牺牲命名，抽象只在降低理解成本时引入；新增测试仅在用户或项目要求、或现有测试无法覆盖具体回归时添加；网页和界面配图优先真实图片，删除装饰性编号、填充徽章、重复标题和复述界面的说明文字。指南中自动建 worktree、解冲突、开 draft PR 的做法与 Git 写操作授权冲突，未采纳。Codex README 与模型档案索引同步。模型示例配置未改：本机 `codex-cli 0.169.0` 模型目录尚无 GPT-6.2 型号。
 - `pro-mobile` 收录 [Pinky](https://github.com/DIYgod/pinky)：替用户在其私人真机上办事（查信息、发消息、下单等，非开发）时，会话已有 `phone_*` 工具就优先用 Pinky，付款等确认步骤、银行类 App 屏蔽和验证码打码由 Pinky 的 gateway 强制执行；没有时可推荐安装，并说明 pre-alpha、Connect 会写用户级 MCP 配置和 skill、默认匿名统计（`DO_NOT_TRACK=1` 关闭）等代价，安装与接入由用户在 Pinky 里完成。Windows / Linux 上操作 iPhone 真机改为走 Pinky。开发调试路线不变，只有 `phone_*` 工具时也可用它的装包、日志和设备开关。新增 `references/pinky.md`（基于 v2026.1114.2 文档核实：接入方式、结果状态处理、与授权边界的关系，`approval_pending` 原样带 `approval_id` 重试、不换工具绕开拒绝、不主动调用计费的 `phone_task_run`）；evals 增至 20 个。
 - `pro-notify` 新增 `feishu-app` 渠道：用飞书 / Lark 企业自建应用的机器人往它所在的群发纯文本。`configure --provider feishu-app` 用 `--app-id`、`--chat-id` 和可选的 `--domain lark` 指定应用与群，App Secret 只通过 `--app-secret-env` 传入变量名，默认存入系统凭据库。每次发送先换取 `tenant_access_token`（只在内存中使用），再调用发消息接口，以 `code` 为 0 且有 `message_id` 判定成功；换取 token 失败时消息未发出，记为 `failed`。新增渠道文档 `references/channel-feishu-app.md`、离线测试 10 个和行为用例 1 个。
 - `pro-readme` 修正四处前后不一：独立仓库的提交信息第 5 条改为“协同关系保留标题和一句说明”，与硬规则 8 一致；提交信息草案只在本次新增或替换 hero 图时写 `+ hero asset` 和第 2 条，没有图时正文为 4 条，真实截图也按 hero 描述；协同关系的兄弟仓库数量统一为 2–4 个；11 节骨架注明第 2 节在没有 AI 协作文档时省略、第 3 节的 hero 可选。

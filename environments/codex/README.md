@@ -30,7 +30,7 @@ PowerShell：
 
 ## 配置分工
 
-- `AGENTS.md`：语言与回复、授权边界、工作原则、验证、安全和具体工具路由。
+- `AGENTS.md`：语言与回复、授权边界、工作原则、验证、安全和具体工具路由，以及最终回复自成一体、收尾自查、代码可读性、测试新增条件和前端界面取舍等 GPT 系列输出 guard。
 - `config.toml`：主模型、推理强度、权限、sandbox、MCP 和宿主功能。
 - `agents/*.toml`：子代理角色、模型和推理强度。
 - `profiles/*.toml`：可选模型和推理参数 overlay；统一输出 guard 仍在 `AGENTS.md`。
@@ -90,6 +90,6 @@ Test-Path "$HOME\.codex\skills\pro-summary\SKILL.md"
 ## 官方参考
 
 - [Prompting Codex](https://learn.chatgpt.com/docs/prompting#prompting-codex)
-- [Using the latest model](https://developers.openai.com/api/docs/guides/latest-model)
+- [Using the latest model](https://developers.openai.com/api/docs/guides/latest-model)：`AGENTS.md` 中的输出 guard 参考其 GPT-6.2 prompting best practices，按本仓授权边界改写，不含自动开 draft PR、建 worktree 等 Git 写操作。
 - [Prompting guidance for GPT-5.6 Sol](https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6)
 - [Codex Subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agent-file-schema)
